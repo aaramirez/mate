@@ -32,14 +32,14 @@
     <span class="op">+</span>
     <a class="tk" href="01-aritmetica.html"><span class="sym">b</span><span class="lab">suma</span></a>
     <span class="op">)</span>
-    <p class="train">¿Y cómo aprende la red los valores de <b>W</b> y <var>b</var>? Con <a href="06-limites.html">límites</a>, <a href="07-derivadas.html">derivadas</a> y <a href="09-gradiente.html">descenso del gradiente</a>. Las <a href="08-integrales.html">integrales</a> convierten densidades en probabilidades. Todo se junta en <a href="11-neurona.html">la neurona</a>.</p>
+    <p class="train">¿Y cómo aprende la red los valores de <b>W</b> y <var>b</var>? Con <a href="06-limites.html">límites</a>, <a href="07-derivadas.html">derivadas</a> y <a href="09-gradiente.html">descenso del gradiente</a>. Las <a href="08-integrales.html">integrales</a> convierten densidades en probabilidades. Todo se junta en <a href="11-neurona.html">la neurona</a>, y de ahí se llega a <a href="14-cnn.html">las redes convolucionales</a>, <a href="15-llm.html">los LLM</a> y <a href="16-agentes.html">los agentes</a>.</p>
   </div>
 </header>
 
 <section>
   <h2>Cómo usar este material</h2>
   <div class="prose">
-    <p>Son 11 módulos cortos, pensados para recorrerse en orden. Cada uno tiene una explicación, al menos un <b>laboratorio interactivo</b> para mover las cosas con las manos, un recuadro de <b>«Dónde aparece en ML»</b>, preguntas para probarte y videos de apoyo, incluidos capítulos concretos de 3Blue1Brown.</p>
+    <p>Son 16 módulos cortos, pensados para recorrerse en orden. Cada uno tiene una explicación, al menos un <b>laboratorio interactivo</b> para mover las cosas con las manos, un recuadro de <b>«Dónde aparece en ML»</b>, preguntas para probarte y videos de apoyo, incluidos capítulos concretos de 3Blue1Brown.</p>
     <p>Al terminar un módulo marca «Lo tengo claro». Tu avance queda guardado en este navegador y se ve en el índice.</p>
   </div>
 </section>
@@ -49,14 +49,14 @@
   <div class="mods">
     <a class="mod" data-id="aritmetica" href="01-aritmetica.html"><span class="n">01</span><b>Aritmética y razones</b><p>Operaciones, porcentajes, la razón entre dos magnitudes y entre dos funciones, normalización y métricas.</p></a>
     <a class="mod" data-id="notacion" href="02-notacion.html"><span class="n">02</span><b>Notación sin miedo</b><p>Σ, ŷ, θ, η, ∂ y ∇: el diccionario para leer cualquier fórmula del curso.</p></a>
-    <a class="mod" data-id="funciones" href="03-funciones.html"><span class="n">03</span><b>Funciones</b><p>Recta, parábola, exponencial, logaritmo, sigmoide y ReLU en un explorador interactivo.</p></a>
+    <a class="mod" data-id="funciones" href="03-funciones.html"><span class="n">03</span><b>Funciones</b><p>Recta, parábola, exponencial, logaritmo, sigmoide y ReLU; la prueba de la recta horizontal y cuándo una función tiene inversa.</p></a>
   </div>
 </div>
 <div class="stage">
   <h2>Álgebra lineal</h2>
   <div class="mods">
     <a class="mod" data-id="vectores" href="04-vectores.html"><span class="n">04</span><b>Vectores</b><p>Flechas y fichas de datos, producto punto y similitud coseno.</p></a>
-    <a class="mod" data-id="matrices" href="05-matrices.html"><span class="n">05</span><b>Matrices</b><p>Multiplicación paso a paso y matrices que deforman el plano.</p></a>
+    <a class="mod" data-id="matrices" href="05-matrices.html"><span class="n">05</span><b>Matrices</b><p>Multiplicación paso a paso, matrices que deforman el plano, autovalores y autovectores, y componentes principales (PCA).</p></a>
   </div>
 </div>
 <div class="stage">
@@ -73,6 +73,16 @@
   <div class="mods">
     <a class="mod" data-id="probabilidad" href="10-probabilidad.html"><span class="n">10</span><b>Probabilidad</b><p>Variables aleatorias, función de densidad, función de distribución, la normal y Bayes.</p></a>
     <a class="mod" data-id="neurona" href="11-neurona.html"><span class="n">11</span><b>La neurona y la red</b><p>Todo junto: una neurona, softmax, entropía cruzada y el ciclo de entrenamiento.</p></a>
+  </div>
+</div>
+<div class="stage">
+  <h2>Modelos de ML e IA moderna</h2>
+  <div class="mods">
+    <a class="mod" data-id="regresion" href="12-regresion.html"><span class="n">12</span><b>Regresión y error</b><p>Residuos, MSE y MAE, cómo el entrenamiento reduce el error y el sobreajuste.</p></a>
+    <a class="mod" data-id="modelos" href="13-modelos.html"><span class="n">13</span><b>Modelos clásicos de ML</b><p>Regresión logística, k vecinos, árboles con Gini, k-means, Naive Bayes, SVM y ensambles, con laboratorios.</p></a>
+    <a class="mod" data-id="cnn" href="14-cnn.html"><span class="n">14</span><b>Redes convolucionales</b><p>Imágenes como matrices, filtros que se deslizan, stride, padding, max pooling y por qué compartir pesos ahorra parámetros.</p></a>
+    <a class="mod" data-id="llm" href="15-llm.html"><span class="n">15</span><b>Cómo funciona un LLM</b><p>Tokens, embeddings, softmax con temperatura, atención Q·K·V y entrenamiento con entropía cruzada.</p></a>
+    <a class="mod" data-id="agentes" href="16-agentes.html"><span class="n">16</span><b>Agentes</b><p>Definición matemática: proceso de decisión de Markov, política π, retorno, Bellman y el bucle de un agente con LLM.</p></a>
     <a class="mod" href="recursos.html"><span class="n">+</span><b>Canales y plan de estudio</b><p>Canales de YouTube recomendados, la ruta de videos de 3Blue1Brown y un plan de 4 semanas.</p></a>
   </div>
 </div>

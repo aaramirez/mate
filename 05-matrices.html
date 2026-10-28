@@ -17,7 +17,7 @@
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 05 DE 11</span><h1>Matrices: tablas que transforman</h1></header>
+<header class="page-head"><span class="num">MÓDULO 05 DE 16</span><h1>Matrices: tablas que transforman</h1></header>
 <section>
   
   <div class="prose">
@@ -52,12 +52,89 @@
     <p class="hint">Las columnas de la matriz dicen a dónde van las flechas base î = [1, 0] y ĵ = [0, 1]. El determinante mide cuánto crece o se encoge el área del cuadrado.</p>
   </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Una capa de una red neuronal es <b>W</b><b>x</b> + <b>b</b>: una matriz de pesos transformando el vector de entrada. Las GPUs existen en ML porque multiplican matrices gigantes muy rápido. Cuando PyTorch se queja de un error de <i>shape</i>, casi siempre es la regla de las dimensiones de arriba.</p></div>
-  <div class="quiz"><h3>Pruébate</h3>
+  </section>
+
+<section>
+  <h2>Autovectores y autovalores: las direcciones que no giran</h2>
+  <div class="prose">
+    <p>En el laboratorio de arriba, casi todas las flechas cambian de dirección al aplicar la matriz. Pero muchas matrices tienen unas pocas direcciones especiales que <b>no giran</b>: la matriz solo las estira, las encoge o les da la vuelta. Esas direcciones son los <b>autovectores</b> (en inglés, <i>eigenvectors</i>) y el factor de estiramiento es su <b>autovalor</b> λ.</p>
+  </div>
+  <div class="eq">A<b>v</b> = λ<b>v</b></div>
+  <div class="prose">
+    <p>Se lee: «aplicar la matriz A al vector <b>v</b> da lo mismo que multiplicarlo por el número λ». Una matriz, que en general es una máquina complicada, <span class="hl">a lo largo de sus autovectores se comporta como un simple número</span>.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>λ &gt; 1</h3><span class="ex">A<b>v</b> = 3<b>v</b></span><p>La dirección se estira. Si se aplica la matriz muchas veces, crece sin control.</p></div>
+    <div class="fact"><h3>0 &lt; λ &lt; 1</h3><span class="ex">A<b>v</b> = 0.5<b>v</b></span><p>La dirección se encoge. Aplicada muchas veces, se apaga hacia 0.</p></div>
+    <div class="fact"><h3>λ &lt; 0</h3><span class="ex">A<b>v</b> = −<b>v</b></span><p>La flecha se da la vuelta y queda sobre la misma recta, apuntando al lado contrario.</p></div>
+    <div class="fact"><h3>λ = 0</h3><span class="ex">A<b>v</b> = <b>0</b></span><p>La matriz aplasta esa dirección hasta un punto: se pierde información y el determinante es 0.</p></div>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Caza de autovectores</h3></div>
+    <div class="split">
+      <canvas id="ev-cv" role="img" aria-label="Un vector v y su imagen Av; cuando son paralelos, v es autovector"></canvas>
+      <div style="display:grid;gap:12px;align-content:start">
+        <div class="btns" id="ev-presets" role="group" aria-label="Matrices de ejemplo">
+          <button data-m="2,0,0,0.5">Escala</button><button data-m="2,1,1,2">Simétrica</button><button data-m="1,1,0,1">Cizalla</button><button data-m="0,-1,1,0">Rotar 90°</button><button data-m="1,2,0.5,1">Aplastar</button><button data-m="-1,0,0,1">Espejo</button>
+        </div>
+        <div class="ctls" style="grid-template-columns:1fr 1fr">
+          <label class="ctl"><var>a</var><output id="ev-a-o"></output><input type="range" id="ev-a" min="-2" max="3" step="0.1" value="2"></label>
+          <label class="ctl"><var>b</var><output id="ev-b-o"></output><input type="range" id="ev-b" min="-2" max="3" step="0.1" value="1"></label>
+          <label class="ctl"><var>c</var><output id="ev-c-o"></output><input type="range" id="ev-c" min="-2" max="3" step="0.1" value="1"></label>
+          <label class="ctl"><var>d</var><output id="ev-d-o"></output><input type="range" id="ev-d" min="-2" max="3" step="0.1" value="2"></label>
+        </div>
+        <label class="ctl"><span>Dirección de <b>v</b> (grados)</span><output id="ev-t-o"></output><input type="range" id="ev-t" min="0" max="180" step="1" value="20"></label>
+        <div class="btns"><button id="ev-sweep">Girar v</button><button id="ev-snap" class="primary">Saltar a un autovector</button></div>
+      </div>
+    </div>
+    <div class="readout" id="ev-out"></div>
+    <div class="legend"><span><i style="background:var(--good)"></i><b>v</b>, vector unitario</span><span><i style="background:var(--warm)"></i>A<b>v</b></span><span><i style="background:var(--accent)"></i>imagen del círculo unidad</span></div>
+    <p class="hint">Gira <b>v</b> y mira cuándo A<b>v</b> queda sobre la misma recta. Las líneas punteadas marcan los autovectores. La matriz es A = [[a, b], [c, d]]: la primera columna es a dónde va î.</p>
+  </div>
+  <div class="prose">
+    <p><b>¿Cómo se calculan?</b> Si A<b>v</b> = λ<b>v</b>, entonces (A − λI)<b>v</b> = <b>0</b> con <b>v</b> ≠ <b>0</b>. Eso solo pasa si A − λI aplasta el plano, es decir, si su determinante es 0. Para una matriz de 2 × 2 sale una ecuación de segundo grado:</p>
+  </div>
+  <div class="eq">det(A − λI) = λ² − (a + d)·λ + (ad − bc) = 0</div>
+  <div class="prose">
+    <p>Por ejemplo, con A = [[2, 1], [1, 2]]: λ² − 4λ + 3 = 0, así que λ = 3 y λ = 1. Dos atajos útiles: <b>la suma de los autovalores es la traza</b> (a + d) y <b>su producto es el determinante</b> (ad − bc). Si la ecuación no tiene soluciones reales, como en una rotación, no hay ninguna dirección que se salve de girar.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Componentes principales (PCA): autovectores de los datos</h2>
+  <div class="prose">
+    <p>Imagina una nube de datos con dos variables muy relacionadas, como la estatura y el peso. Los puntos forman una elipse inclinada. El <b>análisis de componentes principales</b> (PCA) busca la dirección en la que los datos <b>más varían</b>, para describirlos con menos números perdiendo lo mínimo.</p>
+    <p>La sorpresa es que esa dirección es un autovector. Se resume la forma de la nube en la <b>matriz de covarianza</b> Σ: en su diagonal están las varianzas de cada variable y fuera de ella, cuánto varían juntas. <span class="hl">Los autovectores de Σ son los ejes de la elipse y cada autovalor es la varianza de los datos a lo largo de su eje.</span></p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Centrar:</b> restar el promedio de cada variable, para que la nube quede alrededor del origen.</span></li>
+    <li><span><b>Covarianza:</b> calcular Σ = XᵀX / (n − 1), una matriz simétrica de d × d.</span></li>
+    <li><span><b>Autovectores:</b> los de Σ son las componentes principales; ordenarlos de mayor a menor autovalor.</span></li>
+    <li><span><b>Elegir k:</b> quedarse con las k primeras. La fracción de varianza que conservan es (λ₁ + … + λₖ) / (λ₁ + … + λ_d).</span></li>
+    <li><span><b>Proyectar:</b> cada dato se reemplaza por su producto punto con esas k direcciones. Pasa de d números a k.</span></li>
+  </ol>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Busca la dirección de máxima varianza</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Datos en 2D y el eje de proyección</span><canvas id="pc-cv1" role="img" aria-label="Nube de puntos con un eje de proyección y los autovectores de la covarianza"></canvas></div>
+      <div class="fig"><span class="cap">Varianza proyectada según el ángulo del eje</span><canvas id="pc-cv2" role="img" aria-label="Varianza de la proyección en función del ángulo, con máximo en el primer autovector"></canvas></div>
+    </div>
+    <div class="ctls">
+      <label class="ctl"><span>Ángulo del eje de proyección</span><output id="pc-p-o"></output><input type="range" id="pc-p" min="0" max="180" step="1" value="90"></label>
+      <label class="ctl"><span>Inclinación de la nube</span><output id="pc-r-o"></output><input type="range" id="pc-r" min="0" max="180" step="1" value="35"></label>
+      <label class="ctl"><span>Qué tan alargada es</span><output id="pc-e-o"></output><input type="range" id="pc-e" min="1" max="6" step="0.1" value="3"></label>
+    </div>
+    <div class="btns"><button class="primary" id="pc-snap">Alinear con la 1.ª componente</button><button id="pc-new">Otra muestra</button></div>
+    <div class="readout" id="pc-out"></div>
+    <p class="hint">Cada punto cae sobre el eje con una línea fina: eso es proyectar. La curva de la derecha muestra la varianza de las proyecciones para cada ángulo. Su máximo es λ₁ y ocurre justo en el primer autovector; su mínimo es λ₂.</p>
+  </div>
+  <div class="ml"><b>Dónde aparecen los autovalores en ML</b><p><b>PCA</b> comprime datos, quita ruido y permite dibujar en 2D datasets de cientos de variables. Los <b>embeddings</b> de palabras y de imágenes se suelen visualizar así. El algoritmo <b>PageRank</b> de Google es el autovector con λ = 1 de la matriz de enlaces. En una red recurrente, si los autovalores de la matriz de pesos son mayores que 1 los gradientes <b>explotan</b>, y si son menores que 1 se <b>desvanecen</b>. Los autovalores del hessiano (la matriz de segundas derivadas) dicen qué tan curva es la pérdida en cada dirección, y de eso depende la tasa de aprendizaje que se puede usar.</p></div>
+<div class="quiz"><h3>Pruébate</h3><details><summary>A = [[3, 0], [0, 1]]. ¿Cuáles son sus autovalores y autovectores?</summary><p>λ = 3 con el eje x, [1, 0], y λ = 1 con el eje y, [0, 1]. En una matriz diagonal se leen directamente.</p></details><details><summary>Los autovalores de una covarianza son 9 y 1. ¿Cuánta varianza conserva PCA con una sola componente?</summary><p>9 / (9 + 1) = 90 %.</p></details>
     <details><summary>¿Qué forma tiene el resultado de (32 × 784) · (784 × 128)?</summary><p>32 × 128 (las 784 del medio coinciden y desaparecen)</p></details>
     <details><summary>¿Se puede multiplicar (2 × 3) · (2 × 3)?</summary><p>No: 3 ≠ 2. Habría que transponer la segunda: (2 × 3) · (3 × 2) = 2 × 2</p></details>
   </div>
-  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=kYB8IZa5AuE" target="_blank" rel="noopener">Linear transformations and matrices (cap. 3)</a><span>Las columnas de la matriz son a dónde van î y ĵ, igual que en el laboratorio.</span></li><li><a href="https://www.youtube.com/watch?v=XkY2DOUCWMU" target="_blank" rel="noopener">Matrix multiplication as composition (cap. 4)</a><span>Multiplicar matrices es aplicar una transformación después de otra.</span></li><li><a href="https://www.youtube.com/watch?v=Ip3X9LOh2dk" target="_blank" rel="noopener">The determinant (cap. 6)</a><span>El determinante como factor de cambio de área.</span></li></ul></div>
-  <div class="vids"><span>Más videos</span>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=kYB8IZa5AuE" target="_blank" rel="noopener">Linear transformations and matrices (cap. 3)</a><span>Las columnas de la matriz son a dónde van î y ĵ, igual que en el laboratorio.</span></li><li><a href="https://www.youtube.com/watch?v=XkY2DOUCWMU" target="_blank" rel="noopener">Matrix multiplication as composition (cap. 4)</a><span>Multiplicar matrices es aplicar una transformación después de otra.</span></li><li><a href="https://www.youtube.com/watch?v=Ip3X9LOh2dk" target="_blank" rel="noopener">The determinant (cap. 6)</a><span>El determinante como factor de cambio de área.</span></li><li><a href="https://www.youtube.com/watch?v=PFDu9oVAE-g" target="_blank" rel="noopener">Eigenvectors and eigenvalues (cap. 14)</a><span>Las direcciones que una transformación solo estira, con las mismas animaciones del laboratorio.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span> <a class="vid" href="https://www.youtube.com/watch?v=FgakZw6K1QQ" target="_blank" rel="noopener">StatQuest · PCA paso a paso <small>EN</small></a>
     <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=multiplicaci%C3%B3n%20de%20matrices" target="_blank" rel="noopener">julioprofe · multiplicación de matrices</a>
     <a class="vid" href="https://www.youtube.com/@math2me/search?query=matrices" target="_blank" rel="noopener">math2me · matrices</a>
     <a class="vid" href="https://www.youtube.com/@Eigensteve/search?query=matrix" target="_blank" rel="noopener">Steve Brunton · álgebra lineal aplicada <small>EN</small></a>
@@ -108,6 +185,110 @@ const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hex
   });
   ids.forEach(k=>$('#mt-'+k).addEventListener('input',draw));
   $('#mt-presets').addEventListener('click',e=>{const m=e.target.dataset&&e.target.dataset.m;if(!m)return;m.split(',').forEach((v,i)=>$('#mt-'+ids[i]).value=v);draw();});
+})();
+
+/* ---------- 05 Autovectores ---------- */
+(function(){
+  const ids=['a','b','c','d'],S=ids.map(k=>$('#ev-'+k)),T=$('#ev-t');let anim=0;
+  const M=()=>S.map(s=>+s.value);
+  function eig(){
+    const [a,b,c,d]=M(),tr=a+d,det=a*d-b*c,disc=tr*tr-4*det;
+    if(disc<-1e-9)return {tr,det,complex:true,vals:[],vecs:[]};
+    const s=Math.sqrt(Math.max(0,disc)),vals=s<1e-9?[tr/2]:[(tr+s)/2,(tr-s)/2],e=1e-9;
+    if(Math.abs(b)<e&&Math.abs(c)<e&&Math.abs(a-d)<e)return {tr,det,all:true,vals:[a],vecs:[]};
+    const vecs=vals.map(l=>{let v=Math.abs(b)>e?[b,l-a]:Math.abs(c)>e?[l-d,c]:(Math.abs(l-a)<e?[1,0]:[0,1]);const n=Math.hypot(v[0],v[1]);return [v[0]/n,v[1]/n];});
+    return {tr,det,vals,vecs};
+  }
+  const angOf=v=>{let t=Math.atan2(v[1],v[0])*180/Math.PI;t=((t%180)+180)%180;return t;};
+  const draw=canvasWidget($('#ev-cv'),1,(ctx,w,h)=>{
+    const [a,b,c,d]=M(),E=eig(),t=+T.value*Math.PI/180,v=[Math.cos(t),Math.sin(t)],Av=[a*v[0]+b*v[1],c*v[0]+d*v[1]];
+    const F=frame(ctx,w,h,{x0:-3.5,x1:3.5,equal:true,sx:1,sy:1});
+    F.clip();
+    E.vecs.forEach(u=>{ctx.strokeStyle=tok('--ink');ctx.globalAlpha=.55;ctx.lineWidth=1.5;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(F.X(-9*u[0]),F.Y(-9*u[1]));ctx.lineTo(F.X(9*u[0]),F.Y(9*u[1]));ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;});
+    ctx.strokeStyle=tok('--muted');ctx.lineWidth=1;ctx.beginPath();
+    for(let i=0;i<=120;i++){const s=i/120*2*Math.PI;const x=Math.cos(s),y=Math.sin(s);i?ctx.lineTo(F.X(x),F.Y(y)):ctx.moveTo(F.X(x),F.Y(y));}ctx.stroke();
+    ctx.strokeStyle=tok('--accent');ctx.lineWidth=2;ctx.beginPath();
+    for(let i=0;i<=120;i++){const s=i/120*2*Math.PI;const x=Math.cos(s),y=Math.sin(s),X=a*x+b*y,Y=c*x+d*y;i?ctx.lineTo(F.X(X),F.Y(Y)):ctx.moveTo(F.X(X),F.Y(Y));}ctx.stroke();
+    arrow(ctx,F.X(0),F.Y(0),F.X(Av[0]),F.Y(Av[1]),tok('--warm'),3);
+    arrow(ctx,F.X(0),F.Y(0),F.X(v[0]),F.Y(v[1]),tok('--good'),3);
+    ctx.restore();
+  });
+  function out(){
+    const [a,b,c,d]=M(),E=eig(),t=+T.value*Math.PI/180,v=[Math.cos(t),Math.sin(t)],Av=[a*v[0]+b*v[1],c*v[0]+d*v[1]];
+    ids.forEach((k,i)=>$('#ev-'+k+'-o').textContent=short(+S[i].value));$('#ev-t-o').textContent=T.value+'°';
+    const n=Math.hypot(Av[0],Av[1]),cross=v[0]*Av[1]-v[1]*Av[0],dotp=v[0]*Av[0]+v[1]*Av[1];
+    const par=n<.03||Math.abs(cross)/Math.max(n,1e-9)<.035;
+    const lam=n<.03?0:dotp;
+    let msg=par?`<span class="ok">¡v es autovector! A·v = ${fmt(lam,2)}·v.</span> ${lam<0?'La flecha se dio la vuelta pero sigue sobre la misma recta.':Math.abs(lam)<.03?'La matriz aplasta esta dirección hasta el origen.':lam>1?'Esta dirección solo se estira.':lam<1?'Esta dirección solo se encoge.':'Esta dirección queda igual.'}`
+      :`A·v giró ${fmt(Math.abs(Math.atan2(cross,dotp))*180/Math.PI,0)}° respecto de v: no es autovector. Sigue girando v.`;
+    let info;
+    if(E.complex)info=`Autovalores complejos: no hay ninguna dirección real que no gire. Por eso nunca verás v y A·v alineados.`;
+    else if(E.all)info=`A = ${short(E.vals[0])}·I: todas las direcciones son autovectores, con λ = ${short(E.vals[0])}.`;
+    else info=`Autovalores: ${E.vals.map((l,i)=>`λ${'₁₂'[i]} = ${fmt(l,2)} (dirección ${fmt(angOf(E.vecs[i]),0)}°)`).join(' · ')}${E.vals.length===1?'. Es un autovalor doble con una sola dirección, como en la cizalla.':''}`;
+    $('#ev-out').innerHTML=`<span class="big">A = [[${short(a)}, ${short(b)}], [${short(c)}, ${short(d)}]] · traza = ${fmt(E.tr,2)} · det = ${fmt(E.det,2)}</span><span>${msg}</span><span>${info}</span>`;
+    draw();
+  }
+  $('#ev-presets').querySelectorAll('button').forEach(btn=>btn.onclick=()=>{cancelAnimationFrame(anim);btn.dataset.m.split(',').forEach((x,i)=>S[i].value=x);out();});
+  [...S,T].forEach(el=>el.addEventListener('input',()=>{cancelAnimationFrame(anim);out();}));
+  $('#ev-snap').onclick=()=>{cancelAnimationFrame(anim);const E=eig();if(!E.vecs.length){out();return;}
+    const cur=+T.value,angs=E.vecs.map(angOf),dist=x=>Math.min(Math.abs(x-cur),180-Math.abs(x-cur));
+    const far=angs.filter(x=>dist(x)>2);const tgt=(far.length?far:angs).sort((p,q)=>dist(p)-dist(q))[0];T.value=Math.round(tgt)%180;out();};
+  $('#ev-sweep').onclick=()=>{cancelAnimationFrame(anim);const t0=performance.now();
+    const step=t=>{const k=Math.min(1,(t-t0)/6000);T.value=Math.round(180*k);out();if(k<1)anim=requestAnimationFrame(step);};anim=requestAnimationFrame(step);};
+  out();
+})();
+
+/* ---------- 05 PCA ---------- */
+(function(){
+  const P=$('#pc-p'),R=$('#pc-r'),El=$('#pc-e');let seed=7,Z=[];
+  const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const gauss=()=>Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd());
+  const sample=()=>{Z=[];for(let i=0;i<140;i++)Z.push([gauss(),gauss()]);};
+  function data(){
+    const r=+R.value*Math.PI/180,e=+El.value,sx=.55*Math.sqrt(e),sy=.55/Math.sqrt(e);
+    const pts=Z.map(([u,v])=>[Math.cos(r)*u*sx-Math.sin(r)*v*sy,Math.sin(r)*u*sx+Math.cos(r)*v*sy]);
+    const m=[0,1].map(k=>pts.reduce((s,p)=>s+p[k],0)/pts.length);
+    const X=pts.map(p=>[p[0]-m[0],p[1]-m[1]]),n=X.length-1;
+    const sxx=X.reduce((s,p)=>s+p[0]*p[0],0)/n,syy=X.reduce((s,p)=>s+p[1]*p[1],0)/n,sxy=X.reduce((s,p)=>s+p[0]*p[1],0)/n;
+    const tr=sxx+syy,det=sxx*syy-sxy*sxy,s=Math.sqrt(Math.max(0,tr*tr/4-det)),l1=tr/2+s,l2=tr/2-s;
+    const th=.5*Math.atan2(2*sxy,sxx-syy);
+    return {X,sxx,syy,sxy,l1,l2,th};
+  }
+  const varAt=(D,phi)=>{const c=Math.cos(phi),s=Math.sin(phi);return D.sxx*c*c+2*D.sxy*c*s+D.syy*s*s;};
+  const deg=r=>((r*180/Math.PI)%180+180)%180;
+  const c1=canvasWidget($('#pc-cv1'),1,(ctx,w,h)=>{
+    const D=data(),phi=+P.value*Math.PI/180,u=[Math.cos(phi),Math.sin(phi)];
+    const F=frame(ctx,w,h,{x0:-3,x1:3,equal:true,sx:1,sy:1});F.clip();
+    ctx.strokeStyle=tok('--warm');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(F.X(-6*u[0]),F.Y(-6*u[1]));ctx.lineTo(F.X(6*u[0]),F.Y(6*u[1]));ctx.stroke();
+    ctx.globalAlpha=.35;ctx.lineWidth=1;
+    D.X.forEach(p=>{const t=p[0]*u[0]+p[1]*u[1];ctx.beginPath();ctx.moveTo(F.X(p[0]),F.Y(p[1]));ctx.lineTo(F.X(t*u[0]),F.Y(t*u[1]));ctx.stroke();});
+    ctx.globalAlpha=1;
+    D.X.forEach(p=>dot(ctx,F.X(p[0]),F.Y(p[1]),tok('--accent'),2.6));
+    D.X.forEach(p=>{const t=p[0]*u[0]+p[1]*u[1];dot(ctx,F.X(t*u[0]),F.Y(t*u[1]),tok('--warm'),2.2);});
+    [[D.th,D.l1,'PC1'],[D.th+Math.PI/2,D.l2,'PC2']].forEach(([a,l,n])=>{const k=2*Math.sqrt(l);arrow(ctx,F.X(0),F.Y(0),F.X(k*Math.cos(a)),F.Y(k*Math.sin(a)),tok('--ink'),2.5);label(ctx,n,F.X(k*Math.cos(a))+6,F.Y(k*Math.sin(a))-10,tok('--ink'));});
+    ctx.restore();
+  });
+  const c2=canvasWidget($('#pc-cv2'),1,(ctx,w,h)=>{
+    const D=data(),F=frame(ctx,w,h,{x0:0,x1:180,y0:0,y1:Math.max(1,D.l1*1.15),sx:30});
+    ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;
+    [D.l1,D.l2].forEach(l=>{ctx.beginPath();ctx.moveTo(F.X(0),F.Y(l));ctx.lineTo(F.X(180),F.Y(l));ctx.stroke();});ctx.setLineDash([]);
+    curve(ctx,F,x=>varAt(D,x*Math.PI/180),tok('--accent'),2.5);
+    const p=+P.value;F.clip();dot(ctx,F.X(p),F.Y(varAt(D,p*Math.PI/180)),tok('--warm'),7);ctx.restore();
+    label(ctx,'λ₁',F.X(180)-24,F.Y(D.l1)-10,tok('--ink'));label(ctx,'λ₂',F.X(180)-24,F.Y(D.l2)-10,tok('--ink'));
+  });
+  function out(){
+    const D=data(),phi=+P.value*Math.PI/180,v=varAt(D,phi),pc=deg(D.th);
+    $('#pc-p-o').textContent=P.value+'°';$('#pc-r-o').textContent=R.value+'°';$('#pc-e-o').textContent=short(+El.value)+'×';
+    const off=Math.min(Math.abs(+P.value-pc),180-Math.abs(+P.value-pc));
+    $('#pc-out').innerHTML=`<span class="big">Σ = [[${fmt(D.sxx,2)}, ${fmt(D.sxy,2)}], [${fmt(D.sxy,2)}, ${fmt(D.syy,2)}]] · λ₁ = ${fmt(D.l1,2)} · λ₂ = ${fmt(D.l2,2)}</span>`+
+      `<span>Varianza sobre tu eje: <b>${fmt(v,2)}</b>, que es el ${fmt(100*v/(D.l1+D.l2),0)} % de la varianza total. ${off<1.5?'<span class="ok">Estás sobre la primera componente principal: ninguna otra dirección conserva más.</span>':`La 1.ª componente está a ${fmt(pc,0)}°; te faltan ${fmt(off,0)}°.`}</span>`+
+      `<span>Si guardas solo PC1, pasas de 2 números a 1 por punto y conservas λ₁ / (λ₁ + λ₂) = ${fmt(100*D.l1/(D.l1+D.l2),0)} % de la información.</span>`;
+    c1();c2();
+  }
+  [P,R,El].forEach(el=>el.addEventListener('input',out));
+  $('#pc-snap').onclick=()=>{P.value=Math.round(deg(data().th))%180;out();};
+  $('#pc-new').onclick=()=>{seed=Math.floor(Math.random()*1e9)+1;sample();out();};
+  sample();out();
 })();
 })();
 </script>

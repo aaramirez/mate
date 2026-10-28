@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Redes convolucionales · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="cnn">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 14 DE 16</span><h1>Redes convolucionales: cómo ve una red</h1><p class="lede">Una imagen es una tabla de números. Una red convolucional la recorre con filtros pequeños que deslizan un producto punto y aprende sola qué patrones buscar.</p></header>
+<style>
+.cv-kwrap{display:grid;gap:8px;align-content:start;min-width:0}
+.cv-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px 24px;align-items:start}
+@media (max-width:640px){.cv-row{grid-template-columns:minmax(0,1fr)}}
+.cv-k{display:grid;grid-template-columns:repeat(3,60px);gap:6px}
+.cv-k input{width:100%;font:600 .95rem var(--f-mono);text-align:center;padding:8px 2px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+.cv-k input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.cv-terms{font-family:var(--f-mono);font-size:.85rem;line-height:1.6;overflow-wrap:anywhere}
+</style>
+
+<section>
+  <h2>Una imagen es una matriz de números</h2>
+  <div class="prose">
+    <p>Para una computadora, una foto en blanco y negro es una <b>tabla de números</b>: una casilla por píxel, con 0 para el vacío y 1 para el trazo (o de 0 a 255). Una foto a color son <b>tres</b> tablas apiladas, una por canal: rojo, verde y azul. Es decir, una imagen es una <a href="05-matrices.html">matriz</a>, o varias.</p>
+    <p>Podríamos «aplanar» esa tabla en un vector largo y dárselo a la red del <a href="11-neurona.html">módulo 11</a>. Funciona para imágenes diminutas, pero tiene dos problemas: <span class="hl">al aplanar se pierde quién es vecino de quién, y el número de pesos se dispara</span>.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Dígito escrito a mano</h3><span class="ex">28 × 28 = 784 números</span><p>El clásico conjunto MNIST. Ya son 784 entradas para cada neurona de la primera capa.</p></div>
+    <div class="fact"><h3>Foto a color pequeña</h3><span class="ex">224 × 224 × 3 = 150 528</span><p>Una capa densa de solo 1000 neuronas necesitaría ¡más de 150 millones de pesos!</p></div>
+    <div class="fact"><h3>La idea de la CNN</h3><span class="ex">mirar por una ventanita</span><p>En vez de conectar todo con todo, revisar la imagen por trozos pequeños con el mismo «detector».</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>La convolución: deslizar un filtro</h2>
+  <div class="prose">
+    <p>Un <b>filtro</b> (o <i>kernel</i>) es una matriz pequeña, típicamente de 3 × 3. Se coloca sobre una esquina de la imagen, se multiplica casilla por casilla y se suman los 9 resultados. Eso es exactamente un <a href="04-vectores.html">producto punto</a>: mide cuánto se parece ese trozo de imagen al filtro. Luego se desliza una casilla y se repite.</p>
+  </div>
+  <div class="eq">(I ∗ K)[i, j] = Σ<sub>m</sub> Σ<sub>n</sub> I[i + m, j + n] · K[m, n]</div>
+  <ol class="steps">
+    <li><span><b>Colocar</b> el filtro sobre una ventana de 3 × 3 de la imagen.</span></li>
+    <li><span><b>Multiplicar</b> cada píxel por el peso del filtro que tiene encima.</span></li>
+    <li><span><b>Sumar</b> los 9 productos. Ese número es una casilla del resultado.</span></li>
+    <li><span><b>Deslizar</b> el filtro una casilla y repetir hasta recorrer toda la imagen. La tabla de resultados se llama <b>mapa de activación</b>.</span></li>
+  </ol>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Paso a paso</span><h3>Convolución sobre una imagen de 12 × 12</h3></div>
+    <div class="btns" id="cv-imgs" role="group" aria-label="Elegir imagen"></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Imagen <span class="fa">· clic para pintar</span></span><canvas id="cv-in" role="img" aria-label="Imagen de entrada de 12 por 12 con la ventana del filtro resaltada"></canvas></div>
+      <div class="fig"><span class="cap">Mapa de activación 10 × 10</span><canvas id="cv-out" role="img" aria-label="Mapa de activación resultante de la convolución"></canvas></div>
+    </div>
+    <div class="cv-row">
+      <div class="cv-kwrap"><span class="cap">Filtro 3 × 3 · edita los números</span><div class="cv-k" id="cv-k"></div></div>
+      <div class="cv-kwrap">
+        <div class="btns" id="cv-ks" role="group" aria-label="Elegir filtro"></div>
+        <div class="btns"><button class="primary" id="cv-next">Siguiente posición</button><button id="cv-all">Todo</button><button id="cv-reset">Reiniciar</button><button id="cv-relu" aria-pressed="false">Aplicar ReLU</button></div>
+      </div>
+    </div>
+    <div class="readout" id="cv-outtxt"></div>
+    <div class="legend"><span><i style="background:var(--ink)"></i>píxel con trazo (1)</span><span><i style="background:var(--accent)"></i>activación positiva</span><span><i style="background:var(--warm)"></i>activación negativa</span></div>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Borde vertical</h3><span class="ex">[−1 0 1] en cada fila</span><p>Resta la izquierda de la derecha: da un número grande donde la imagen cambia de vacío a trazo de izquierda a derecha.</p></div>
+    <div class="fact"><h3>Desenfoque</h3><span class="ex">todos 1/9</span><p>Es el promedio de la ventana: suaviza y borra los detalles finos.</p></div>
+    <div class="fact"><h3>Nitidez</h3><span class="ex">5 al centro, −1 en la cruz</span><p>Refuerza el píxel central frente a sus vecinos: resalta los contornos.</p></div>
+  </div>
+  <div class="prose">
+    <p>Aquí está el truco que convierte esto en aprendizaje automático: <span class="hl">en una red convolucional nadie escribe los números del filtro; la red los aprende</span> con el <a href="09-gradiente.html">descenso del gradiente</a>, igual que los pesos de cualquier neurona. Empiezan al azar y terminan siendo detectores de bordes, de texturas o de ojos, según lo que ayude a reducir el error.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Paso (stride), relleno (padding) y tamaño de salida</h2>
+  <div class="prose">
+    <p>Un filtro de 3 × 3 no puede centrarse en el borde de la imagen, así que el resultado sale un poco más chico: de 12 × 12 pasamos a 10 × 10. Dos perillas controlan el tamaño:</p>
+    <ul>
+      <li><b>Padding (<var>p</var>):</b> agregar un marco de ceros alrededor para que el filtro también revise los bordes.</li>
+      <li><b>Stride (<var>s</var>):</b> cuántas casillas salta el filtro en cada paso. Con <var>s</var> = 2 el resultado queda a la mitad.</li>
+    </ul>
+  </div>
+  <div class="eq">salida = (<var>n</var> + 2<var>p</var> − <var>k</var>) / <var>s</var> + 1</div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Calcula</span><h3>Tamaño de salida y número de pesos</h3></div>
+    <div class="ctls">
+      <label class="ctl"><span>Imagen: <var>n</var> × <var>n</var></span><output id="ts-n-o"></output><input type="range" id="ts-n" min="4" max="256" step="1" value="28"></label>
+      <label class="ctl"><span>Canales (1 = gris, 3 = color)</span><output id="ts-c-o"></output><input type="range" id="ts-c" min="1" max="3" step="2" value="1"></label>
+      <label class="ctl"><span>Filtro: <var>k</var> × <var>k</var></span><output id="ts-k-o"></output><input type="range" id="ts-k" min="1" max="11" step="2" value="3"></label>
+      <label class="ctl"><span>Padding <var>p</var></span><output id="ts-p-o"></output><input type="range" id="ts-p" min="0" max="5" step="1" value="0"></label>
+      <label class="ctl"><span>Stride <var>s</var></span><output id="ts-s-o"></output><input type="range" id="ts-s" min="1" max="4" step="1" value="1"></label>
+      <label class="ctl"><span>Número de filtros</span><output id="ts-f-o"></output><input type="range" id="ts-f" min="1" max="64" step="1" value="8"></label>
+    </div>
+    <div class="readout" id="ts-out"></div>
+  </div>
+  <div class="prose">
+    <p>La gran diferencia está en la última línea. Un filtro <b>comparte sus pesos</b>: los mismos 9 números revisan cada rincón de la imagen. Un detector de bordes que funciona arriba a la izquierda también funciona abajo a la derecha. Por eso una CNN necesita miles de pesos donde una red densa necesitaría millones.</p>
+  </div>
+</section>
+
+<section>
+  <h2>ReLU y pooling: quedarse con lo importante</h2>
+  <div class="prose">
+    <p>Después de cada convolución se aplica <b>ReLU</b> casilla por casilla: los negativos pasan a 0 y quedan solo las coincidencias positivas (prueba el botón «Aplicar ReLU» de arriba). Luego viene el <b>pooling</b>: se parte el mapa en bloques de 2 × 2 y de cada bloque se guarda solo el máximo.</p>
+    <p>El <i>max pooling</i> reduce el mapa a la cuarta parte y dice, en resumen, «por esta zona sí había un borde», sin importar en qué píxel exacto. Eso hace a la red más tolerante a que el objeto se mueva un poco.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Max pooling 2 × 2 sobre el mapa de activación</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Mapa 10 × 10 tras ReLU</span><canvas id="pl-in" role="img" aria-label="Mapa de activación dividido en bloques de 2 por 2"></canvas></div>
+      <div class="fig"><span class="cap">Resultado 5 × 5</span><canvas id="pl-out" role="img" aria-label="Mapa reducido por max pooling"></canvas></div>
+    </div>
+    <div class="btns"><button class="primary" id="pl-next">Siguiente bloque</button><button id="pl-all">Todo</button><button id="pl-reset">Reiniciar</button></div>
+    <div class="readout" id="pl-txt"></div>
+    <p class="hint">El mapa viene del laboratorio de convolución: cambia ahí la imagen o el filtro y este se actualiza.</p>
+  </div>
+</section>
+
+<section>
+  <h2>De bordes a objetos: la red completa</h2>
+  <div class="prose">
+    <p>Una CNN apila varias veces el mismo bloque. Las primeras capas aprenden filtros de <b>bordes y colores</b>; las siguientes combinan bordes en <b>formas</b> (esquinas, círculos, texturas); las últimas combinan formas en <b>partes de objetos</b> (ojos, ruedas, letras). Al final, una red normal toma la decisión.</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Convolución:</b> muchos filtros a la vez, cada uno produce su propio mapa de activación.</span></li>
+    <li><span><b>ReLU:</b> apagar los negativos.</span></li>
+    <li><span><b>Pooling:</b> reducir el tamaño. Se repiten los pasos 1 a 3 varias veces.</span></li>
+    <li><span><b>Aplanar:</b> convertir los mapas finales en un vector.</span></li>
+    <li><span><b>Capa densa + softmax:</b> la neurona del <a href="11-neurona.html">módulo 11</a> convierte ese vector en probabilidades: «92 % gato, 6 % perro, 2 % zorro».</span></li>
+  </ol>
+  <div class="tbl"><table>
+    <thead><tr><th>Pieza</th><th>Matemática</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td>Convolución</td><td>productos punto con un filtro que se desliza</td><td>Detecta un patrón local en cualquier lugar</td></tr>
+      <tr><td>ReLU</td><td>máx(0, z)</td><td>Se queda con las coincidencias</td></tr>
+      <tr><td>Max pooling</td><td>máx de cada bloque 2 × 2</td><td>Resume y reduce el tamaño</td></tr>
+      <tr><td>Aplanar + densa</td><td><b>W</b><b>x</b> + <b>b</b></td><td>Combina todos los rasgos</td></tr>
+      <tr><td>Softmax</td><td>e<sup>zᵢ</sup> / Σ e<sup>zⱼ</sup></td><td>Convierte puntajes en probabilidades</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Reconocimiento de imágenes y rostros, lectura de radiografías, autos que ven la carretera, lectura de cheques y matrículas. La misma idea de «ventana que se desliza» funciona en una dimensión, para audio y series de tiempo, y en tres, para video. Los modelos de visión modernos (los <i>Vision Transformers</i>) cambian la convolución por atención, pero siguen partiendo la imagen en trozos.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Imagen de 32 × 32, filtro 5 × 5, sin padding y stride 1. ¿Tamaño de salida?</summary><p>(32 + 0 − 5) / 1 + 1 = 28, o sea 28 × 28.</p></details>
+    <details><summary>¿Y con padding 1 y filtro 3 × 3 sobre la misma imagen?</summary><p>(32 + 2 − 3) / 1 + 1 = 32: el padding conserva el tamaño.</p></details>
+    <details><summary>¿Cuántos pesos tiene un filtro 3 × 3 sobre una imagen a color?</summary><p>3 · 3 · 3 = 27 pesos, más 1 sesgo = 28. Y sirven para toda la imagen, sea del tamaño que sea.</p></details>
+    <details><summary>Max pooling 2 × 2 sobre un mapa de 28 × 28. ¿Qué queda?</summary><p>14 × 14: un cuarto de las casillas.</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=KuXjwB4LzSA" target="_blank" rel="noopener">But what is a convolution?</a><span>La convolución explicada con dados, imágenes y desenfoque: la misma operación que hace cada filtro de una CNN.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=redes%20neuronales%20convolucionales" target="_blank" rel="noopener">Dot CSV · redes convolucionales</a>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=convolucional" target="_blank" rel="noopener">Ringa Tech · redes convolucionales</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=convolutional%20neural%20network" target="_blank" rel="noopener">StatQuest · CNNs, paso a paso <small>EN</small></a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 14 Convolución paso a paso ---------- */
+(function(){
+  const N=12,K=3,O=N-K+1;
+  const rgb=n=>{const v=tok(n);if(v[0]==='#')return hexRgb(v);const m=v.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number);};
+  const css=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
+  const IMGS={
+    'Cuadrado':(i,j)=>i>=3&&i<=8&&j>=3&&j<=8?1:0,
+    'Letra T':(i,j)=>(i>=2&&i<=3&&j>=2&&j<=9)||(j>=5&&j<=6&&i>=2&&i<=9)?1:0,
+    'Diagonal':(i,j)=>Math.abs(i-j)<=1&&i>0&&i<11?1:0,
+    'Anillo gris':(i,j)=>{const r=Math.hypot(i-5.5,j-5.5);return Math.max(0,Math.round((1-Math.abs(r-3.6)/1.6)*10)/10);}
+  };
+  const KS={
+    'Identidad':{k:[0,0,0,0,1,0,0,0,0],d:'Solo copia el píxel central: el mapa repite la imagen, un poco recortada.'},
+    'Borde vertical':{k:[-1,0,1,-2,0,2,-1,0,1],d:'Resta la columna izquierda de la derecha. Positivo (azul) donde el trazo empieza al ir hacia la derecha; negativo donde termina. En las zonas parejas da 0.'},
+    'Borde horizontal':{k:[-1,-2,-1,0,0,0,1,2,1],d:'Lo mismo pero de arriba hacia abajo: se encienden los bordes superior e inferior de la figura.'},
+    'Desenfoque':{k:Array(9).fill(+(1/9).toFixed(3)),d:'Promedia la ventana: los bordes quedan difusos y los valores bajan de 1 a fracciones.'},
+    'Nitidez':{k:[0,-1,0,-1,5,-1,0,-1,0],d:'Refuerza el centro frente a sus cuatro vecinos: los contornos quedan más marcados que el interior.'}
+  };
+  let img=[],ker=KS['Borde vertical'].k.slice(),kname='Borde vertical',iname='Cuadrado',step=-1,relu=false;
+  const setImg=n=>{iname=n;img=[];for(let i=0;i<N;i++){img.push([]);for(let j=0;j<N;j++)img[i].push(IMGS[n](i,j));}};
+  setImg(iname);
+  const conv=(i,j)=>{let s=0;for(let m=0;m<K;m++)for(let n=0;n<K;n++)s+=img[i+m][j+n]*ker[m*K+n];return s;};
+  const act=(i,j)=>{const v=conv(i,j);return relu?Math.max(0,v):v;};
+  const amap=()=>{const r=[];for(let i=0;i<O;i++){r.push([]);for(let j=0;j<O;j++)r[i].push(Math.max(0,conv(i,j)));}return r;};
+  const vmax=()=>{let m=1e-9;for(let i=0;i<O;i++)for(let j=0;j<O;j++)m=Math.max(m,Math.abs(conv(i,j)));return m;};
+  const pos=k=>[Math.floor(k/O),k%O];
+  function cell(ctx,x,y,s,fill,txt,tc){ctx.fillStyle=fill;ctx.fillRect(x,y,s,s);ctx.strokeStyle=tok('--line');ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,s-1,s-1);
+    if(txt!=null){ctx.fillStyle=tc;ctx.font=`600 ${Math.max(9,Math.min(13,s*.38))}px ${tok('--f-mono')}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(txt,x+s/2,y+s/2+.5);}}
+  const heat=(v,M)=>{const c=rgb('--card'),t=Math.min(1,Math.abs(v)/M);return [css(lerp(c,rgb(v>=0?'--accent':'--warm'),t)),t];};
+  const short1=v=>{const r=Math.round(v*10)/10;return String(Object.is(r,-0)?0:r);};
+
+  const cin=$('#cv-in'),cout=$('#cv-out');
+  const drawIn=canvasWidget(cin,1,(ctx,w)=>{
+    ctx.clearRect(0,0,w,w);const s=w/N,c=rgb('--card'),ink=rgb('--ink');
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++)cell(ctx,j*s,i*s,s,css(lerp(c,ink,img[i][j])),null);
+    if(step>=0){const [pi,pj]=pos(Math.min(step,O*O-1));
+      if(step<O*O){for(let m=0;m<K;m++)for(let n=0;n<K;n++){const v=img[pi+m][pj+n];ctx.fillStyle=v>.5?tok('--card'):tok('--ink');ctx.font=`600 ${Math.max(9,s*.36)}px ${tok('--f-mono')}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(short1(v),(pj+n+.5)*s,(pi+m+.5)*s);}
+        ctx.strokeStyle=tok('--accent');ctx.lineWidth=3;ctx.strokeRect(pj*s+1.5,pi*s+1.5,K*s-3,K*s-3);}}
+  });
+  const drawOut=canvasWidget(cout,1,(ctx,w)=>{
+    ctx.clearRect(0,0,w,w);const s=w/O,M=vmax(),done=step>=O*O?O*O:step+1;
+    for(let k=0;k<O*O;k++){const [i,j]=pos(k);
+      if(k<done){const v=act(i,j),[f,t]=heat(v,M);cell(ctx,j*s,i*s,s,f,s>=22?short1(v):null,t>.55?tok('--card'):tok('--ink'));}
+      else cell(ctx,j*s,i*s,s,tok('--paper'),null);}
+    if(step>=0&&step<O*O){const [i,j]=pos(step);ctx.strokeStyle=tok('--accent');ctx.lineWidth=3;ctx.strokeRect(j*s+1.5,i*s+1.5,s-3,s-3);}
+  });
+
+  const kbox=$('#cv-k'),kin=[];
+  for(let q=0;q<9;q++){const e=document.createElement('input');e.type='number';e.step='0.1';e.setAttribute('aria-label','Peso del filtro, fila '+(Math.floor(q/3)+1)+', columna '+(q%3+1));
+    e.addEventListener('input',()=>{const v=parseFloat(e.value);ker[q]=isFinite(v)?v:0;kname='';mark();redraw();});kbox.appendChild(e);kin.push(e);}
+  const fillK=()=>ker.forEach((v,q)=>kin[q].value=short(v));
+  const mkBtns=(box,names,fn)=>names.forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.n=n;b.onclick=()=>fn(n);$(box).appendChild(b);});
+  mkBtns('#cv-imgs',Object.keys(IMGS),n=>{setImg(n);mark();redraw();});
+  mkBtns('#cv-ks',Object.keys(KS),n=>{kname=n;ker=KS[n].k.slice();fillK();mark();redraw();});
+  function mark(){$('#cv-imgs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.n===iname));
+    $('#cv-ks').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.n===kname));}
+
+  function text(){
+    const el=$('#cv-outtxt'),desc=kname?KS[kname].d:'Filtro personalizado: prueba a poner un patrón y mira dónde se enciende el mapa.';
+    if(step<0){el.innerHTML=`<span class="big">Pulsa «Siguiente posición» para empezar en la esquina.</span><span style="font-family:var(--f-body);font-size:.95rem">${desc}</span>`;return;}
+    if(step>=O*O){el.innerHTML=`<span class="big">Mapa completo: ${O*O} productos punto con los mismos 9 pesos.</span><span>${relu?'<span class="ok">ReLU aplicada: los negativos pasaron a 0.</span>':'Sin ReLU: el mapa tiene valores negativos (naranja).'}</span><span style="font-family:var(--f-body);font-size:.95rem">${desc}</span>`;return;}
+    const [i,j]=pos(step),rows=[];
+    for(let m=0;m<K;m++){const t=[];for(let n=0;n<K;n++){const kv=ker[m*K+n];t.push(`${short1(img[i+m][j+n])}·${kv<0?'('+short(kv)+')':short(kv)}`);}rows.push(t.join(' + '));}
+    const s=conv(i,j);
+    el.innerHTML=`<span class="big">Posición fila ${i+1}, columna ${j+1}: suma = ${fmt(s,2)}${relu?` → ReLU = ${fmt(Math.max(0,s),2)}`:''}</span><span class="cv-terms">${rows.join(' +<br>')}</span><span style="font-family:var(--f-body);font-size:.95rem">${desc}</span>`;
+  }
+  function redraw(){drawIn();drawOut();text();window.dispatchEvent(new Event('cv-change'));}
+  $('#cv-next').onclick=()=>{step=step>=O*O-1?0:step+1;redraw();};
+  $('#cv-all').onclick=()=>{step=O*O;redraw();};
+  $('#cv-reset').onclick=()=>{step=-1;redraw();};
+  $('#cv-relu').onclick=()=>{relu=!relu;$('#cv-relu').setAttribute('aria-pressed',relu);redraw();};
+  cin.addEventListener('click',e=>{const r=cin.getBoundingClientRect(),s=r.width/N,j=Math.floor((e.clientX-r.left)/s),i=Math.floor((e.clientY-r.top)/s);
+    if(i<0||j<0||i>=N||j>=N)return;img[i][j]=img[i][j]>=.5?0:1;iname='';mark();redraw();});
+  cin.style.cursor='crosshair';
+  window.CNN={amap,O};
+  fillK();mark();redraw();
+})();
+
+/* ---------- 14 Max pooling ---------- */
+(function(){
+  const rgb=n=>{const v=tok(n);if(v[0]==='#')return hexRgb(v);const m=v.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number);};
+  const css=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
+  const short1=v=>{const r=Math.round(v*10)/10;return String(Object.is(r,-0)?0:r);};
+  const P=5;let b=-1;
+  const map=()=>window.CNN.amap();
+  const pool=(A,bi,bj)=>Math.max(A[2*bi][2*bj],A[2*bi][2*bj+1],A[2*bi+1][2*bj],A[2*bi+1][2*bj+1]);
+  const mx=A=>Math.max(1e-9,...A.flat());
+  function cell(ctx,x,y,s,v,M,show){const t=Math.min(1,v/M);ctx.fillStyle=show?css(lerp(rgb('--card'),rgb('--accent'),t)):tok('--paper');ctx.fillRect(x,y,s,s);
+    ctx.strokeStyle=tok('--line');ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,s-1,s-1);
+    if(show&&s>=20){ctx.fillStyle=t>.55?tok('--card'):tok('--ink');ctx.font=`600 ${Math.max(9,Math.min(14,s*.36))}px ${tok('--f-mono')}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(short1(v),x+s/2,y+s/2+.5);}}
+  const dIn=canvasWidget($('#pl-in'),1,(ctx,w)=>{
+    ctx.clearRect(0,0,w,w);const A=map(),O=A.length,s=w/O,M=mx(A);
+    for(let i=0;i<O;i++)for(let j=0;j<O;j++)cell(ctx,j*s,i*s,s,A[i][j],M,true);
+    ctx.strokeStyle=tok('--ink');ctx.lineWidth=2;for(let q=0;q<=P;q++){ctx.beginPath();ctx.moveTo(q*2*s,0);ctx.lineTo(q*2*s,w);ctx.stroke();ctx.beginPath();ctx.moveTo(0,q*2*s);ctx.lineTo(w,q*2*s);ctx.stroke();}
+    if(b>=0&&b<P*P){const bi=Math.floor(b/P),bj=b%P,m=pool(A,bi,bj);
+      for(let u=0;u<2;u++)for(let v=0;v<2;v++)if(A[2*bi+u][2*bj+v]===m){ctx.strokeStyle=tok('--warm');ctx.lineWidth=3;ctx.strokeRect((2*bj+v)*s+2,(2*bi+u)*s+2,s-4,s-4);u=v=2;}
+      ctx.strokeStyle=tok('--accent');ctx.lineWidth=4;ctx.strokeRect(2*bj*s+2,2*bi*s+2,2*s-4,2*s-4);}
+  });
+  const dOut=canvasWidget($('#pl-out'),1,(ctx,w)=>{
+    ctx.clearRect(0,0,w,w);const A=map(),s=w/P,M=mx(A),done=b>=P*P?P*P:b+1;
+    for(let k=0;k<P*P;k++){const i=Math.floor(k/P),j=k%P;cell(ctx,j*s,i*s,s,pool(A,i,j),M,k<done);}
+    if(b>=0&&b<P*P){ctx.strokeStyle=tok('--accent');ctx.lineWidth=4;ctx.strokeRect((b%P)*s+2,Math.floor(b/P)*s+2,s-4,s-4);}
+  });
+  function out(){
+    const A=map(),el=$('#pl-txt');
+    if(b<0)el.innerHTML='<span class="big">Pulsa «Siguiente bloque».</span><span>Cada bloque de 2 × 2 del mapa se resume en un solo número: su máximo.</span>';
+    else if(b>=P*P)el.innerHTML=`<span class="big">De 100 casillas a 25.</span><span>Se conserva dónde hubo una activación fuerte, pero con una cuarta parte de los números. Cuantas más capas de pooling, más «resumida» queda la imagen.</span>`;
+    else{const bi=Math.floor(b/P),bj=b%P,v=[A[2*bi][2*bj],A[2*bi][2*bj+1],A[2*bi+1][2*bj],A[2*bi+1][2*bj+1]];
+      el.innerHTML=`<span class="big">Bloque ${b+1} de 25: máx(${v.map(short1).join(', ')}) = ${short1(Math.max(...v))}</span><span>El recuadro naranja marca el valor que sobrevive.</span>`;}
+    dIn();dOut();
+  }
+  $('#pl-next').onclick=()=>{b=b>=P*P-1?0:b+1;out();};
+  $('#pl-all').onclick=()=>{b=P*P;out();};
+  $('#pl-reset').onclick=()=>{b=-1;out();};
+  window.addEventListener('cv-change',out);
+  out();
+})();
+
+/* ---------- 14 Tamaño de salida ---------- */
+(function(){
+  const ids=['n','c','k','p','s','f'],G=k=>+$('#ts-'+k).value,L=x=>Math.round(x).toLocaleString('es');
+  function out(){
+    ids.forEach(k=>$('#ts-'+k+'-o').textContent=G(k));
+    const n=G('n'),c=G('c'),k=G('k'),p=G('p'),s=G('s'),f=G('f'),raw=(n+2*p-k)/s+1,o=Math.floor(raw);
+    const el=$('#ts-out');
+    if(o<1){el.innerHTML='<span class="big warn">El filtro es más grande que la imagen con relleno: no cabe.</span>';return;}
+    const conv=f*(k*k*c+1),dense=(n*n*c+1)*o*o*f;
+    el.innerHTML=`<span class="big">(${n} + 2·${p} − ${k}) / ${s} + 1 = ${Number.isInteger(raw)?raw:fmt(raw,2)+' → '+o} · salida ${o} × ${o} × ${f}</span>`+
+      (Number.isInteger(raw)?'':`<span class="warn">El filtro no encaja justo: la última columna y la última fila sobrantes se ignoran.</span>`)+
+      `<span>Pesos de la capa convolucional: ${f} filtros × (${k}·${k}·${c} + 1) = <b>${L(conv)}</b></span>`+
+      `<span>Una capa densa con la misma salida (${L(o*o*f)} neuronas, cada una conectada a los ${L(n*n*c)} píxeles): <b>${L(dense)}</b> pesos, unas <b>${L(dense/conv)}</b> veces más.</span>`;
+  }
+  ids.forEach(k=>$('#ts-'+k).addEventListener('input',out));
+  out();
+})();
+})();
+</script>
+</body>
+</html>

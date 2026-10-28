@@ -81,6 +81,11 @@ const PAGES=[
   ['gradiente','09-gradiente.html','09','Descenso del gradiente'],
   ['probabilidad','10-probabilidad.html','10','Probabilidad'],
   ['neurona','11-neurona.html','11','La neurona y la red'],
+  ['regresion','12-regresion.html','12','Regresión y error'],
+  ['modelos','13-modelos.html','13','Modelos clásicos de ML'],
+  ['cnn','14-cnn.html','14','Redes convolucionales'],
+  ['llm','15-llm.html','15','Cómo funciona un LLM'],
+  ['agentes','16-agentes.html','16','Agentes'],
   ['recursos','recursos.html','','Canales y plan']
 ];
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};

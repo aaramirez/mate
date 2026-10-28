@@ -17,7 +17,7 @@
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 03 DE 11</span><h1>Funciones: la máquina de entrada y salida</h1></header>
+<header class="page-head"><span class="num">MÓDULO 03 DE 16</span><h1>Funciones: la máquina de entrada y salida</h1></header>
 <section>
   
   <div class="prose">
@@ -40,7 +40,50 @@
     <div class="fact"><h3>La regla de oro del log</h3><span class="ex">ln(a·b) = ln a + ln b</span><p>Convierte multiplicaciones en sumas. Multiplicar mil probabilidades pequeñas da un número que la computadora redondea a cero; sumar sus logaritmos no.</p></div>
   </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Regresión lineal (recta), funciones de pérdida (parábola), activaciones de la red (sigmoide, ReLU, tanh), softmax (exponencial) y entropía cruzada (logaritmo).</p></div>
-  <div class="quiz"><h3>Pruébate</h3>
+  </section>
+
+<section>
+  <h2>¿Se puede deshacer? Inyectiva, sobreyectiva y biyectiva</h2>
+  <div class="prose">
+    <p>A veces necesitamos recorrer la máquina al revés: saber qué entrada produjo una salida. Eso solo es posible si la función no «mezcla» entradas distintas en la misma salida y si alcanza todas las salidas posibles. Hay dos pruebas visuales que se hacen con una regla.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Recta vertical: ¿es función?</h3><span class="ex">x fija → una sola y</span><p>Si una recta vertical corta la gráfica en dos puntos, una entrada tendría dos salidas y eso no es una función. Una circunferencia, por ejemplo, no lo es.</p></div>
+    <div class="fact"><h3>Inyectiva (uno a uno)</h3><span class="ex">f(a) = f(b) ⇒ a = b</span><p>Entradas distintas dan salidas distintas. <b>Prueba de la recta horizontal:</b> ninguna recta horizontal corta la gráfica en más de un punto.</p></div>
+    <div class="fact"><h3>Sobreyectiva</h3><span class="ex">para toda y hay alguna x</span><p>La función alcanza todas las salidas del conjunto de llegada. Con la regla: <b>toda</b> recta horizontal corta la gráfica al menos una vez.</p></div>
+    <div class="fact"><h3>Biyectiva</h3><span class="ex">inyectiva + sobreyectiva</span><p>Cada recta horizontal corta la gráfica <b>exactamente una vez</b>. Solo entonces existe la función inversa f⁻¹, que deshace lo que hizo f.</p></div>
+  </div>
+  <div class="prose">
+    <p>La clave: <span class="hl">si una recta horizontal corta la curva en dos lugares distintos, la función no es inyectiva y por lo tanto no es biyectiva.</span> Esos dos cortes son dos entradas, <var>x</var>₁ ≠ <var>x</var>₂, con la misma salida. Al ver solo la salida no hay forma de saber de cuál de las dos vino.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>La prueba de la recta horizontal</h3></div>
+    <div class="btns" id="bi-btns" role="group" aria-label="Elegir función"></div>
+    <canvas id="bi-cv" role="img" aria-label="Gráfica de la función con una recta horizontal que la corta"></canvas>
+    <div class="ctls">
+      <label class="ctl"><span>Altura de la recta: y = c</span><output id="bi-c-o"></output><input type="range" id="bi-c" min="-4" max="8" step="0.1" value="4"></label>
+      <div class="btns"><button id="bi-scan">Barrer de abajo hacia arriba</button><button id="bi-dom" aria-pressed="false" hidden>Restringir el dominio</button></div>
+    </div>
+    <div class="readout" id="bi-out"></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Función (de ℝ en ℝ)</th><th>Inyectiva</th><th>Sobreyectiva</th><th>Biyectiva</th><th>Inversa</th></tr></thead>
+    <tbody>
+      <tr><td>2x + 1</td><td>Sí</td><td>Sí</td><td>Sí</td><td>(y − 1) / 2</td></tr>
+      <tr><td>x³</td><td>Sí</td><td>Sí</td><td>Sí</td><td>∛y</td></tr>
+      <tr><td>x²</td><td>No: f(−2) = f(2)</td><td>No: nunca es negativa</td><td>No</td><td>√y, solo si x ≥ 0</td></tr>
+      <tr><td>x³ − 3x</td><td>No: sube, baja y sube</td><td>Sí</td><td>No</td><td>—</td></tr>
+      <tr><td>eˣ</td><td>Sí</td><td>No: siempre &gt; 0</td><td>Sobre (0, ∞)</td><td>ln y</td></tr>
+      <tr><td>σ(x), sigmoide</td><td>Sí</td><td>No: queda entre 0 y 1</td><td>Sobre (0, 1)</td><td>logit: ln(y / (1 − y))</td></tr>
+      <tr><td>ReLU</td><td>No: todo negativo da 0</td><td>No: nunca es negativa</td><td>No</td><td>—</td></tr>
+      <tr><td>sen x</td><td>No: se repite cada 2π</td><td>No: queda entre −1 y 1</td><td>No</td><td>arcsen, solo en [−π/2, π/2]</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <p>Fíjate en dos trucos. Si una función no es inyectiva, se puede <b>recortar el dominio</b> hasta quedarse con un tramo donde sí lo es: x² con x ≥ 0 tiene inversa √y. Y si no es sobreyectiva, se puede <b>achicar el conjunto de llegada</b> a las salidas que de verdad alcanza: la sigmoide es biyectiva de ℝ en (0, 1), y por eso el logit la deshace.</p>
+  </div>
+  <div class="ml"><b>Por qué importa en ML</b><p>Del logit (lo que calcula la red) se pasa a la probabilidad con la sigmoide, y de vuelta con su inversa. Estandarizar datos con z = (x − μ) / σ es biyectivo, así que siempre se puede volver a las unidades originales. ReLU no es inyectiva: todas las entradas negativas terminan en 0, y esa información se pierde. Los modelos generativos de tipo <i>normalizing flow</i> están hechos a propósito solo con funciones biyectivas, para poder ir y volver entre los datos y el ruido.</p></div>
+<div class="quiz"><h3>Pruébate</h3><details><summary>Una recta horizontal corta la gráfica de f en x = −1 y en x = 3. ¿Puede f ser biyectiva?</summary><p>No. f(−1) = f(3): dos entradas distintas con la misma salida, así que f no es inyectiva y por lo tanto no es biyectiva. No tiene inversa en todo su dominio.</p></details>
     <details><summary>¿Cuánto vale la sigmoide en x = 0?</summary><p>σ(0) = 1 / (1 + e⁰) = 1 / 2 = 0.5</p></details>
     <details><summary>¿Cuánto vale ReLU(−2)? ¿Y ReLU(3)?</summary><p>ReLU(−2) = 0 · ReLU(3) = 3</p></details>
   </div>
@@ -86,6 +129,92 @@ const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hex
     const F=frame(ctx,w,h,o.v);curve(ctx,F,x=>o.f(x,a,b),tok('--accent'),3);
   });
   p1.addEventListener('input',draw);p2.addEventListener('input',draw);set('lineal');
+})();
+
+/* ---------- 03 Prueba de la recta horizontal ---------- */
+(function(){
+  const cbrt=Math.cbrt,PI=Math.PI;
+  const cub=c=>{ // raíces de x³ − 3x = c
+    if(Math.abs(c)<=2){const t=Math.acos(c/2);const r=[0,1,2].map(k=>2*Math.cos((t+2*PI*k)/3)).sort((a,b)=>a-b);return r.filter((x,i)=>i===0||x-r[i-1]>1e-9);}
+    const s=Math.sqrt(c*c/4-1);return [cbrt(c/2+s)+cbrt(c/2-s)];
+  };
+  const sin=c=>{if(Math.abs(c)>1)return [];const a=Math.asin(c),r=[];for(let k=-3;k<=3;k++)r.push(a+2*PI*k,PI-a+2*PI*k);return [...new Set(r.map(x=>+x.toFixed(9)))].sort((a,b)=>a-b);};
+  const FN=[
+    {name:'2x + 1',f:x=>2*x+1,roots:c=>[(c-1)/2],v:{x0:-4,x1:4,y0:-4,y1:8},
+     why:'Es una recta inclinada: cualquier altura c se alcanza una sola vez. Es biyectiva y su inversa es x = (y − 1) / 2.'},
+    {name:'x²',f:x=>x*x,roots:c=>c<0?[]:c===0?[0]:[-Math.sqrt(c),Math.sqrt(c)],v:{x0:-4,x1:4,y0:-4,y1:8},
+     dom:[0,Infinity],droots:c=>c<0?[]:[Math.sqrt(c)],
+     why:'La parábola es simétrica: x y −x dan la misma salida. Tampoco alcanza las alturas negativas.',
+     dwhy:'Con x ≥ 0 nos quedamos con la rama derecha: ahora cada altura c ≥ 0 se alcanza una sola vez y la inversa es √y. Las alturas negativas siguen sin alcanzarse, así que es biyectiva de [0, ∞) en [0, ∞).'},
+    {name:'x³',f:x=>x*x*x,roots:c=>[cbrt(c)],v:{x0:-4,x1:4,y0:-4,y1:8},
+     why:'Siempre sube, aunque se aplana en 0. Cada altura se alcanza exactamente una vez: es biyectiva y su inversa es ∛y.'},
+    {name:'x³ − 3x',f:x=>x*x*x-3*x,roots:cub,v:{x0:-4,x1:4,y0:-4,y1:8},
+     why:'Sube, baja y vuelve a subir. Entre las alturas −2 y 2 la recta corta tres veces. Alcanza todas las alturas, pero no es inyectiva.'},
+    {name:'eˣ',f:Math.exp,roots:c=>c>0?[Math.log(c)]:[],v:{x0:-4,x1:4,y0:-4,y1:8},
+     why:'Siempre sube, así que es inyectiva. Pero nunca toca las alturas ≤ 0. Es biyectiva de ℝ en (0, ∞), y su inversa es ln y.'},
+    {name:'Sigmoide',f:x=>1/(1+Math.exp(-x)),roots:c=>c>0&&c<1?[Math.log(c/(1-c))]:[],v:{x0:-6,x1:6,y0:-.5,y1:1.5,sy:.25},cr:[-.5,1.5,.02,.5],
+     why:'Es inyectiva, pero solo alcanza alturas entre 0 y 1. Es biyectiva de ℝ en (0, 1); su inversa es el logit ln(y / (1 − y)).'},
+    {name:'ReLU',f:x=>Math.max(0,x),roots:c=>c>0?[c]:c===0?'inf':[],v:{x0:-4,x1:4,y0:-4,y1:8},
+     why:'Todas las entradas negativas se aplastan en 0. Con c = 0 la recta toca toda la mitad izquierda: infinitas entradas con la misma salida.'},
+    {name:'sen x',f:Math.sin,roots:sin,v:{x0:-7,x1:7,y0:-2,y1:2,sx:PI/2,sy:.5},cr:[-2,2,.05,.5],
+     dom:[-PI/2,PI/2],droots:c=>Math.abs(c)<=1?[Math.asin(c)]:[],
+     why:'Es periódica: se repite cada 2π, así que cada altura entre −1 y 1 se alcanza infinitas veces.',
+     dwhy:'En [−π/2, π/2] el seno solo sube: cada altura entre −1 y 1 se alcanza una sola vez. Así se define su inversa, arcsen.'}
+  ];
+  let cur=1,rest=false,anim=0;
+  const C=$('#bi-c'),btns=$('#bi-btns'),dom=$('#bi-dom'),scan=$('#bi-scan');
+  FN.forEach((o,i)=>{const b=document.createElement('button');b.textContent=o.name;b.onclick=()=>set(i);btns.appendChild(b);});
+  const cnt=r=>r==='inf'?Infinity:r.length;
+  function hits(o,c){
+    const r=rest?o.droots(c):o.roots(c);
+    if(r==='inf'||o.name!=='sen x'||rest)return r;
+    return r.filter(x=>x>=o.v.x0&&x<=o.v.x1); // en pantalla; el total es infinito
+  }
+  const draw=canvasWidget($('#bi-cv'),w=>w<520?.8:.55,(ctx,w,h)=>{
+    const o=FN[cur],c=+C.value,F=frame(ctx,w,h,o.v),r=hits(o,c),n=cnt(r);
+    if(rest){
+      ctx.globalAlpha=.3;curve(ctx,F,o.f,tok('--muted'),2);ctx.globalAlpha=1;
+      seg(ctx,F,o.f,Math.max(o.dom[0],F.x0),Math.min(o.dom[1],F.x1),tok('--accent'),3,600);
+    }else curve(ctx,F,o.f,tok('--accent'),3);
+    const col=n>=2?tok('--warm'):n===1?tok('--good'):tok('--muted');
+    F.clip();
+    ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash(n===0?[6,5]:[]);ctx.beginPath();ctx.moveTo(F.X(F.x0),F.Y(c));ctx.lineTo(F.X(F.x1),F.Y(c));ctx.stroke();ctx.setLineDash([]);
+    if(r==='inf'){ctx.strokeStyle=col;ctx.lineWidth=6;ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(F.X(F.x0),F.Y(0));ctx.lineTo(F.X(0),F.Y(0));ctx.stroke();ctx.globalAlpha=1;}
+    else r.forEach(x=>{
+      ctx.strokeStyle=col;ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(F.X(x),F.Y(c));ctx.lineTo(F.X(x),F.Y(0));ctx.stroke();ctx.setLineDash([]);
+      dot(ctx,F.X(x),F.Y(c),col,7);
+    });
+    ctx.restore();
+    label(ctx,n===Infinity?'infinitos cortes':n+(n===1?' corte':' cortes'),w-110,18,col);
+  });
+  function out(){
+    const o=FN[cur],c=+C.value,r=hits(o,c),n=cnt(r),inf=n===Infinity||(o.name==='sen x'&&!rest&&n>0);
+    $('#bi-c-o').textContent=short(c);
+    const xs=r==='inf'?'todas las x ≤ 0':r.map(x=>'x = '+fmt(x,2)).join(' · ');
+    let v;
+    if(n===0)v=`<span class="warn">La recta y = ${short(c)} no corta la gráfica:</span> ninguna entrada da esa salida. ${rest?'Con este dominio, la':'La'} función no es sobreyectiva sobre ℝ.`;
+    else if(n===1)v=`<span class="ok">Un solo corte, en ${xs}.</span> Solo una entrada produce la salida ${short(c)}: a esta altura, la inversa sabe exactamente a dónde volver.`;
+    else{const a=r==='inf'?-1:r[0],b=r==='inf'?-2:r[1];
+      v=`<span class="warn">${inf?'Infinitos cortes':n+' cortes'}: ${xs}${o.name==='sen x'&&!rest?' (y más fuera de la pantalla)':''}.</span> ${r==='inf'?'Por ejemplo f(−1) = f(−2) = 0':`f(${fmt(a,2)}) = f(${fmt(b,2)}) = ${short(c)}`}: entradas distintas con la misma salida. <b>No es inyectiva, así que no es biyectiva.</b>`;}
+    $('#bi-out').innerHTML=`<span class="big">y = ${short(c)} → ${n===Infinity||inf?'∞':n} ${n===1?'corte':'cortes'}</span><span>${v}</span><span style="font-family:var(--f-body);font-size:.95rem">${rest?o.dwhy:o.why}</span>`;
+    draw();
+  }
+  function set(i){
+    cancelAnimationFrame(anim);cur=i;rest=false;const o=FN[i],cr=o.cr||[-4,8,.1,4];
+    C.min=cr[0];C.max=cr[1];C.step=cr[2];C.value=cr[3];
+    dom.hidden=!o.dom;dom.setAttribute('aria-pressed','false');
+    dom.textContent=o.dom?(o.name==='x²'?'Restringir a x ≥ 0':'Restringir a [−π/2, π/2]'):'';
+    btns.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));
+    out();
+  }
+  dom.onclick=()=>{rest=!rest;dom.setAttribute('aria-pressed',rest);out();};
+  scan.onclick=()=>{
+    cancelAnimationFrame(anim);const lo=+C.min,hi=+C.max,t0=performance.now(),T=4000;
+    const step=t=>{const k=Math.min(1,(t-t0)/T);C.value=lo+(hi-lo)*k;out();if(k<1)anim=requestAnimationFrame(step);};
+    anim=requestAnimationFrame(step);
+  };
+  C.addEventListener('input',()=>{cancelAnimationFrame(anim);out();});
+  set(1);
 })();
 })();
 </script>
