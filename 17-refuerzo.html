@@ -44,7 +44,7 @@
 <section>
   <h2>La idea clave: corregir con la sorpresa</h2>
   <div class="prose">
-    <p>Todo el RL descansa en una regla de actualización que ya conoces del <a href="09-gradiente.html">descenso del gradiente</a>: tomar la estimación actual y moverla un poco hacia un objetivo mejor.</p>
+    <p>Todo el RL descansa en una regla de actualización que ya conoces del <a href="10-gradiente.html">descenso del gradiente</a>: tomar la estimación actual y moverla un poco hacia un objetivo mejor.</p>
   </div>
   <div class="eq">estimación ← estimación + α · (objetivo − estimación)</div>
   <div class="prose">
@@ -84,7 +84,7 @@
 <section>
   <h2>Gradiente de política: ajustar las probabilidades directamente</h2>
   <div class="prose">
-    <p>Otra familia de métodos no aprende valores: aprende la política misma. La política es una función con parámetros θ que da probabilidades de cada acción, normalmente con un <a href="11-neurona.html">softmax</a>. La idea de <b>REINFORCE</b> se dice en una línea: <span class="hl">si una acción salió mejor que el promedio, súbele la probabilidad; si salió peor, bájasela</span>.</p>
+    <p>Otra familia de métodos no aprende valores: aprende la política misma. La política es una función con parámetros θ que da probabilidades de cada acción, normalmente con un <a href="13-neurona.html">softmax</a>. La idea de <b>REINFORCE</b> se dice en una línea: <span class="hl">si una acción salió mejor que el promedio, súbele la probabilidad; si salió peor, bájasela</span>.</p>
   </div>
   <div class="eq">θ ← θ + α · (G − b) · ∇<sub>θ</sub> ln π<sub>θ</sub>(a | s)</div>
   <div class="prose">
@@ -109,7 +109,7 @@
     <p>En el acantilado hay 28 estados y cabe una tabla. En el ajedrez hay más posiciones que átomos en el universo, y en un videojuego el estado es una imagen. La solución es reemplazar la tabla por una <b>red neuronal</b>: Q<sub>θ</sub>(s, a) o π<sub>θ</sub>(a | s). Eso es el <b>deep reinforcement learning</b>.</p>
   </div>
   <div class="cards">
-    <div class="fact"><h3>DQN</h3><span class="ex">pérdida = (r + γ máx Q′ − Q<sub>θ</sub>)²</span><p>La regla de Q-learning convertida en un <a href="12-regresion.html">error cuadrático</a> que se baja con descenso del gradiente. Aprendió a jugar Atari a partir de los píxeles.</p></div>
+    <div class="fact"><h3>DQN</h3><span class="ex">pérdida = (r + γ máx Q′ − Q<sub>θ</sub>)²</span><p>La regla de Q-learning convertida en un <a href="11-regresion.html">error cuadrático</a> que se baja con descenso del gradiente. Aprendió a jugar Atari a partir de los píxeles.</p></div>
     <div class="fact"><h3>PPO</h3><span class="ex">gradiente de política con freno</span><p>Como REINFORCE, pero recorta cada actualización para que la política no cambie demasiado de golpe. Es el método más usado en la práctica.</p></div>
     <div class="fact"><h3>AlphaGo / AlphaZero</h3><span class="ex">red + búsqueda + autojuego</span><p>Una red que propone jugadas y evalúa posiciones, entrenada jugando millones de partidas contra sí misma.</p></div>
   </div>

@@ -32,7 +32,7 @@
   <h2>Una imagen es una matriz de números</h2>
   <div class="prose">
     <p>Para una computadora, una foto en blanco y negro es una <b>tabla de números</b>: una casilla por píxel, con 0 para el vacío y 1 para el trazo (o de 0 a 255). Una foto a color son <b>tres</b> tablas apiladas, una por canal: rojo, verde y azul. Es decir, una imagen es una <a href="05-matrices.html">matriz</a>, o varias.</p>
-    <p>Podríamos «aplanar» esa tabla en un vector largo y dárselo a la red del <a href="11-neurona.html">módulo 11</a>. Funciona para imágenes diminutas, pero tiene dos problemas: <span class="hl">al aplanar se pierde quién es vecino de quién, y el número de pesos se dispara</span>.</p>
+    <p>Podríamos «aplanar» esa tabla en un vector largo y dárselo a la red del <a href="13-neurona.html">módulo 13</a>. Funciona para imágenes diminutas, pero tiene dos problemas: <span class="hl">al aplanar se pierde quién es vecino de quién, y el número de pesos se dispara</span>.</p>
   </div>
   <div class="cards">
     <div class="fact"><h3>Dígito escrito a mano</h3><span class="ex">28 × 28 = 784 números</span><p>El clásico conjunto MNIST. Ya son 784 entradas para cada neurona de la primera capa.</p></div>
@@ -76,7 +76,7 @@
     <div class="fact"><h3>Nitidez</h3><span class="ex">5 al centro, −1 en la cruz</span><p>Refuerza el píxel central frente a sus vecinos: resalta los contornos.</p></div>
   </div>
   <div class="prose">
-    <p>Aquí está el truco que convierte esto en aprendizaje automático: <span class="hl">en una red convolucional nadie escribe los números del filtro; la red los aprende</span> con el <a href="09-gradiente.html">descenso del gradiente</a>, igual que los pesos de cualquier neurona. Empiezan al azar y terminan siendo detectores de bordes, de texturas o de ojos, según lo que ayude a reducir el error.</p>
+    <p>Aquí está el truco que convierte esto en aprendizaje automático: <span class="hl">en una red convolucional nadie escribe los números del filtro; la red los aprende</span> con el <a href="10-gradiente.html">descenso del gradiente</a>, igual que los pesos de cualquier neurona. Empiezan al azar y terminan siendo detectores de bordes, de texturas o de ojos, según lo que ayude a reducir el error.</p>
   </div>
 </section>
 
@@ -135,7 +135,7 @@
     <li><span><b>ReLU:</b> apagar los negativos.</span></li>
     <li><span><b>Pooling:</b> reducir el tamaño. Se repiten los pasos 1 a 3 varias veces.</span></li>
     <li><span><b>Aplanar:</b> convertir los mapas finales en un vector.</span></li>
-    <li><span><b>Capa densa + softmax:</b> la neurona del <a href="11-neurona.html">módulo 11</a> convierte ese vector en probabilidades: «92 % gato, 6 % perro, 2 % zorro».</span></li>
+    <li><span><b>Capa densa + softmax:</b> la neurona del <a href="13-neurona.html">módulo 13</a> convierte ese vector en probabilidades: «92 % gato, 6 % perro, 2 % zorro».</span></li>
   </ol>
   <div class="tbl"><table>
     <thead><tr><th>Pieza</th><th>Matemática</th><th>Qué hace</th></tr></thead>

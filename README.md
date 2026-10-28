@@ -16,15 +16,17 @@ Repaso visual e interactivo de las matemáticas que hay detrás de Machine Learn
 | 06 | Límites y continuidad | Límites laterales, definición ε-δ, tipos de discontinuidad |
 | 07 | Derivadas | La derivada como límite, regla de la cadena, derivadas parciales |
 | 08 | Integrales | Integrabilidad, sumas de Riemann, el límite que define la integral, teorema fundamental |
-| 09 | Descenso del gradiente | Entrenar un peso paso a paso |
-| 10 | Probabilidad | Función de masa, función de densidad, función de distribución, la normal y Bayes |
-| 11 | La neurona y la red | Neurona, softmax, entropía cruzada y ciclo de entrenamiento |
-| 12 | Regresión y error | Residuos, MAE, MSE, RMSE, R², descenso por la superficie de error, sobreajuste |
-| 13 | Modelos clásicos de ML | Regresión logística, k vecinos, árboles (Gini), k-means, Naive Bayes, SVM y ensambles |
+| 09 | Probabilidad | Función de masa, densidad, distribución, la normal, probabilidad condicional como cambio de punto de vista y Bayes |
+| 10 | Descenso del gradiente | Entrenar un peso paso a paso |
+| 11 | Regresión y error | Residuos, MAE, MSE, RMSE, R², descenso por la superficie de error, sobreajuste |
+| 12 | Modelos clásicos de ML | Regresión logística, k vecinos, árboles (Gini), k-means, Naive Bayes, SVM y ensambles |
+| 13 | La neurona y la red | Neurona, softmax, entropía cruzada y ciclo de entrenamiento |
 | 14 | Redes convolucionales | Convolución paso a paso, filtros, stride, padding, max pooling y parámetros compartidos |
 | 15 | Cómo funciona un LLM | Tokens, embeddings, softmax con temperatura, bigramas, atención Q·K·V, entropía cruzada |
 | 16 | Agentes | Proceso de decisión de Markov, política, retorno, Bellman, ε-greedy y el bucle de un agente con LLM |
 | 17 | Aprendizaje por refuerzo | Q-learning y error de diferencia temporal, gradiente de política (REINFORCE), DQN, PPO y RLHF |
+
+El orden sigue las dependencias: bases y álgebra lineal (01–05), cálculo y probabilidad (06–09), aprender de los datos (10–12), redes neuronales (13–15) y agentes (16–17).
 
 Cada módulo tiene laboratorios interactivos, un recuadro de «Dónde aparece en ML», preguntas de autoevaluación y videos de apoyo. Entre ellos hay capítulos concretos de [3Blue1Brown](https://www.youtube.com/@3blue1brown). La página `recursos.html` reúne los canales recomendados y un plan de 6 semanas.
 
