@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vectores · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="vectores">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 04 DE 11</span><h1>Vectores: flechas y fichas de datos</h1></header>
+<section>
+  
+  <div class="prose">
+    <p>Un vector es una lista ordenada de números. Se puede ver de dos formas: como una <b>flecha</b> en el espacio o como una <b>ficha de datos</b>. Una casa con 120 m², 3 habitaciones y 2 baños es el vector <span class="mono">[120, 3, 2]</span>, una flecha en un espacio de 3 dimensiones.</p>
+    <p>La operación estrella es el <span class="hl">producto punto</span>: multiplicas posición por posición y sumas. Mide cuánto apuntan dos vectores hacia el mismo lado.</p>
+  </div>
+  <div class="eq"><b>a</b> · <b>b</b> = <var>a</var>₁<var>b</var>₁ + <var>a</var>₂<var>b</var>₂ = ‖<b>a</b>‖ ‖<b>b</b>‖ cos θ<small>‖<b>a</b>‖ = √(<var>a</var>₁² + <var>a</var>₂²)</small></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Arrastra las puntas de las flechas</h3></div>
+    <canvas id="vec-cv" style="touch-action:none;cursor:grab" role="img" aria-label="Dos vectores en el plano que se pueden arrastrar"></canvas>
+    <div class="readout" id="vec-out"></div>
+    <p class="hint">Pon las flechas en ángulo recto: el producto punto da 0. Ponlas en sentidos opuestos: da negativo.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Suma</h3><span class="ex">[1, 2] + [3, 1] = [4, 3]</span><p>Posición por posición. Gráficamente, una flecha a continuación de la otra.</p></div>
+    <div class="fact"><h3>Por un número</h3><span class="ex">2 · [1, 2] = [2, 4]</span><p>Estira o encoge la flecha sin cambiar su dirección.</p></div>
+    <div class="fact"><h3>Similitud coseno</h3><span class="ex">cos θ = a·b / (‖a‖‖b‖)</span><p>1 = misma dirección, 0 = sin relación, −1 = opuestos.</p></div>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Cada ejemplo de un dataset es un vector. Los <i>embeddings</i> convierten palabras, imágenes o productos en vectores; los buscadores, recomendadores y sistemas RAG comparan esos vectores con similitud coseno. Y una neurona calcula exactamente un producto punto: <b>w</b> · <b>x</b>.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Cuánto vale [1, 2, 3] · [4, 0, −1]?</summary><p>1·4 + 2·0 + 3·(−1) = 4 + 0 − 3 = 1</p></details>
+    <details><summary>¿Qué largo tiene el vector [3, 4]?</summary><p>√(9 + 16) = √25 = 5</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=fNk_zzaMoSs" target="_blank" rel="noopener">Vectors (Essence of linear algebra, cap. 1)</a><span>Un vector como flecha y como lista de números, las dos miradas del módulo.</span></li><li><a href="https://www.youtube.com/watch?v=k7RM-ot2NWY" target="_blank" rel="noopener">Linear combinations, span, and basis vectors (cap. 2)</a><span>Qué significa que î y ĵ «generen» el plano.</span></li><li><a href="https://www.youtube.com/watch?v=LyGKycYT2v0" target="_blank" rel="noopener">Dot products and duality (cap. 9)</a><span>Por qué el producto punto mide proyecciones.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=vectores" target="_blank" rel="noopener">julioprofe · vectores</a>
+    <a class="vid" href="https://www.youtube.com/@SerranoAcademy/search?query=embeddings" target="_blank" rel="noopener">Serrano.Academy · embeddings <small>EN</small></a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const c=$('#vec-cv');let A={x:3,y:1},B={x:1,y:2.5},F=null,drag=null;
+  const draw=canvasWidget(c,w=>w<520?0.9:0.6,(ctx,w,h)=>{
+    F=frame(ctx,w,h,{x0:-5,x1:5,equal:true});
+    const ox=F.X(0),oy=F.Y(0);
+    const a1=Math.atan2(A.y,A.x),a2=Math.atan2(B.y,B.x);let d=a2-a1;while(d>Math.PI)d-=2*Math.PI;while(d<=-Math.PI)d+=2*Math.PI;
+    if(Math.hypot(A.x,A.y)>0&&Math.hypot(B.x,B.y)>0){ctx.beginPath();ctx.strokeStyle=tok('--muted');ctx.lineWidth=1.5;ctx.arc(ox,oy,30,-a1,-a1-d,d>0);ctx.stroke();}
+    arrow(ctx,ox,oy,F.X(A.x),F.Y(A.y),tok('--accent'),3.5);
+    arrow(ctx,ox,oy,F.X(B.x),F.Y(B.y),tok('--warm'),3.5);
+    [[A,'a',tok('--accent')],[B,'b',tok('--warm')]].forEach(([v,n,col])=>{const px=F.X(v.x),py=F.Y(v.y);ctx.beginPath();ctx.arc(px,py,9,0,Math.PI*2);ctx.strokeStyle=col;ctx.lineWidth=2;ctx.stroke();label(ctx,n+' ['+short(v.x)+', '+short(v.y)+']',px+12,py-12,col);});
+    const dp=A.x*B.x+A.y*B.y,na=Math.hypot(A.x,A.y),nb=Math.hypot(B.x,B.y);
+    let cs=na&&nb?dp/(na*nb):NaN,ang=isNaN(cs)?NaN:Math.acos(Math.max(-1,Math.min(1,cs)))*180/Math.PI;
+    let read=isNaN(cs)?'':cs>.9?'<span class="ok">muy parecidos</span>':cs>.3?'parecidos':cs>-.3?'casi sin relación (perpendiculares)':cs>-.9?'apuntan a lados distintos':'<span class="warn">opuestos</span>';
+    $('#vec-out').innerHTML=`<span class="big">a · b = ${short(A.x)}·${short(B.x)} + ${short(A.y)}·${short(B.y)} = ${short(dp)}</span>`+
+      `<span>‖a‖ = ${fmt(na)} · ‖b‖ = ${fmt(nb)} · ángulo θ = ${isNaN(ang)?'—':fmt(ang,1)+'°'}</span>`+
+      `<span>similitud coseno = ${isNaN(cs)?'—':fmt(cs,3)} → ${read}</span>`;
+  });
+  const pos=e=>{const r=c.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];};
+  c.addEventListener('pointerdown',e=>{if(!F)return;const [x,y]=pos(e);const da=Math.hypot(x-F.X(A.x),y-F.Y(A.y)),db=Math.hypot(x-F.X(B.x),y-F.Y(B.y));const m=Math.min(da,db);if(m<28){drag=da<=db?A:B;c.setPointerCapture(e.pointerId);c.style.cursor='grabbing';}});
+  c.addEventListener('pointermove',e=>{if(!drag)return;const [x,y]=pos(e);drag.x=Math.max(-5,Math.min(5,Math.round(F.IX(x)*2)/2));drag.y=Math.max(F.y0+.3,Math.min(F.y1-.3,Math.round(F.IY(y)*2)/2));draw();});
+  const end=()=>{drag=null;c.style.cursor='grab';};c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);
+})();
+})();
+</script>
+</body>
+</html>

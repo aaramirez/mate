@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Funciones · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="funciones">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 03 DE 11</span><h1>Funciones: la máquina de entrada y salida</h1></header>
+<section>
+  
+  <div class="prose">
+    <p>Una función es una máquina: entra un número y sale otro. Si <var>f</var>(<var>x</var>) = 2<var>x</var> + 1, entonces <var>f</var>(3) = 7. <span class="hl">Un modelo de ML es una función con muchas perillas</span>; entrenarlo es girar esas perillas hasta que la salida se parezca a la realidad.</p>
+    <p>Estas seis funciones aparecen en todo el curso. Elige una y mueve sus parámetros.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Explorador de funciones</h3></div>
+    <div class="btns" id="fn-btns" role="group" aria-label="Elegir función"></div>
+    <canvas id="fn-cv" role="img" aria-label="Gráfica de la función seleccionada"></canvas>
+    <div class="ctls">
+      <label class="ctl"><span id="fn-p1-l">m</span><output id="fn-p1-o"></output><input type="range" id="fn-p1"></label>
+      <label class="ctl"><span id="fn-p2-l">b</span><output id="fn-p2-o"></output><input type="range" id="fn-p2"></label>
+    </div>
+    <div class="readout"><span class="big" id="fn-tex"></span><span id="fn-ml" style="font-family:var(--f-body);font-size:.95rem"></span></div>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Exponencial</h3><span class="ex">e ≈ 2.718 · e⁰ = 1 · eˣ siempre &gt; 0</span><p>Crece muy rápido. Convierte cualquier número en uno positivo.</p></div>
+    <div class="fact"><h3>Logaritmo</h3><span class="ex">ln(eˣ) = x · ln(1) = 0</span><p>Es la operación inversa de la exponencial: responde «¿a qué potencia elevé <var>e</var>?».</p></div>
+    <div class="fact"><h3>La regla de oro del log</h3><span class="ex">ln(a·b) = ln a + ln b</span><p>Convierte multiplicaciones en sumas. Multiplicar mil probabilidades pequeñas da un número que la computadora redondea a cero; sumar sus logaritmos no.</p></div>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Regresión lineal (recta), funciones de pérdida (parábola), activaciones de la red (sigmoide, ReLU, tanh), softmax (exponencial) y entropía cruzada (logaritmo).</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Cuánto vale la sigmoide en x = 0?</summary><p>σ(0) = 1 / (1 + e⁰) = 1 / 2 = 0.5</p></details>
+    <details><summary>¿Cuánto vale ReLU(−2)? ¿Y ReLU(3)?</summary><p>ReLU(−2) = 0 · ReLU(3) = 3</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=m2MIpDrF7Es" target="_blank" rel="noopener">What's so special about Euler's number e?</a><span>Por qué la exponencial con base e es su propia derivada.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=funciones" target="_blank" rel="noopener">julioprofe · funciones</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=logaritmos" target="_blank" rel="noopener">julioprofe · logaritmos</a>
+    <a class="vid" href="https://www.youtube.com/@math2me/search?query=funci%C3%B3n%20exponencial" target="_blank" rel="noopener">math2me · función exponencial</a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const sg=v=>v>=0?'+ '+short(v):'− '+short(-v);
+  const FN={
+    lineal:{name:'Lineal',p:[['m (pendiente)',-3,3,.1,1],['b (corte con el eje)',-4,4,.1,1]],f:(x,a,b)=>a*x+b,tex:(a,b)=>`f(x) = ${short(a)}·x ${sg(b)}`,v:{x0:-6,x1:6,y0:-6,y1:6},ml:'Regresión lineal: predecir un precio con ŷ = m·x + b. Entrenar es encontrar la mejor m y la mejor b.'},
+    cuad:{name:'Cuadrática',p:[['a (apertura)',-2,2,.1,.5],['h (posición del vértice)',-4,4,.1,1]],f:(x,a,h)=>a*(x-h)*(x-h),tex:(a,h)=>`f(x) = ${short(a)}·(x ${sg(-h)})²`,v:{x0:-6,x1:6,y0:-6,y1:10},ml:'El error al cuadrado (y − ŷ)² tiene esta forma de cuenco. Su punto más bajo es la mejor respuesta, y lo buscaremos con derivadas.'},
+    exp:{name:'Exponencial',p:[['k (velocidad)',-2,2,.1,1],['a (escala)',.2,3,.1,1]],f:(x,k,a)=>a*Math.exp(k*x),tex:(k,a)=>`f(x) = ${short(a)}·e^(${short(k)}·x)`,v:{x0:-4,x1:4,y0:-1,y1:8},ml:'Softmax usa e^z para volver positivos los puntajes de una red. Pequeñas diferencias en z se vuelven grandes diferencias en e^z.'},
+    log:{name:'Logaritmo',p:[['a (escala)',-3,3,.1,1],['c (desplazamiento)',-3,3,.1,0]],f:(x,a,c)=>x>0?a*Math.log(x)+c:NaN,tex:(a,c)=>`f(x) = ${short(a)}·ln(x) ${sg(c)}`,v:{x0:-1,x1:8,y0:-4,y1:4},ml:'La entropía cruzada usa −ln(p). Si el modelo da una probabilidad cercana a 0 a la respuesta correcta, el castigo se dispara.'},
+    sig:{name:'Sigmoide',p:[['k (inclinación)',.2,6,.1,1],['c (centro)',-4,4,.1,0]],f:(x,k,c)=>1/(1+Math.exp(-k*(x-c))),tex:(k,c)=>`σ(x) = 1 / (1 + e^(−${short(k)}·(x ${sg(-c)})))`,v:{x0:-6,x1:6,y0:-.25,y1:1.25,sy:.25},ml:'Aplasta cualquier número al rango entre 0 y 1. Por eso se usa para dar una probabilidad: ¿es spam o no?'},
+    relu:{name:'ReLU',p:[['m (pendiente)',0,3,.1,1],['b (desplazamiento)',-3,3,.1,0]],f:(x,m,b)=>Math.max(0,m*x+b),tex:(m,b)=>`ReLU = máx(0, ${short(m)}·x ${sg(b)})`,v:{x0:-4,x1:4,y0:-2,y1:5},ml:'Deja pasar lo positivo y apaga lo negativo. Es la activación más usada dentro de las redes profundas porque es simple y rápida.'}
+  };
+  let cur='lineal';const p1=$('#fn-p1'),p2=$('#fn-p2'),btns=$('#fn-btns');
+  Object.entries(FN).forEach(([k,o])=>{const b=document.createElement('button');b.textContent=o.name;b.dataset.k=k;b.setAttribute('aria-pressed',k===cur);b.onclick=()=>set(k);btns.appendChild(b);});
+  function set(k){
+    cur=k;const o=FN[k];
+    btns.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+    [[p1,o.p[0],'#fn-p1-l'],[p2,o.p[1],'#fn-p2-l']].forEach(([el,c,l])=>{el.min=c[1];el.max=c[2];el.step=c[3];el.value=c[4];$(l).textContent=c[0];});
+    $('#fn-ml').textContent=o.ml;draw();
+  }
+  const draw=canvasWidget($('#fn-cv'),wide,(ctx,w,h)=>{
+    const o=FN[cur],a=+p1.value,b=+p2.value;
+    $('#fn-p1-o').textContent=short(a);$('#fn-p2-o').textContent=short(b);$('#fn-tex').textContent=o.tex(a,b);
+    const F=frame(ctx,w,h,o.v);curve(ctx,F,x=>o.f(x,a,b),tok('--accent'),3);
+  });
+  p1.addEventListener('input',draw);p2.addEventListener('input',draw);set('lineal');
+})();
+})();
+</script>
+</body>
+</html>

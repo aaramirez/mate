@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Integrales · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="integrales">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 08 DE 11</span><h1>Integrales: sumar infinitas tiras</h1><p class="lede">Primero, cuándo se puede integrar. Después, cómo una suma de rectángulos se convierte en un área exacta gracias a un límite.</p></header>
+<section>
+  <h2>La integral acumula</h2>
+  <div class="prose">
+    <p>La <a href="07-derivadas.html">derivada</a> responde «¿qué tan rápido cambia?». La integral responde la pregunta opuesta: <span class="hl">«¿cuánto se acumuló?»</span>. Si un auto va a 60 km/h durante 2 horas, recorre 60 × 2 = 120 km: el área de un rectángulo de alto 60 y ancho 2. Pero si la velocidad cambia a cada instante, ya no hay un solo rectángulo. Hay que partir el tiempo en pedacitos, multiplicar en cada uno y sumar.</p>
+    <p>Esa es la idea completa: <b>el área bajo una curva se calcula sumando tiras muy delgadas</b>. Se escribe así:</p>
+  </div>
+  <div class="eq">∫<sub><var>a</var></sub><sup><var>b</var></sup> <var>f</var>(<var>x</var>) <var>dx</var><small>∫ es una S alargada de «suma», y dx es el ancho de cada tira, infinitamente delgado</small></div>
+</section>
+
+<section>
+  <h2>Antes de integrar: ¿se puede? La integrabilidad</h2>
+  <div class="prose">
+    <p>Antes de calcular un área conviene saber si el área existe. Para eso se aproxima la región con rectángulos de dos maneras extremas:</p>
+    <p><b>Suma inferior</b>: en cada tira, el rectángulo usa la altura <b>más baja</b> que toma la función en ese tramo. Siempre queda por debajo del área real.<br><b>Suma superior</b>: cada rectángulo usa la altura <b>más alta</b> del tramo. Siempre queda por encima.</p>
+    <p>El área real está atrapada entre las dos. Si al hacer las tiras más finas <span class="hl">la brecha entre la suma superior y la inferior se puede hacer tan pequeña como quieras</span>, las dos se encuentran en un único número. Entonces la función es <b>integrable</b> (en el sentido de Riemann) y ese número es su integral.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Suma inferior contra suma superior</h3></div>
+    <div class="btns" id="in-btns" role="group" aria-label="Elegir función"></div>
+    <canvas id="in-cv" role="img" aria-label="Rectángulos de la suma inferior y de la suma superior"></canvas>
+    <div class="ctls"><label class="ctl">Número de tiras <var>n</var><output id="in-n-o"></output><input type="range" id="in-n" min="1" max="100" step="1" value="6"></label></div>
+    <div class="readout" id="in-out"></div>
+    <div class="tbl"><table id="in-tbl"></table></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Suma inferior</span><span><i style="background:var(--warm)"></i>Lo que agrega la suma superior (la brecha)</span></div>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Continua en [a, b]</h3><span class="ex">siempre integrable</span><p>Sin saltos ni explosiones, la brecha siempre se cierra.</p></div>
+    <div class="fact"><h3>Acotada con algunos saltos</h3><span class="ex">integrable</span><p>Cada salto solo afecta a una tira, y esa tira se vuelve cada vez más delgada.</p></div>
+    <div class="fact"><h3>No acotada</h3><span class="ex">1/x en (0, 1]: no integrable</span><p>La suma superior es infinita para cualquier <var>n</var>. Hace falta otra herramienta, la integral impropia.</p></div>
+    <div class="fact"><h3>Salta en todas partes</h3><span class="ex">Dirichlet: no integrable</span><p>Vale 1 en los números racionales y 0 en los irracionales. Toda tira contiene de ambos, así que la suma superior siempre da 1 y la inferior 0.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>De la suma al límite: así nace la integral</h2>
+  <div class="prose">
+    <p>Ya sabemos cuándo existe el área. Ahora, cómo se calcula. La receta tiene cinco pasos, y el último es un <a href="06-limites.html">límite</a>:</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Divide</b> el intervalo [<var>a</var>, <var>b</var>] en <var>n</var> tiras iguales de ancho Δ<var>x</var> = (<var>b</var> − <var>a</var>) / <var>n</var>.</span></li>
+    <li><span><b>Elige un punto</b> <var>x</var>ᵢ* dentro de cada tira (el borde izquierdo, el derecho o el centro) y usa <var>f</var>(<var>x</var>ᵢ*) como altura.</span></li>
+    <li><span><b>Suma</b> las áreas de los rectángulos. El resultado es la suma de Riemann <var>S</var><sub><var>n</var></sub> = Σ <var>f</var>(<var>x</var>ᵢ*) · Δ<var>x</var>. Es una aproximación.</span></li>
+    <li><span><b>Repite con más tiras.</b> <var>S</var>₄, <var>S</var>₁₆, <var>S</var>₆₄… forman una sucesión de números cada vez más cercanos entre sí.</span></li>
+    <li><span><b>Toma el límite</b> cuando <var>n</var> → ∞. El número al que se acerca esa sucesión es la integral.</span></li>
+  </ol>
+  <div class="eq">∫<sub><var>a</var></sub><sup><var>b</var></sup> <var>f</var>(<var>x</var>) <var>dx</var> = lím<sub><var>n</var>→∞</sub> Σ<sub><var>i</var>=1</sub><sup><var>n</var></sup> <var>f</var>(<var>x</var>ᵢ*) Δ<var>x</var></div>
+  <div class="prose">
+    <h3>¿Por qué hace falta el límite?</h3>
+    <p>Con cualquier número finito de tiras siempre sobra o falta un pedacito: las esquinas de los rectángulos que se salen de la curva, o los huecos que no alcanzan a cubrir. Ese error se achica al aumentar <var>n</var>, pero <b>nunca llega a cero con un número finito de tiras</b>. Ningún <var>S</var><sub><var>n</var></sub> es exactamente el área.</p>
+    <p>El límite resuelve el problema. No pide calcular «infinitas tiras», cosa imposible. Pide encontrar el único número al que las aproximaciones se acercan tanto como quieras. Es la misma idea del juego ε-δ del módulo 06: dame cualquier margen de error, y te digo cuántas tiras hacen falta para quedar dentro.</p>
+    <p>Piensa en cubrir un terreno curvo con baldosas cuadradas. Con baldosas grandes sobra o falta mucho; con baldosas más pequeñas el error baja. El área exacta del terreno es el valor al que tiende el conteo cuando las baldosas se vuelven infinitamente pequeñas.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Suma de Riemann y su límite</h3></div>
+    <div class="btns" id="rs-fn" role="group" aria-label="Elegir función"></div>
+    <div class="btns" id="rs-m" role="group" aria-label="Elegir el punto de cada tira"></div>
+    <div class="twin">
+      <figure class="fig"><figcaption class="cap">Las tiras para el n elegido</figcaption><canvas id="rs-cv" role="img" aria-label="Rectángulos de la suma de Riemann bajo la curva"></canvas></figure>
+      <figure class="fig"><figcaption class="cap">La sucesión S₁, S₂, … S₁₀₀ acercándose al área exacta (línea verde)</figcaption><canvas id="rs-cv2" role="img" aria-label="Valor de la suma de Riemann según el número de tiras"></canvas></figure>
+    </div>
+    <div class="ctls"><label class="ctl">Número de tiras <var>n</var><output id="rs-n-o"></output><input type="range" id="rs-n" min="1" max="100" step="1" value="8"></label></div>
+    <div class="readout" id="rs-out"></div>
+    <div class="tbl"><table id="rs-tbl"></table></div>
+    <p class="hint">Fíjate en la tabla: con el borde izquierdo o derecho, multiplicar <var>n</var> por 4 divide el error más o menos entre 4. Con el punto medio o el trapecio lo divide entre 16. Por eso las computadoras usan esos métodos.</p>
+  </div>
+  <div class="tbl"><table class="compare">
+    <thead><tr><th></th><th>Derivada</th><th>Integral</th></tr></thead>
+    <tbody>
+      <tr><td>Pregunta</td><td>¿Qué tan rápido cambia?</td><td>¿Cuánto se acumula?</td></tr>
+      <tr><td>Aproximación</td><td>Una razón: la pendiente de una secante, Δ<var>y</var> / Δ<var>x</var></td><td>Una suma de rectángulos: Σ <var>f</var>(<var>x</var>ᵢ) Δ<var>x</var></td></tr>
+      <tr><td>Qué se achica</td><td>La distancia <var>h</var> entre dos puntos</td><td>El ancho Δ<var>x</var> de cada tira</td></tr>
+      <tr><td>El límite</td><td><var>h</var> → 0</td><td>Δ<var>x</var> → 0, es decir, <var>n</var> → ∞</td></tr>
+      <tr><td>Resultado</td><td><var>f</var>′(<var>x</var>)</td><td>∫ <var>f</var>(<var>x</var>) <var>dx</var></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>El teorema fundamental del cálculo</h2>
+  <div class="prose">
+    <p>Calcular límites de sumas cada vez sería agotador. El teorema fundamental da un atajo: <span class="hl">integrar y derivar son operaciones inversas</span>. Si encuentras una función <var>F</var> cuya derivada es <var>f</var>, el área es simplemente <var>F</var>(<var>b</var>) − <var>F</var>(<var>a</var>).</p>
+  </div>
+  <div class="eq">∫<sub>0</sub><sup>2</sup> <var>x</var>² <var>dx</var> = [<var>x</var>³ / 3]<sub>0</sub><sup>2</sup> = 8/3 − 0 ≈ 2.667<small>Compáralo con lo que se acercaban las sumas del laboratorio</small></div>
+  <div class="cards">
+    <div class="fact"><h3>Potencias</h3><span class="ex">∫ xⁿ dx = xⁿ⁺¹ / (n + 1)</span><p>La regla de la derivada, al revés.</p></div>
+    <div class="fact"><h3>Exponencial</h3><span class="ex">∫ eˣ dx = eˣ</span><p>Su propia derivada y su propia integral.</p></div>
+    <div class="fact"><h3>Recíproco</h3><span class="ex">∫ 1/x dx = ln x</span><p>De aquí sale el logaritmo de la entropía cruzada.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Repaso del módulo</h2>
+  <div class="ml"><b>Dónde aparece en ML</b><p>En probabilidad, <b>el área es la probabilidad</b>: P(<var>a</var> &lt; <var>X</var> &lt; <var>b</var>) es la integral de la función de densidad (<a href="10-probabilidad.html">módulo 10</a>). El valor esperado es otra integral: E[<var>X</var>] = ∫ <var>x</var>·<var>p</var>(<var>x</var>) <var>dx</var>. La métrica AUC-ROC es literalmente el área bajo una curva, y scikit-learn la calcula con trapecios, es decir, con una suma de Riemann. En la práctica casi todas las integrales de ML se aproximan con sumas.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Suma de Riemann por la izquierda de f(x) = x en [0, 2] con n = 2. ¿Cuánto da y cuál es el área real?</summary><p>Δx = 1; f(0)·1 + f(1)·1 = 0 + 1 = 1. El área real es 2 (un triángulo de base 2 y alto 2).</p></details>
+    <details><summary>¿Es integrable la función escalón en [−1, 1]? ¿Cuánto vale?</summary><p>Sí: tiene un solo salto y está acotada. Vale 1 (un rectángulo de 1 × 1).</p></details>
+    <details><summary>¿Cuánto vale ∫₀³ 2x dx?</summary><p>[x²]₀³ = 9 − 0 = 9</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=rfG8ce4nNh0" target="_blank" rel="noopener">Integration and the fundamental theorem of calculus (cap. 8)</a><span>El área como suma de rectángulos cada vez más finos, y el límite que la convierte en integral.</span></li><li><a href="https://www.youtube.com/watch?v=FnJqaIESC2s" target="_blank" rel="noopener">What does area have to do with slope? (cap. 9)</a><span>Por qué integrar y derivar son operaciones inversas.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=sumas%20de%20riemann" target="_blank" rel="noopener">julioprofe · sumas de Riemann</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=integral%20definida" target="_blank" rel="noopener">julioprofe · integral definida</a>
+    <a class="vid" href="https://www.youtube.com/@math2me/search?query=integral" target="_blank" rel="noopener">math2me · integrales</a>
+    <a class="vid" href="https://www.youtube.com/results?search_query=khan+academy+espa%C3%B1ol+sumas+de+riemann" target="_blank" rel="noopener">Khan Academy Español · sumas de Riemann</a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 08 Integrabilidad ---------- */
+(function(){
+  const IF=[
+    {name:'x² en [0, 2]',f:x=>x*x,a:0,b:2,pieces:[[0,2]],is:(l,r)=>[l*l,r*r],v:{x0:-.2,x1:2.2,y0:-.5,y1:4.5,sx:.5},
+     note:'Continua en un intervalo cerrado: la brecha se encoge hacia 0 al aumentar n. Es integrable y el área vale 8/3 ≈ 2.667.'},
+    {name:'Escalón en [−1, 1]',f:x=>x<0?0:1,a:-1,b:1,pieces:[[-1,-1e-9],[0,1]],is:(l,r)=>[l>=0?1:0,r>=0?1:0],v:{x0:-1.2,x1:1.2,y0:-.3,y1:1.4,sx:.5,sy:.5},
+     note:'Tiene un salto, pero solo afecta a la tira que lo contiene, de ancho 2/n. La brecha también se va a 0: es integrable y el área vale 1.'},
+    {name:'1/x en (0, 1]',f:x=>1/x,a:0,b:1,pieces:[[.005,1]],is:(l,r)=>[1/r,l<=0?Infinity:1/l],v:{x0:-.1,x1:1.1,y0:-.5,y1:10,sx:.25,sy:2},
+     note:'No está acotada: cerca de 0 sube sin límite. La primera tira de la suma superior siempre es infinita, y la suma inferior sigue creciendo con n en vez de estabilizarse. No es integrable de Riemann.'}
+  ];
+  let cur=0;const N=$('#in-n'),btns=$('#in-btns');
+  IF.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c.name;b.setAttribute('aria-pressed',i===0);b.onclick=()=>{cur=i;btns.querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-pressed',j===i));draw();};btns.appendChild(b);});
+  function sums(c,n){const d=(c.b-c.a)/n;let lo=0,hi=0;for(let i=0;i<n;i++){const l=c.a+i*d,[p,q]=c.is(l,l+d);lo+=p*d;hi+=q*d;}return [lo,hi];}
+  const sv=v=>isFinite(v)?fmt(v,4):'∞';
+  const draw=canvasWidget($('#in-cv'),wide,(ctx,w,h)=>{
+    const c=IF[cur],n=+N.value,d=(c.b-c.a)/n,F=frame(ctx,w,h,c.v);
+    $('#in-n-o').textContent=n;
+    F.clip();
+    for(let i=0;i<n;i++){
+      const l=c.a+i*d,[p,q]=c.is(l,l+d),top=isFinite(q)?q:F.y1+1;
+      ctx.globalAlpha=.35;ctx.fillStyle=tok('--warm');ctx.fillRect(F.X(l),F.Y(top),F.X(l+d)-F.X(l),F.Y(p)-F.Y(top));
+      ctx.globalAlpha=.55;ctx.fillStyle=tok('--accent');ctx.fillRect(F.X(l),F.Y(p),F.X(l+d)-F.X(l),F.Y(0)-F.Y(p));
+      ctx.globalAlpha=1;if(n<=60){ctx.strokeStyle=tok('--card');ctx.lineWidth=1;ctx.strokeRect(F.X(l),F.Y(top),F.X(l+d)-F.X(l),F.Y(0)-F.Y(top));}
+    }
+    ctx.restore();
+    c.pieces.forEach(([p,q])=>seg(ctx,F,c.f,p,q,tok('--ink'),2.5,800));
+    const [lo,hi]=sums(c,n);
+    $('#in-out').innerHTML=`<span>Suma inferior = ${sv(lo)} · Suma superior = ${sv(hi)}</span><span class="big">Brecha = ${isFinite(hi-lo)?fmt(hi-lo,4):'∞'}</span><span style="font-family:var(--f-body);font-size:.95rem">${c.note}</span>`;
+    const rows=[10,100,1000,10000].map(k=>{const [a,b]=sums(c,k);return `<tr><td class="num">${k}</td><td class="num">${sv(a)}</td><td class="num">${sv(b)}</td><td class="num">${isFinite(b-a)?fmt(b-a,4):'∞'}</td></tr>`;}).join('');
+    $('#in-tbl').innerHTML=`<thead><tr><th class="num">n</th><th class="num">Inferior</th><th class="num">Superior</th><th class="num">Brecha</th></tr></thead><tbody>${rows}</tbody>`;
+  });
+  N.addEventListener('input',draw);
+})();
+
+/* ---------- 08 Suma de Riemann y su límite ---------- */
+(function(){
+  const RF=[
+    {name:'x² en [0, 2]',f:x=>x*x,a:0,b:2,exact:8/3,ex:'8/3 ≈ 2.6667',v:{x0:-.2,x1:2.2,y0:-.5,y1:4.5,sx:.5}},
+    {name:'sen(x) en [0, π]',f:Math.sin,a:0,b:Math.PI,exact:2,ex:'2',v:{x0:-.2,x1:3.4,y0:-.3,y1:1.3,sx:.5,sy:.5}},
+    {name:'eˣ en [0, 1]',f:Math.exp,a:0,b:1,exact:Math.E-1,ex:'e − 1 ≈ 1.7183',v:{x0:-.1,x1:1.1,y0:-.3,y1:3,sx:.25,sy:.5}},
+    {name:'Campana normal en [−1, 1]',f:x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI),a:-1,b:1,exact:.682689492,ex:'≈ 0.6827, el famoso 68%',v:{x0:-3,x1:3,y0:-.05,y1:.5,sy:.1}}
+  ];
+  const M=[['izq','Borde izquierdo',(l,r)=>l],['der','Borde derecho',(l,r)=>r],['med','Punto medio',(l,r)=>(l+r)/2],['tra','Trapecio',null]];
+  let cf=0,cm=0;const N=$('#rs-n');
+  function S(c,m,n){const d=(c.b-c.a)/n;let s=0;for(let i=0;i<n;i++){const l=c.a+i*d,r=l+d;s+=M[m][2]?c.f(M[m][2](l,r))*d:(c.f(l)+c.f(r))/2*d;}return s;}
+  function mk(el,list,get,set){list.forEach((it,i)=>{const b=document.createElement('button');b.textContent=it.name||it[1];b.setAttribute('aria-pressed',i===get());b.onclick=()=>{set(i);el.querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-pressed',j===i));all();};el.appendChild(b);});}
+  const c1=canvasWidget($('#rs-cv'),.8,(ctx,w,h)=>{
+    const c=RF[cf],n=+N.value,d=(c.b-c.a)/n,F=frame(ctx,w,h,c.v);
+    F.clip();
+    for(let i=0;i<n;i++){
+      const l=c.a+i*d,r=l+d;ctx.beginPath();
+      if(M[cm][2]){const y=c.f(M[cm][2](l,r));ctx.rect(F.X(l),F.Y(y),F.X(r)-F.X(l),F.Y(0)-F.Y(y));}
+      else{ctx.moveTo(F.X(l),F.Y(0));ctx.lineTo(F.X(l),F.Y(c.f(l)));ctx.lineTo(F.X(r),F.Y(c.f(r)));ctx.lineTo(F.X(r),F.Y(0));ctx.closePath();}
+      ctx.globalAlpha=.3;ctx.fillStyle=tok('--accent');ctx.fill();ctx.globalAlpha=1;if(n<=50){ctx.strokeStyle=tok('--accent');ctx.lineWidth=1;ctx.stroke();}
+      if(M[cm][2]&&n<=40){const x=M[cm][2](l,r);dot(ctx,F.X(x),F.Y(c.f(x)),tok('--warm'),3.5);}
+    }
+    ctx.restore();
+    seg(ctx,F,c.f,c.a,c.b,tok('--ink'),2.5,600);
+  });
+  const c2=canvasWidget($('#rs-cv2'),.8,(ctx,w,h)=>{
+    const c=RF[cf],n=+N.value,vals=[];for(let k=1;k<=100;k++)vals.push(S(c,cm,k));
+    const e=Math.max(...vals.map(v=>Math.abs(v-c.exact)),c.exact*.02)*1.15;
+    const F=frame(ctx,w,h,{x0:0,x1:101,y0:c.exact-e,y1:c.exact+e,sx:20});
+    F.clip();ctx.strokeStyle=tok('--good');ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(F.X(0),F.Y(c.exact));ctx.lineTo(F.X(101),F.Y(c.exact));ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=tok('--accent');ctx.lineWidth=1.5;ctx.beginPath();vals.forEach((v,i)=>{i?ctx.lineTo(F.X(i+1),F.Y(v)):ctx.moveTo(F.X(1),F.Y(v));});ctx.stroke();
+    dot(ctx,F.X(n),F.Y(vals[n-1]),tok('--warm'),6);ctx.restore();
+    label(ctx,'área exacta',F.X(101)-4,F.Y(c.exact)-11,tok('--good'),'right');
+  });
+  function all(){
+    const c=RF[cf],n=+N.value,d=(c.b-c.a)/n,s=S(c,cm,n),err=s-c.exact;
+    $('#rs-n-o').textContent=n;
+    $('#rs-out').innerHTML=`<span>Δx = (${short(c.b)} − ${short(c.a)}) / ${n} = ${fmt(d,4)} · método: ${M[cm][1].toLowerCase()}</span><span class="big">S<sub>${n}</sub> = ${fmt(s,5)} · área exacta = ${c.ex}</span><span>error = ${err>=0?'+':'−'}${fmt(Math.abs(err),5)} (${fmt(Math.abs(err)/c.exact*100,3)}%) · ${err>1e-9?'la suma sobra':err<-1e-9?'la suma se queda corta':'coincide'}</span>`;
+    const rows=[4,16,64,256,1024].map(k=>{const v=S(c,cm,k);return `<tr><td class="num">${k}</td><td class="num">${fmt(v,6)}</td><td class="num">${fmt(Math.abs(v-c.exact),6)}</td></tr>`;}).join('');
+    $('#rs-tbl').innerHTML=`<thead><tr><th class="num">n</th><th class="num">S<sub>n</sub></th><th class="num">|error|</th></tr></thead><tbody>${rows}</tbody>`;
+    c1();c2();
+  }
+  mk($('#rs-fn'),RF,()=>cf,i=>cf=i);mk($('#rs-m'),M,()=>cm,i=>cm=i);
+  N.addEventListener('input',all);all();
+})();
+})();
+</script>
+</body>
+</html>

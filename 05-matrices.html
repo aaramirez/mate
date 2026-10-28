@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Matrices · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="matrices">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 05 DE 11</span><h1>Matrices: tablas que transforman</h1></header>
+<section>
+  
+  <div class="prose">
+    <p>Una matriz es una tabla de números con <var>m</var> filas y <var>n</var> columnas. Tu dataset ya es una matriz: cada fila es un ejemplo y cada columna una variable. Pero la idea poderosa es otra: <span class="hl">una matriz es una máquina que transforma vectores</span>.</p>
+    <p>Para multiplicar, cada casilla del resultado es el producto punto de una <b>fila</b> de la primera matriz con una <b>columna</b> de la segunda. Por eso las dimensiones internas deben coincidir:</p>
+  </div>
+  <div class="eq">(<var>m</var> × <b style="color:var(--warm)">n</b>) · (<b style="color:var(--warm)">n</b> × <var>p</var>) = (<var>m</var> × <var>p</var>)</div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Paso a paso</span><h3>Multiplicación de matrices</h3></div>
+    <div class="mm" id="mm"></div>
+    <div class="readout"><span class="big" id="mm-out">Presiona «Siguiente casilla».</span></div>
+    <div class="btns"><button class="primary" id="mm-next">Siguiente casilla</button><button id="mm-reset">Reiniciar</button></div>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Una matriz deforma el plano</h3></div>
+    <div class="split">
+      <canvas id="mt-cv" role="img" aria-label="Cuadrícula transformada por una matriz de 2 por 2"></canvas>
+      <div style="display:grid;gap:12px;align-content:start">
+        <div class="btns" id="mt-presets" role="group" aria-label="Matrices de ejemplo">
+          <button data-m="1,0,0,1">Identidad</button><button data-m="2,0,0,0.5">Escala</button><button data-m="0,-1,1,0">Rotar 90°</button><button data-m="1,1,0,1">Cizalla</button><button data-m="-1,0,0,1">Espejo</button><button data-m="1,2,0.5,1">Aplastar</button>
+        </div>
+        <div class="ctls" style="grid-template-columns:1fr 1fr">
+          <label class="ctl"><var>a</var><output id="mt-a-o"></output><input type="range" id="mt-a" min="-2" max="2" step="0.1" value="1"></label>
+          <label class="ctl"><var>b</var><output id="mt-b-o"></output><input type="range" id="mt-b" min="-2" max="2" step="0.1" value="1"></label>
+          <label class="ctl"><var>c</var><output id="mt-c-o"></output><input type="range" id="mt-c" min="-2" max="2" step="0.1" value="0"></label>
+          <label class="ctl"><var>d</var><output id="mt-d-o"></output><input type="range" id="mt-d" min="-2" max="2" step="0.1" value="1"></label>
+        </div>
+        <div class="readout" id="mt-out"></div>
+        <div class="legend"><span><i style="background:var(--good)"></i>î = columna 1</span><span><i style="background:var(--warm)"></i>ĵ = columna 2</span></div>
+      </div>
+    </div>
+    <p class="hint">Las columnas de la matriz dicen a dónde van las flechas base î = [1, 0] y ĵ = [0, 1]. El determinante mide cuánto crece o se encoge el área del cuadrado.</p>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Una capa de una red neuronal es <b>W</b><b>x</b> + <b>b</b>: una matriz de pesos transformando el vector de entrada. Las GPUs existen en ML porque multiplican matrices gigantes muy rápido. Cuando PyTorch se queja de un error de <i>shape</i>, casi siempre es la regla de las dimensiones de arriba.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Qué forma tiene el resultado de (32 × 784) · (784 × 128)?</summary><p>32 × 128 (las 784 del medio coinciden y desaparecen)</p></details>
+    <details><summary>¿Se puede multiplicar (2 × 3) · (2 × 3)?</summary><p>No: 3 ≠ 2. Habría que transponer la segunda: (2 × 3) · (3 × 2) = 2 × 2</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=kYB8IZa5AuE" target="_blank" rel="noopener">Linear transformations and matrices (cap. 3)</a><span>Las columnas de la matriz son a dónde van î y ĵ, igual que en el laboratorio.</span></li><li><a href="https://www.youtube.com/watch?v=XkY2DOUCWMU" target="_blank" rel="noopener">Matrix multiplication as composition (cap. 4)</a><span>Multiplicar matrices es aplicar una transformación después de otra.</span></li><li><a href="https://www.youtube.com/watch?v=Ip3X9LOh2dk" target="_blank" rel="noopener">The determinant (cap. 6)</a><span>El determinante como factor de cambio de área.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=multiplicaci%C3%B3n%20de%20matrices" target="_blank" rel="noopener">julioprofe · multiplicación de matrices</a>
+    <a class="vid" href="https://www.youtube.com/@math2me/search?query=matrices" target="_blank" rel="noopener">math2me · matrices</a>
+    <a class="vid" href="https://www.youtube.com/@Eigensteve/search?query=matrix" target="_blank" rel="noopener">Steve Brunton · álgebra lineal aplicada <small>EN</small></a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const A=[[1,2,0],[3,-1,2]],B=[[2,1],[0,3],[1,-1]];
+  const C=A.map(r=>B[0].map((_,j)=>r.reduce((s,v,k)=>s+v*B[k][j],0)));
+  let k=0;
+  function mat(M,cls,dim){const cols=M[0].length;return `<div><div class="mat" style="grid-template-columns:repeat(${cols},auto)">${M.map((r,i)=>r.map((v,j)=>`<span class="${cls(i,j)}">${v}</span>`).join('')).join('')}</div><span class="dim">${dim}</span></div>`;}
+  function draw(){
+    const ci=k?Math.floor((k-1)/2):-1,cj=k?(k-1)%2:-1;
+    const done=(i,j)=>i*2+j<k;
+    $('#mm').innerHTML=mat(A,(i)=>i===ci?'row':'','A · 2 × 3')+'<span class="x">×</span>'+mat(B,(i,j)=>j===cj?'col':'','B · 3 × 2')+'<span class="x">=</span>'+
+      `<div><div class="mat" style="grid-template-columns:repeat(2,auto)">${C.map((r,i)=>r.map((v,j)=>`<span class="${i===ci&&j===cj?'cell':done(i,j)?'':'q'}">${done(i,j)?v:'?'}</span>`).join('')).join('')}</div><span class="dim">C · 2 × 2</span></div>`;
+    if(!k){$('#mm-out').textContent='Presiona «Siguiente casilla».';return;}
+    const terms=A[ci].map((v,t)=>`${v}·${B[t][cj]<0?'('+B[t][cj]+')':B[t][cj]}`).join(' + ');
+    $('#mm-out').innerHTML=`c<sub>${ci+1}${cj+1}</sub> = fila ${ci+1} de A · columna ${cj+1} de B = ${terms} = ${C[ci][cj]}`+(k===4?'<br><span class="ok">¡Listo! Cada casilla fue un producto punto.</span>':'');
+  }
+  $('#mm-next').onclick=()=>{k=k>=4?1:k+1;draw();};$('#mm-reset').onclick=()=>{k=0;draw();};draw();
+})();
+
+
+(function(){
+  const ids=['a','b','c','d'];
+  const draw=canvasWidget($('#mt-cv'),0.9,(ctx,w,h)=>{
+    const [a,b,c,d]=ids.map(k=>num('#mt-'+k));ids.forEach(k=>$('#mt-'+k+'-o').textContent=short(num('#mt-'+k)));
+    const F=frame(ctx,w,h,{x0:-4,x1:4,equal:true,sx:1,sy:1});const M=(x,y)=>[F.X(a*x+b*y),F.Y(c*x+d*y)];
+    F.clip();ctx.globalAlpha=.4;ctx.strokeStyle=tok('--accent');ctx.lineWidth=1.2;
+    for(let t=-8;t<=8;t++){let p=M(t,-8),q=M(t,8);ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke();p=M(-8,t);q=M(8,t);ctx.beginPath();ctx.moveTo(...p);ctx.lineTo(...q);ctx.stroke();}
+    ctx.globalAlpha=.28;ctx.fillStyle=tok('--warm');ctx.beginPath();[[0,0],[1,0],[1,1],[0,1]].forEach(([x,y],i)=>{const p=M(x,y);i?ctx.lineTo(...p):ctx.moveTo(...p);});ctx.closePath();ctx.fill();
+    ctx.globalAlpha=1;ctx.restore();
+    arrow(ctx,F.X(0),F.Y(0),...M(1,0),tok('--good'),3.5);arrow(ctx,F.X(0),F.Y(0),...M(0,1),tok('--warm'),3.5);
+    const det=a*d-b*c;
+    $('#mt-out').innerHTML=`<span class="big">[ ${short(a)}  ${short(b)} ]<br>[ ${short(c)}  ${short(d)} ]</span><span>î → [${short(a)}, ${short(c)}] · ĵ → [${short(b)}, ${short(d)}]</span><span>det = ad − bc = ${fmt(det)}</span>`+
+      (Math.abs(det)<.05?'<span class="warn">det ≈ 0: el plano se aplasta en una línea y se pierde información.</span>':det<0?'<span>det negativo: el plano quedó «volteado» como en un espejo.</span>':`<span>El área del cuadrado se multiplicó por ${fmt(det)}.</span>`);
+  });
+  ids.forEach(k=>$('#mt-'+k).addEventListener('input',draw));
+  $('#mt-presets').addEventListener('click',e=>{const m=e.target.dataset&&e.target.dataset.m;if(!m)return;m.split(',').forEach((v,i)=>$('#mt-'+ids[i]).value=v);draw();});
+})();
+})();
+</script>
+</body>
+</html>
