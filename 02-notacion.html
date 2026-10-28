@@ -60,6 +60,77 @@
   </div>
   
 </section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Desarmar una sumatoria</b><p>Calcula Σ<sub><var>i</var>=1</sub><sup>4</sup> (2<var>i</var> − 1).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Reemplaza <var>i</var> por 1, 2, 3 y 4, como en un ciclo for: 2·1 − 1 = 1, 2·2 − 1 = 3, 2·3 − 1 = 5 y 2·4 − 1 = 7.</li>
+        <li>Suma los cuatro términos: 1 + 3 + 5 + 7 = 16.</li>
+      </ol>
+      <p class="ej-res">Resultado: 16</p>
+      <p class="ej-ml">En código: <code>sum(2*i - 1 for i in range(1, 5))</code>.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Leer una predicción</b><p>Un modelo lineal predice <var>ŷ</var> = Σ<sub><var>i</var>=1</sub><sup>3</sup> <var>w<sub>i</sub></var> <var>x<sub>i</sub></var> + <var>b</var>. Con <b>w</b> = [2, −1, 0.5], <b>x</b> = [3, 4, 2] y <var>b</var> = 1, ¿cuánto vale <var>ŷ</var>? ¿Qué es <var>x</var>₂?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>x</var>₂ es el segundo elemento de <b>x</b>: <var>x</var>₂ = 4.</li>
+        <li>Términos de la suma: <var>w</var>₁<var>x</var>₁ = 2 · 3 = 6, <var>w</var>₂<var>x</var>₂ = (−1) · 4 = −4, <var>w</var>₃<var>x</var>₃ = 0.5 · 2 = 1.</li>
+        <li>Σ = 6 − 4 + 1 = 3.</li>
+        <li>Se suma el sesgo: <var>ŷ</var> = 3 + 1 = 4.</li>
+      </ol>
+      <p class="ej-res">Resultado: <var>x</var>₂ = 4 y <var>ŷ</var> = 4</p>
+      <p class="ej-ml">En ML: esta es la cuenta de una neurona antes de la activación (módulo <a href="13-neurona.html">13</a>).</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Error cuadrático medio</b><p>Los valores reales son <b>y</b> = [2, 4, 6] y el modelo predijo <b>ŷ</b> = [3, 4, 4]. Calcula MSE = 1/<var>n</var> Σ (<var>y<sub>i</sub></var> − <var>ŷ<sub>i</sub></var>)².</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Diferencias <var>y<sub>i</sub></var> − <var>ŷ<sub>i</sub></var>: 2 − 3 = −1, 4 − 4 = 0, 6 − 4 = 2.</li>
+        <li>Cuadrados: (−1)² = 1, 0² = 0, 2² = 4.</li>
+        <li>Suma: 1 + 0 + 4 = 5. Hay <var>n</var> = 3 datos.</li>
+        <li>MSE = 5 / 3 ≈ 1.667.</li>
+      </ol>
+      <p class="ej-res">Resultado: MSE ≈ 1.667</p>
+      <p class="ej-ml">En ML: el error de 2 en el tercer dato aporta 4 de los 5 puntos. Al elevar al cuadrado, los errores grandes pesan mucho más.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Productoria y logaritmos</b><p>Un modelo asigna probabilidades 0.5, 0.4 y 0.5 a tres datos independientes. Calcula ∏ <var>p<sub>i</sub></var> y después Σ ln <var>p<sub>i</sub></var>. Usa ln 0.5 ≈ −0.693 y ln 0.4 ≈ −0.916.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>∏ <var>p<sub>i</sub></var> = 0.5 × 0.4 × 0.5 = 0.2 × 0.5 = 0.1.</li>
+        <li>Σ ln <var>p<sub>i</sub></var> = −0.693 + (−0.916) + (−0.693) = −2.302.</li>
+        <li>Comprobación: ln 0.1 ≈ −2.303. El logaritmo de un producto es la suma de los logaritmos.</li>
+      </ol>
+      <p class="ej-res">Resultado: ∏ = 0.1 y Σ ln ≈ −2.30 = ln 0.1</p>
+      <p class="ej-ml">En ML: con miles de datos el producto se vuelve 0 en la computadora. Por eso se usa la log-verosimilitud, que es una suma.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>θ, η, ∂ y arg min en una línea</b><p>La pérdida es <var>L</var>(<var>θ</var>) = (<var>θ</var> − 3)². (a) ¿Cuánto vale arg min <var>L</var>? ¿Y min <var>L</var>? (b) En <var>θ</var> = 2 la derivada vale ∂<var>L</var>/∂<var>θ</var> = −2. Con <var>η</var> = 0.1, calcula un paso <var>θ</var> ← <var>θ</var> − <var>η</var> · ∂<var>L</var>/∂<var>θ</var>.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>(a) Un cuadrado nunca es negativo, así que lo menor que puede valer <var>L</var> es 0. Eso ocurre cuando <var>θ</var> − 3 = 0, es decir, en <var>θ</var> = 3.</li>
+        <li>arg min es la <b>entrada</b> que da el mínimo (3); min es el <b>valor</b> mínimo (0).</li>
+        <li>(b) <var>θ</var> ← 2 − 0.1 · (−2) = 2 + 0.2 = 2.2.</li>
+      </ol>
+      <p class="ej-res">Resultado: arg min <var>L</var> = 3, min <var>L</var> = 0, y el paso lleva <var>θ</var> de 2 a 2.2, más cerca del 3</p>
+      <p class="ej-ml">En ML: esta línea es el descenso del gradiente completo (módulo <a href="10-gradiente.html">10</a>).</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

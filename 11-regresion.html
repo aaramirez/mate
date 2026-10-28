@@ -117,6 +117,76 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución. Los ejercicios 1 a 4 usan los mismos tres datos:</p></div>
+  <div class="eq">(<var>x</var>, <var>y</var>) = (1, 2), (2, 4), (3, 5)</div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Residuos, MAE y MSE</b><p>Un modelo propone la recta ŷ = <var>x</var> + 1. Calcula los residuos, el MAE, el MSE y el RMSE.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Predicciones: ŷ = 1 + 1 = 2, 2 + 1 = 3, 3 + 1 = 4.</li>
+        <li>Residuos <var>e</var> = <var>y</var> − ŷ: 2 − 2 = 0, 4 − 3 = 1, 5 − 4 = 1. Son positivos: la recta se queda corta.</li>
+        <li>MAE = (0 + 1 + 1) / 3 = 2/3 ≈ 0.667.</li>
+        <li>MSE = (0² + 1² + 1²) / 3 = 2/3 ≈ 0.667.</li>
+        <li>RMSE = √0.667 ≈ 0.816.</li>
+      </ol>
+      <p class="ej-res">Resultado: e = 0, 1, 1 · MAE ≈ 0.667 · MSE ≈ 0.667 · RMSE ≈ 0.816.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>¿Cuál recta es mejor?</b><p>Otro modelo propone ŷ = 1.5<var>x</var> + 0.5. Calcula su MSE y compáralo con el del ejercicio 1.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Predicciones: 1.5 + 0.5 = 2, 3 + 0.5 = 3.5, 4.5 + 0.5 = 5.</li>
+        <li>Residuos: 0, 4 − 3.5 = 0.5, 0.</li>
+        <li>MSE = (0 + 0.25 + 0) / 3 ≈ 0.083.</li>
+      </ol>
+      <p class="ej-res">Resultado: MSE ≈ 0.083, ocho veces menor que 0.667. La segunda recta es mejor.</p>
+      <p class="ej-ml">En ML: el MSE convierte «esta recta se ve mejor» en un número que se puede comparar y minimizar.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>La mejor recta por mínimos cuadrados</b><p>Calcula la recta de mínimos cuadrados con las fórmulas <var>m</var> = Σ(<var>x</var> − <var>x̄</var>)(<var>y</var> − <var>ȳ</var>) / Σ(<var>x</var> − <var>x̄</var>)² y <var>b</var> = <var>ȳ</var> − <var>m</var>·<var>x̄</var>. Después calcula su MSE y su R².</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Promedios: <var>x̄</var> = (1 + 2 + 3)/3 = 2 y <var>ȳ</var> = (2 + 4 + 5)/3 = 11/3 ≈ 3.667.</li>
+        <li>Desviaciones de <var>x</var>: −1, 0, 1. Desviaciones de <var>y</var>: −5/3, 1/3, 4/3.</li>
+        <li>Numerador: (−1)(−5/3) + 0·(1/3) + 1·(4/3) = 5/3 + 4/3 = 3. Denominador: 1 + 0 + 1 = 2. <div class="eq"><var>m</var> = 3 / 2 = 1.5 &nbsp;&nbsp; <var>b</var> = 11/3 − 1.5·2 = 2/3 ≈ 0.667</div></li>
+        <li>Predicciones: 2.167, 3.667, 5.167. Residuos: −1/6, 1/3, −1/6. MSE = (1/36 + 4/36 + 1/36)/3 = (6/36)/3 = 1/18 ≈ 0.056.</li>
+        <li>Var(<var>y</var>) = (25/9 + 1/9 + 16/9)/3 = 14/9 ≈ 1.556. <div class="eq">R² = 1 − 0.056 / 1.556 ≈ 0.964</div></li>
+      </ol>
+      <p class="ej-res">Resultado: ŷ = 1.5x + 0.667 · MSE ≈ 0.056 (menor que 0.083) · R² ≈ 0.96.</p>
+      <p class="ej-ml">En ML: esta es la misma respuesta que da la ecuación normal θ = (XᵀX)⁻¹Xᵀy y el botón «Mostrar la mejor recta».</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Un paso de entrenamiento</b><p>Empieza con <var>m</var> = 0, <var>b</var> = 0 y η = 0.1. Calcula las dos derivadas del MSE, da un paso y mide el MSE nuevo.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Con <var>m</var> = <var>b</var> = 0 todas las predicciones son 0, así que los residuos son los propios <var>y</var>: 2, 4, 5. MSE = (4 + 16 + 25)/3 = 15.</li>
+        <li>Σ <var>x</var>ᵢ<var>e</var>ᵢ = 1·2 + 2·4 + 3·5 = 25 y Σ <var>e</var>ᵢ = 11. <div class="eq">∂MSE/∂<var>m</var> = −(2/3)·25 ≈ −16.67 &nbsp;&nbsp; ∂MSE/∂<var>b</var> = −(2/3)·11 ≈ −7.33</div></li>
+        <li>Las dos derivadas son negativas, así que los pasos suben <var>m</var> y <var>b</var>: <div class="eq"><var>m</var> ← 0 − 0.1·(−16.67) ≈ 1.667 &nbsp;&nbsp; <var>b</var> ← 0 − 0.1·(−7.33) ≈ 0.733</div></li>
+        <li>Predicciones nuevas: 2.4, 4.067, 5.733. Residuos: −0.4, −0.067, −0.733.</li>
+        <li>MSE = (0.16 + 0.0044 + 0.5378)/3 ≈ 0.234.</li>
+      </ol>
+      <p class="ej-res">Resultado: m ≈ 1.667, b ≈ 0.733 y el MSE baja de 15 a 0.234 en un solo paso.</p>
+      <p class="ej-ml">En ML: los residuos ahora son negativos (la recta se pasó un poco); el siguiente paso corregirá en sentido contrario, como en el laboratorio de la superficie de error.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Regularización: elegir entre dos modelos</b><p>El modelo A tiene coeficientes (2, −1) y MSE de entrenamiento 0.30. El modelo B tiene coeficientes (8, −7, 5) y MSE 0.20. Con λ = 0.01, calcula la pérdida regularizada MSE + λ·Σ <var>w</var>ⱼ² de cada uno. ¿Cuál prefiere?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Modelo A: Σ <var>w</var>ⱼ² = 4 + 1 = 5. Castigo = 0.01·5 = 0.05. Pérdida = 0.30 + 0.05 = 0.35.</li>
+        <li>Modelo B: Σ <var>w</var>ⱼ² = 64 + 49 + 25 = 138. Castigo = 0.01·138 = 1.38. Pérdida = 0.20 + 1.38 = 1.58.</li>
+      </ol>
+      <p class="ej-res">Resultado: A = 0.35 y B = 1.58. Gana A, aunque su error de entrenamiento sea mayor.</p>
+      <p class="ej-ml">En ML: coeficientes grandes que se compensan entre sí son la firma del sobreajuste. La regularización los castiga para preferir curvas tranquilas, que suelen dar menos error con datos nuevos.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

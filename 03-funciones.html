@@ -95,6 +95,81 @@
   </div>
   
 </section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Evaluar y deshacer una recta</b><p>Sea <var>f</var>(<var>x</var>) = 3<var>x</var> − 2. Calcula <var>f</var>(4). Encuentra la inversa <var>f</var>⁻¹ y comprueba que <var>f</var>⁻¹(<var>f</var>(4)) = 4.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>f</var>(4) = 3 · 4 − 2 = 12 − 2 = 10.</li>
+        <li>Para invertir, escribe <var>y</var> = 3<var>x</var> − 2 y despeja <var>x</var>: <var>y</var> + 2 = 3<var>x</var>, así que <var>x</var> = (<var>y</var> + 2) / 3.</li>
+        <li>La inversa es <var>f</var>⁻¹(<var>y</var>) = (<var>y</var> + 2) / 3.</li>
+        <li>Comprobación: <var>f</var>⁻¹(10) = (10 + 2) / 3 = 12 / 3 = 4.</li>
+      </ol>
+      <p class="ej-res">Resultado: <var>f</var>(4) = 10 y <var>f</var>⁻¹(<var>y</var>) = (<var>y</var> + 2) / 3</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>La prueba de la recta horizontal</b><p>Sea <var>f</var>(<var>x</var>) = <var>x</var>² − 4<var>x</var>. ¿En qué puntos corta la recta horizontal <var>y</var> = −3 a la gráfica? ¿Es <var>f</var> biyectiva? ¿Cómo se recorta el dominio para que tenga inversa?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Iguala: <var>x</var>² − 4<var>x</var> = −3, es decir, <var>x</var>² − 4<var>x</var> + 3 = 0.</li>
+        <li>Factoriza: (<var>x</var> − 1)(<var>x</var> − 3) = 0, así que <var>x</var> = 1 o <var>x</var> = 3.</li>
+        <li>Comprueba: <var>f</var>(1) = 1 − 4 = −3 y <var>f</var>(3) = 9 − 12 = −3. Son dos entradas distintas con la misma salida.</li>
+        <li>Como la recta corta en dos lugares, <var>f</var> no es inyectiva y por lo tanto no es biyectiva.</li>
+        <li>La parábola tiene su vértice en <var>x</var> = 2, a mitad de camino entre 1 y 3. Si se restringe a <var>x</var> ≥ 2, solo sube y cada recta horizontal la corta una sola vez.</li>
+      </ol>
+      <p class="ej-res">Resultado: corta en <var>x</var> = 1 y <var>x</var> = 3; no es biyectiva; con <var>x</var> ≥ 2 sí es inyectiva</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Una red neuronal minúscula con ReLU</b><p>Calcula <var>h</var>(<var>x</var>) = ReLU(2<var>x</var> − 1) para <var>x</var> = −1, 0, 1 y 2. ¿Es <var>h</var> inyectiva?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>ReLU(<var>z</var>) = máx(0, <var>z</var>): deja pasar los positivos y cambia los negativos por 0.</li>
+        <li><var>x</var> = −1: 2(−1) − 1 = −3, y ReLU(−3) = 0.</li>
+        <li><var>x</var> = 0: 2(0) − 1 = −1, y ReLU(−1) = 0.</li>
+        <li><var>x</var> = 1: 2(1) − 1 = 1, y ReLU(1) = 1.</li>
+        <li><var>x</var> = 2: 2(2) − 1 = 3, y ReLU(3) = 3.</li>
+        <li><var>h</var>(−1) = <var>h</var>(0) = 0: dos entradas distintas con la misma salida, así que no es inyectiva.</li>
+      </ol>
+      <p class="ej-res">Resultado: 0, 0, 1, 3; no es inyectiva</p>
+      <p class="ej-ml">En ML: es una neurona con peso 2, sesgo −1 y activación ReLU. Todo lo que cae por debajo de 0 se pierde y no se puede recuperar mirando la salida.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>De probabilidad a logit</b><p>Una neurona con sigmoide entregó la probabilidad σ(<var>z</var>) = 0.8. ¿Qué valor de <var>z</var> calculó la red? Usa ln 4 ≈ 1.386.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La sigmoide es biyectiva de ℝ en (0, 1), y su inversa es el logit: <var>z</var> = ln(<var>y</var> / (1 − <var>y</var>)).</li>
+        <li><var>y</var> / (1 − <var>y</var>) = 0.8 / 0.2 = 4.</li>
+        <li><var>z</var> = ln 4 ≈ 1.386.</li>
+        <li>Comprobación: σ(1.386) = 1 / (1 + <var>e</var><sup>−1.386</sup>) = 1 / (1 + 0.25) = 1 / 1.25 = 0.8, porque <var>e</var><sup>−ln 4</sup> = 1/4.</li>
+      </ol>
+      <p class="ej-res">Resultado: <var>z</var> ≈ 1.386</p>
+      <p class="ej-ml">En ML: ese <var>z</var> es el «logit» que aparece en PyTorch antes de la sigmoide o del softmax.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>La regla de oro del logaritmo</b><p>Calcula ln(0.5 × 0.25 × 0.5) de dos formas: multiplicando primero y sumando logaritmos. Usa ln 0.5 ≈ −0.693 y ln 0.25 ≈ −1.386.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Multiplicando: 0.5 × 0.25 = 0.125 y 0.125 × 0.5 = 0.0625. ln 0.0625 ≈ −2.773.</li>
+        <li>Sumando: ln 0.5 + ln 0.25 + ln 0.5 = −0.693 − 1.386 − 0.693 = −2.772.</li>
+        <li>Coinciden (la diferencia es solo de redondeo), porque ln(<var>a</var>·<var>b</var>) = ln <var>a</var> + ln <var>b</var>.</li>
+      </ol>
+      <p class="ej-res">Resultado: ≈ −2.77 por los dos caminos</p>
+      <p class="ej-ml">En ML: la entropía cruzada suma logaritmos de probabilidades en vez de multiplicarlas.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

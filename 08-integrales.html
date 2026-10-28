@@ -125,6 +125,68 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Una suma de Riemann a mano</b><p>Aproxima el área bajo <var>f</var>(<var>x</var>) = <var>x</var>² entre 0 y 2 con 4 rectángulos, primero con la altura del borde derecho y luego con la del borde izquierdo.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Ancho de cada tira: Δ<var>x</var> = (2 − 0) / 4 = 0.5. Los bordes son 0, 0.5, 1, 1.5 y 2.</li>
+        <li>Borde derecho (0.5, 1, 1.5 y 2): alturas 0.25, 1, 2.25 y 4. Suman 7.5, y 7.5 · 0.5 = 3.75.</li>
+        <li>Borde izquierdo (0, 0.5, 1 y 1.5): alturas 0, 0.25, 1 y 2.25. Suman 3.5, y 3.5 · 0.5 = 1.75.</li>
+        <li>El área exacta es [<var>x</var>³/3]<sub>0</sub><sup>2</sup> = 8/3 ≈ 2.67, y queda entre las dos aproximaciones. Con más tiras, las dos se acercan a 2.67.</li>
+      </ol>
+      <p class="ej-res">Resultado: 3.75 (por exceso) y 1.75 (por defecto); el valor exacto es 8/3 ≈ 2.67.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>El teorema fundamental en acción</b><p>Calcula ∫<sub>0</sub><sup>3</sup> (2<var>x</var> + 1) <var>dx</var> con una antiderivada y compruébalo con geometría.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Una antiderivada de 2<var>x</var> + 1 es <var>F</var>(<var>x</var>) = <var>x</var>² + <var>x</var>, porque su derivada es 2<var>x</var> + 1.</li>
+        <li>Teorema fundamental:<div class="eq"><var>F</var>(3) − <var>F</var>(0) = (9 + 3) − 0 = 12</div></li>
+        <li>Con geometría: bajo la recta queda un trapecio de alturas <var>f</var>(0) = 1 y <var>f</var>(3) = 7 y de ancho 3. Su área es (1 + 7) / 2 · 3 = 12.</li>
+      </ol>
+      <p class="ej-res">Resultado: 12, por los dos caminos.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Antiderivada de una potencia</b><p>Calcula ∫<sub>1</sub><sup>2</sup> 3<var>x</var>² <var>dx</var>.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Busca una función cuya derivada sea 3<var>x</var>². Es <var>x</var>³, porque (<var>x</var>³)′ = 3<var>x</var>².</li>
+        <li>Evalúa en los extremos y resta:<div class="eq">[<var>x</var>³]<sub>1</sub><sup>2</sup> = 2³ − 1³ = 8 − 1 = 7</div></li>
+      </ol>
+      <p class="ej-res">Resultado: 7.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>¿Se puede integrar?</b><p>Decide si cada función se puede integrar en el intervalo indicado y, si se puede, calcula el área. (a) <var>f</var>(<var>x</var>) = 1 si <var>x</var> &lt; 1, y <var>f</var>(<var>x</var>) = 3 si <var>x</var> ≥ 1, en [0, 2]. (b) <var>g</var>(<var>x</var>) = 1/<var>x</var> en [0, 1].</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>(a) <var>f</var> es acotada y tiene un solo salto, en <var>x</var> = 1. Un número finito de saltos no impide integrar: al afinar las tiras, el error de la tira del salto se va a 0.</li>
+        <li>(a) El área son dos rectángulos: 1·1 + 3·1 = 4.</li>
+        <li>(b) Cerca de 0, 1/<var>x</var> crece sin límite (1/0.01 = 100 y 1/0.001 = 1000). La función no es acotada, así que no es integrable en el sentido de Riemann: la tira que toca el 0 puede tener altura tan grande como quieras.</li>
+      </ol>
+      <p class="ej-res">Resultado: (a) sí, con área 4; (b) no, porque no es acotada en [0, 1].</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Una densidad de probabilidad</b><p>Un tiempo de espera <var>X</var>, en minutos, tiene densidad <var>p</var>(<var>x</var>) = <var>x</var>/2 entre 0 y 2. Comprueba que el área total es 1 y calcula <var>P</var>(<var>X</var> ≤ 1).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Una antiderivada de <var>x</var>/2 es <var>x</var>²/4.</li>
+        <li>Área total: [<var>x</var>²/4]<sub>0</sub><sup>2</sup> = 4/4 − 0 = 1. Es una densidad válida.</li>
+        <li>Probabilidad de esperar un minuto o menos:<div class="eq"><var>P</var>(<var>X</var> ≤ 1) = [<var>x</var>²/4]<sub>0</sub><sup>1</sup> = 1/4 = 0.25</div></li>
+        <li>La primera mitad del intervalo acumula solo el 25 %, porque la densidad es baja cerca de 0 y alta cerca de 2.</li>
+      </ol>
+      <p class="ej-res">Resultado: área total 1; P(X ≤ 1) = 0.25.</p>
+      <p class="ej-ml">En ML: así se convierte una densidad en probabilidad. La integral desde el inicio hasta <var>x</var> es la función de distribución acumulada del <a href="09-probabilidad.html">módulo 09</a>.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

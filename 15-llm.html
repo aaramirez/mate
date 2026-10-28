@@ -186,6 +186,80 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel (y una calculadora para <var>e</var><sup><var>x</var></sup>) antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>De logits a probabilidades</b><p>Después de «el perro persigue al…», el modelo da estos logits: «gato» 2, «cartero» 1, «mesa» 0. Calcula las probabilidades con softmax (<var>T</var> = 1).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Exponencial de cada logit: <var>e</var>² ≈ 7.389, <var>e</var>¹ ≈ 2.718, <var>e</var>⁰ = 1.</li>
+        <li>Suma: 7.389 + 2.718 + 1 = 11.107.</li>
+        <li>Dividir cada una entre la suma: <div class="eq">7.389 / 11.107 ≈ 0.665 · 2.718 / 11.107 ≈ 0.245 · 1 / 11.107 ≈ 0.090</div></li>
+      </ol>
+      <p class="ej-res">Resultado: gato 66.5 %, cartero 24.5 %, mesa 9.0 % (suman 100 %).</p>
+      <p class="ej-ml">En ML: una diferencia de solo 1 en el logit multiplica la probabilidad por <var>e</var> ≈ 2.7.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Mover la temperatura</b><p>Con los mismos logits [2, 1, 0], repite el cálculo con <var>T</var> = 2 y con <var>T</var> = 0.5. ¿Qué le pasa a la probabilidad de «gato»?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>T</var> = 2: se divide cada logit entre 2 → [1, 0.5, 0]. Exponenciales: 2.718, 1.649, 1. Suma = 5.367.</li>
+        <li>Probabilidades: 2.718 / 5.367 ≈ 0.507 · 1.649 / 5.367 ≈ 0.307 · 1 / 5.367 ≈ 0.186.</li>
+        <li><var>T</var> = 0.5: se divide entre 0.5, o sea se multiplica por 2 → [4, 2, 0]. Exponenciales: 54.598, 7.389, 1. Suma = 62.987.</li>
+        <li>Probabilidades: 54.598 / 62.987 ≈ 0.867 · 7.389 / 62.987 ≈ 0.117 · 1 / 62.987 ≈ 0.016.</li>
+      </ol>
+      <p class="ej-res">Resultado: «gato» baja a 50.7 % con T = 2 y sube a 86.7 % con T = 0.5 (con T = 1 era 66.5 %).</p>
+      <p class="ej-ml">En ML: temperatura baja = respuestas predecibles; temperatura alta = más variedad y más riesgo de disparates.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Una cabeza de atención</b><p>En «el banco del río», calcula a quién atiende «banco». Usa vectores de 3 dimensiones (finanzas, naturaleza, sustantivo): <b>q</b><sub>banco</sub> = [1, 1, 0]; claves <b>k</b><sub>el</sub> = [0, 0, 1], <b>k</b><sub>banco</sub> = [1, 0, 1], <b>k</b><sub>río</sub> = [0, 3, 1]. Valores de 2 dimensiones (finanzas, naturaleza): <b>v</b><sub>el</sub> = [0, 0], <b>v</b><sub>banco</sub> = [1, 1], <b>v</b><sub>río</sub> = [0, 2].</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Puntajes <b>q</b>·<b>k</b>: el → 1·0 + 1·0 + 0·1 = 0; banco → 1·1 + 1·0 + 0·1 = 1; río → 1·0 + 1·3 + 0·1 = 3.</li>
+        <li>Dividir entre √<var>d</var> = √3 ≈ 1.732: [0, 0.577, 1.732].</li>
+        <li>Softmax: <var>e</var>⁰ = 1, <var>e</var><sup>0.577</sup> ≈ 1.781, <var>e</var><sup>1.732</sup> ≈ 5.652. Suma = 8.433. Pesos: <div class="eq">1 / 8.433 ≈ 0.119 · 1.781 / 8.433 ≈ 0.211 · 5.652 / 8.433 ≈ 0.670</div></li>
+        <li>Salida = suma de los valores pesada por la atención: <div class="eq">0.119·[0, 0] + 0.211·[1, 1] + 0.670·[0, 2] = [0.211, 0.211 + 1.340] = [0.211, 1.551]</div></li>
+      </ol>
+      <p class="ej-res">Resultado: «banco» presta 67 % de su atención a «río» y su nuevo vector [0.21, 1.55] apunta a «naturaleza», no a «finanzas».</p>
+      <p class="ej-ml">En ML: esto es una fila de softmax(Q·Kᵀ / √d)·V. Un transformer hace lo mismo para todas las palabras a la vez y con decenas de cabezas.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>La entropía cruzada de un token</b><p>La palabra correcta era «gato». Calcula la pérdida −ln <var>P</var>(gato) si el modelo le dio (a) 0.665, como en el ejercicio 1, o (b) 0.090, como si se hubiera equivocado y prefiriera «mesa».</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La pérdida solo mira la probabilidad que el modelo le dio a la palabra correcta: <div class="eq">pérdida = −ln <var>P</var>(correcta)</div></li>
+        <li>(a) −ln 0.665 ≈ −(−0.408) = <b>0.408</b>.</li>
+        <li>(b) −ln 0.090 ≈ −(−2.408) = <b>2.408</b>.</li>
+        <li>Si el modelo hubiera dado 1.0, la pérdida sería −ln 1 = 0: no hay nada que corregir.</li>
+      </ol>
+      <p class="ej-res">Resultado: 0.41 contra 2.41. Equivocarse con confianza cuesta casi 6 veces más.</p>
+      <p class="ej-ml">En ML: el preentrenamiento de un LLM es bajar este número promediado sobre billones de tokens, con descenso del gradiente (<a href="10-gradiente.html">módulo 10</a>).</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>La probabilidad de una frase</b><p>Un modelo da <var>P</var>(el) = 0.2, <var>P</var>(gato | el) = 0.1 y <var>P</var>(duerme | el gato) = 0.5. ¿Cuál es la probabilidad de «el gato duerme»? ¿Y la pérdida total y promedio por token?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Regla de la cadena: <div class="eq"><var>P</var>(el, gato, duerme) = 0.2 · 0.1 · 0.5 = 0.01</div></li>
+        <li>Pérdida de cada token: −ln 0.2 ≈ 1.609; −ln 0.1 ≈ 2.303; −ln 0.5 ≈ 0.693.</li>
+        <li>Total: 1.609 + 2.303 + 0.693 = 4.605. Es lo mismo que −ln 0.01 ≈ 4.605, porque el logaritmo convierte el producto en suma.</li>
+        <li>Promedio por token: 4.605 / 3 ≈ 1.535.</li>
+      </ol>
+      <p class="ej-res">Resultado: P = 0.01 (1 %); pérdida total 4.605; promedio 1.535 por token.</p>
+      <p class="ej-ml">En ML: por eso se suman logaritmos en vez de multiplicar probabilidades: con miles de tokens el producto sería tan pequeño que la computadora lo redondearía a 0.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

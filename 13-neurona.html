@@ -100,6 +100,75 @@
   </div>
   
 </section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Una neurona hacia adelante</b><p>Una neurona tiene <var>w</var>₁ = 0.5, <var>w</var>₂ = −1 y <var>b</var> = 0.5. La entrada es <var>x</var> = (2, 1). Calcula <var>z</var> y la salida con sigmoide, tanh y ReLU. ¿Qué clase predice? Usa <var>e</var><sup>−0.5</sup> ≈ 0.607.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Producto punto más sesgo: <div class="eq"><var>z</var> = 0.5·2 + (−1)·1 + 0.5 = 1 − 1 + 0.5 = 0.5</div></li>
+        <li>Sigmoide: 1 / (1 + 0.607) ≈ 0.62.</li>
+        <li>tanh(0.5) ≈ 0.46. ReLU(0.5) = máx(0, 0.5) = 0.5.</li>
+        <li>Como <var>z</var> &gt; 0, el punto queda del lado «azul» de la frontera <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> = 0.</li>
+      </ol>
+      <p class="ej-res">Resultado: z = 0.5 · σ ≈ 0.62 · tanh ≈ 0.46 · ReLU = 0.5 · clase azul.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Contar parámetros</b><p>Una red recibe 3 entradas, tiene una capa oculta de 4 neuronas y una salida de 2 clases. ¿Cuántos parámetros aprende?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Capa oculta: <b>W</b>₁ es de 4 × 3 = 12 pesos, más 4 sesgos = 16.</li>
+        <li>Capa de salida: <b>W</b>₂ es de 2 × 4 = 8 pesos, más 2 sesgos = 10.</li>
+        <li>Total: 16 + 10 = 26.</li>
+      </ol>
+      <p class="ej-res">Resultado: 26 parámetros.</p>
+      <p class="ej-ml">En ML: un LLM hace la misma cuenta con matrices de miles por miles, y por eso llega a miles de millones de parámetros.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Softmax y entropía cruzada</b><p>El clasificador de la foto da los puntajes «gato» = 2, «perro» = 1, «pájaro» = 0. La respuesta correcta es «perro». Calcula las probabilidades y la pérdida. Usa <var>e</var>² ≈ 7.389 y <var>e</var> ≈ 2.718.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Exponenciales: <var>e</var>² ≈ 7.389, <var>e</var>¹ ≈ 2.718, <var>e</var>⁰ = 1. Total ≈ 11.107.</li>
+        <li>Dividir entre el total: <div class="eq">gato ≈ 0.665 · perro ≈ 0.245 · pájaro ≈ 0.090</div> Suman 1.</li>
+        <li>Pérdida: −ln(0.245) ≈ 1.41.</li>
+      </ol>
+      <p class="ej-res">Resultado: probabilidades 0.665 / 0.245 / 0.090 y pérdida ≈ 1.41.</p>
+      <p class="ej-ml">En ML: si la respuesta fuera «gato», la pérdida sería −ln(0.665) ≈ 0.41. La pérdida es grande porque el modelo apostó por la clase equivocada.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Una red pequeña con matrices</b><p>Calcula <b>h</b> = ReLU(<b>W</b>₁<b>x</b> + <b>b</b>₁) y ŷ = softmax(<b>W</b>₂<b>h</b>) con <b>x</b> = [1, 2], <b>W</b>₁ = [[1, 0], [−1, 1]], <b>b</b>₁ = [0, −2] y <b>W</b>₂ = [[2, 1], [0, 1]]. ¿Qué pérdida tiene si la clase correcta es la primera?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Cada fila de <b>W</b>₁ hace un producto punto con <b>x</b> (<a href="05-matrices.html">módulo 05</a>): <div class="eq"><b>W</b>₁<b>x</b> = [1·1 + 0·2, −1·1 + 1·2] = [1, 1]</div></li>
+        <li>Sumar el sesgo: [1 + 0, 1 − 2] = [1, −1]. ReLU apaga lo negativo: <b>h</b> = [1, 0].</li>
+        <li>Salida: <b>W</b>₂<b>h</b> = [2·1 + 1·0, 0·1 + 1·0] = [2, 0].</li>
+        <li>Softmax: <var>e</var>² ≈ 7.389 y <var>e</var>⁰ = 1, total 8.389. <div class="eq">ŷ ≈ [0.881, 0.119]</div></li>
+        <li>Pérdida con la clase 1 correcta: −ln(0.881) ≈ 0.13.</li>
+      </ol>
+      <p class="ej-res">Resultado: h = [1, 0] · ŷ ≈ [0.88, 0.12] · pérdida ≈ 0.13.</p>
+      <p class="ej-ml">En ML: la segunda neurona oculta quedó apagada (ReLU dio 0). Sus pesos de salida no influyen en esta predicción y no reciben gradiente en este ejemplo.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Un paso de backpropagation</b><p>Usa la neurona del ejercicio 1 (con sigmoide y ŷ ≈ 0.6225), pero ahora la respuesta real es <var>y</var> = 0, es decir, rojo. Con entropía cruzada, la regla de la cadena da ∂<var>L</var>/∂<var>z</var> = ŷ − <var>y</var>. Calcula el gradiente de cada parámetro, da un paso con η = 0.5 y comprueba que la pérdida baja.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La cadena completa (<a href="07-derivadas.html">módulo 07</a>): ∂<var>L</var>/∂ŷ = 1/(1 − ŷ) ≈ 2.649 y σ′(<var>z</var>) = ŷ(1 − ŷ) ≈ 0.235. Su producto es ≈ 0.6225 = ŷ − <var>y</var>.</li>
+        <li>Como <var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var>, se tiene ∂<var>z</var>/∂<var>w</var>₁ = <var>x</var>₁ = 2, ∂<var>z</var>/∂<var>w</var>₂ = <var>x</var>₂ = 1 y ∂<var>z</var>/∂<var>b</var> = 1. <div class="eq">∂<var>L</var>/∂<var>w</var>₁ ≈ 1.245 · ∂<var>L</var>/∂<var>w</var>₂ ≈ 0.6225 · ∂<var>L</var>/∂<var>b</var> ≈ 0.6225</div></li>
+        <li>Paso con η = 0.5: <var>w</var>₁ ≈ 0.5 − 0.6225 = −0.12; <var>w</var>₂ ≈ −1 − 0.31 = −1.31; <var>b</var> ≈ 0.5 − 0.31 = 0.19.</li>
+        <li>Nuevo puntaje: <var>z</var> ≈ −0.12·2 − 1.31·1 + 0.19 ≈ −1.37, así que ŷ = σ(−1.37) ≈ 0.20.</li>
+        <li>Pérdida antes: −ln(1 − 0.6225) ≈ 0.97. Después: −ln(1 − 0.20) ≈ 0.23.</li>
+      </ol>
+      <p class="ej-res">Resultado: gradiente ≈ (1.245, 0.6225, 0.6225); la pérdida baja de 0.97 a 0.23 y ahora el punto se clasifica rojo.</p>
+      <p class="ej-ml">En ML: este es el ciclo completo (adelante, pérdida, atrás, actualizar) que una red repite millones de veces.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

@@ -191,6 +191,72 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Contar casos</b><p>Se lanza un dado. Calcula <var>P</var>(par), <var>P</var>(mayor o igual que 5) y <var>P</var>(par y mayor o igual que 5).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Hay 6 resultados igual de probables: 1, 2, 3, 4, 5 y 6.</li>
+        <li>Par: {2, 4, 6} son 3 casos, así que 3/6 = 0.5.</li>
+        <li>Mayor o igual que 5: {5, 6} son 2 casos, así que 2/6 = 1/3 ≈ 0.33.</li>
+        <li>Las dos cosas a la vez: solo el {6}, así que 1/6 ≈ 0.17.</li>
+      </ol>
+      <p class="ej-res">Resultado: 0.5, 1/3 y 1/6.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Densidad y distribución de una uniforme</b><p><var>X</var> es uniforme entre 0 y 10. Escribe su densidad <var>p</var>(<var>x</var>) y su distribución <var>F</var>(<var>x</var>). Calcula <var>P</var>(2 ≤ <var>X</var> ≤ 5) y <var>P</var>(<var>X</var> = 4).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La densidad es constante y el área total debe ser 1: altura · 10 = 1, así que <var>p</var>(<var>x</var>) = 1/10.</li>
+        <li>La distribución acumula el área desde 0: <var>F</var>(<var>x</var>) = <var>x</var>/10, para <var>x</var> entre 0 y 10.</li>
+        <li>Probabilidad del intervalo:<div class="eq"><var>P</var>(2 ≤ <var>X</var> ≤ 5) = <var>F</var>(5) − <var>F</var>(2) = 0.5 − 0.2 = 0.3</div></li>
+        <li>Un valor exacto es una tira de ancho 0, y su área es 0. Por eso <var>P</var>(<var>X</var> = 4) = 0, aunque 4 sea perfectamente posible.</li>
+      </ol>
+      <p class="ej-res">Resultado: p(x) = 0.1, F(x) = x/10, P(2 ≤ X ≤ 5) = 0.3 y P(X = 4) = 0.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>La regla 68-95-99.7</b><p>La estatura de un grupo es normal con media μ = 170 cm y desviación σ = 10 cm. ¿Qué porcentaje mide entre 160 y 180 cm? ¿Qué porcentaje mide más de 190 cm?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>160 y 180 están a una σ de la media (170 ± 10). Entre μ − σ y μ + σ cae cerca del 68 %.</li>
+        <li>190 está a dos σ (170 + 2·10). Entre μ − 2σ y μ + 2σ cae cerca del 95 %, así que fuera queda el 5 %.</li>
+        <li>La campana es simétrica: la mitad de ese 5 % está arriba y la otra mitad abajo.<div class="eq">5 % / 2 = 2.5 %</div></li>
+      </ol>
+      <p class="ej-res">Resultado: cerca del 68 % mide entre 160 y 180 cm, y cerca del 2.5 % mide más de 190 cm.</p>
+      <p class="ej-ml">En ML: así se detectan valores atípicos. Un dato a más de 2 o 3 desviaciones de la media es sospechoso.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Condicional: preguntar en un mundo más pequeño</b><p>Se lanzan dos dados. ¿Cuál es la probabilidad de que la suma sea 8? ¿Y si ya sabes que el primer dado salió par?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Sin información hay 36 resultados. Suman 8: (2,6), (3,5), (4,4), (5,3) y (6,2), que son 5 casos. <var>P</var>(suma = 8) = 5/36 ≈ 0.139.</li>
+        <li>Saber que el primero es par <b>restringe el espacio</b>: solo quedan las filas 2, 4 y 6, es decir 3 · 6 = 18 resultados. Ese es el mundo nuevo.</li>
+        <li>Dentro de ese mundo, los que suman 8 son (2,6), (4,4) y (6,2): 3 casos.<div class="eq"><var>P</var>(suma = 8 | primero par) = 3/18 = 1/6 ≈ 0.167</div></li>
+        <li>Con la fórmula se llega a lo mismo: <var>P</var>(<var>A</var> ∩ <var>B</var>) / <var>P</var>(<var>B</var>) = (3/36) / (18/36) = 3/18. Dividir entre <var>P</var>(<var>B</var>) es reescalar el mundo pequeño para que vuelva a sumar 1.</li>
+      </ol>
+      <p class="ej-res">Resultado: 5/36 ≈ 0.139 sin información y 1/6 ≈ 0.167 sabiendo que el primero es par.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Bayes en un filtro de spam</b><p>El 20 % de los correos es spam. La palabra «gratis» aparece en el 60 % del spam y en el 5 % de los correos normales. Si un correo dice «gratis», ¿qué probabilidad hay de que sea spam?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Imagina 1000 correos: 200 son spam y 800 son normales.</li>
+        <li>Con «gratis»: 60 % de 200 = 120 de spam y 5 % de 800 = 40 normales.</li>
+        <li>Cambia el punto de vista: ahora el mundo son solo los 120 + 40 = 160 correos que dicen «gratis». De ellos, 120 son spam.<div class="eq"><var>P</var>(spam | gratis) = 120 / 160 = 0.75</div></li>
+        <li>Con la fórmula de Bayes: (0.6 · 0.2) / (0.6 · 0.2 + 0.05 · 0.8) = 0.12 / 0.16 = 0.75.</li>
+      </ol>
+      <p class="ej-res">Resultado: 75 %. La palabra sube la sospecha del 20 % al 75 %.</p>
+      <p class="ej-ml">En ML: esta es la cuenta de Naive Bayes. Repite el mismo paso con cada palabra del correo (<a href="12-modelos.html">módulo 12</a>).</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

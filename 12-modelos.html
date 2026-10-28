@@ -223,6 +223,78 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Regresión logística: probabilidad, pérdida y un paso</b><p>Un modelo tiene <var>w</var>₁ = 2, <var>w</var>₂ = −1 y <var>b</var> = −1. Llega el ejemplo <var>x</var> = (1, 0.5), cuya respuesta real es <var>y</var> = 1. Calcula <var>p</var>, la entropía cruzada y el nuevo <var>w</var>₁ tras un paso con η = 0.5. Usa <var>e</var><sup>−0.5</sup> ≈ 0.607.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Puntaje: <div class="eq"><var>z</var> = 2·1 + (−1)·0.5 − 1 = 2 − 0.5 − 1 = 0.5</div></li>
+        <li>Sigmoide: <var>p</var> = 1 / (1 + 0.607) = 1 / 1.607 ≈ 0.62. Como <var>p</var> &gt; 0.5, el modelo dice «sí».</li>
+        <li>Pérdida con <var>y</var> = 1: −ln(0.6225) ≈ 0.47. Si la respuesta real fuera <var>y</var> = 0 sería −ln(0.38) ≈ 0.97.</li>
+        <li>Gradiente para <var>w</var>₁: (<var>p</var> − <var>y</var>)·<var>x</var>₁ = (0.62 − 1)·1 = −0.38.</li>
+        <li>Paso: <var>w</var>₁ ← 2 − 0.5·(−0.38) = 2 + 0.19 = 2.19.</li>
+      </ol>
+      <p class="ej-res">Resultado: p ≈ 0.62 · pérdida ≈ 0.47 · w₁ sube a ≈ 2.19.</p>
+      <p class="ej-ml">En ML: el peso sube porque el modelo acertó con poca seguridad; el siguiente intento dará una probabilidad más alta a este ejemplo.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>k vecinos: cambiar k cambia la respuesta</b><p>Clase A: (1, 1), (2, 4), (0, 3). Clase B: (3, 2), (4, 4), (5, 2). Clasifica el punto nuevo (2, 2) con <var>k</var> = 1, <var>k</var> = 3 y <var>k</var> = 5.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Distancias desde (2, 2) con <var>d</var> = √[(Δ<var>x</var>)² + (Δ<var>y</var>)²]:
+          <div class="eq">B (3, 2): √(1 + 0) = 1 · A (1, 1): √(1 + 1) ≈ 1.41 · A (2, 4): √(0 + 4) = 2</div>
+          <div class="eq">A (0, 3): √(4 + 1) ≈ 2.24 · B (4, 4): √(4 + 4) ≈ 2.83 · B (5, 2): √(9 + 0) = 3</div></li>
+        <li><var>k</var> = 1: el más cercano es B.</li>
+        <li><var>k</var> = 3: B, A, A → gana A por 2 a 1.</li>
+        <li><var>k</var> = 5: B, A, A, A, B → gana A por 3 a 2.</li>
+      </ol>
+      <p class="ej-res">Resultado: k = 1 → B · k = 3 → A · k = 5 → A.</p>
+      <p class="ej-ml">En ML: k es un hiperparámetro. Un k pequeño se deja llevar por un solo vecino; uno grande suaviza la decisión.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Árbol de decisión: elegir el mejor corte con Gini</b><p>Un nodo tiene 10 datos: 6 A y 4 B. El corte 1 deja 4 A + 0 B a la izquierda y 2 A + 4 B a la derecha. El corte 2 deja 3 A + 1 B a la izquierda y 3 A + 3 B a la derecha. ¿Cuál tiene más ganancia?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Gini antes: 1 − (0.6² + 0.4²) = 1 − (0.36 + 0.16) = 0.48.</li>
+        <li>Corte 1. Izquierda pura: Gini = 0. Derecha: 1 − [(2/6)² + (4/6)²] = 1 − 5/9 ≈ 0.444. Promedio pesado por tamaño: <div class="eq">0.4·0 + 0.6·0.444 ≈ 0.267 → ganancia = 0.48 − 0.267 ≈ 0.213</div></li>
+        <li>Corte 2. Izquierda: 1 − [(3/4)² + (1/4)²] = 1 − 10/16 = 0.375. Derecha (mitad y mitad): 0.5. Promedio pesado: <div class="eq">0.4·0.375 + 0.6·0.5 = 0.15 + 0.30 = 0.45 → ganancia = 0.48 − 0.45 = 0.03</div></li>
+      </ol>
+      <p class="ej-res">Resultado: gana el corte 1, con ganancia ≈ 0.21 contra 0.03.</p>
+      <p class="ej-ml">En ML: el árbol repite esta cuenta con todos los umbrales posibles de cada variable y se queda con el mejor, como en el laboratorio.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>k-means hasta que nada cambie</b><p>Datos en una recta: 1, 2, 3, 8, 9, 12. Con <var>k</var> = 2 y centros iniciales 2 y 3, haz los pasos «asignar» y «mover» hasta converger. Calcula la inercia final.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Asignar (centros 2 y 3): {1, 2} van con el 2; {3, 8, 9, 12} van con el 3.</li>
+        <li>Mover: <var>c</var>₁ = (1 + 2)/2 = 1.5 y <var>c</var>₂ = (3 + 8 + 9 + 12)/4 = 32/4 = 8.</li>
+        <li>Asignar otra vez: el 3 está a 1.5 de <var>c</var>₁ y a 5 de <var>c</var>₂, así que cambia de grupo. Grupos: {1, 2, 3} y {8, 9, 12}.</li>
+        <li>Mover: <var>c</var>₁ = 6/3 = 2 y <var>c</var>₂ = 29/3 ≈ 9.67. Al asignar de nuevo nadie cambia: convergió.</li>
+        <li>Inercia: (1 − 2)² + 0 + (3 − 2)² = 2 en el primer grupo; (8 − 9.67)² + (9 − 9.67)² + (12 − 9.67)² ≈ 2.78 + 0.44 + 5.44 = 8.67 en el segundo. <div class="eq">inercia ≈ 2 + 8.67 = 10.67</div></li>
+      </ol>
+      <p class="ej-res">Resultado: centros 2 y 9.67, grupos {1, 2, 3} y {8, 9, 12}, inercia ≈ 10.67.</p>
+      <p class="ej-ml">En ML: con los centros iniciales, la inercia era (1 + 0 + 0 + 25 + 36 + 81) = 143. Cada paso la bajó, como promete el algoritmo.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Naive Bayes con dos palabras</b><p>Como en el ejemplo del módulo, P(spam) = 0.4 y «gratis» aparece en el 30 % del spam y en el 2 % del correo normal. Además, «reunión» aparece en el 5 % del spam y en el 20 % del normal. Llega un correo con las dos palabras. ¿Qué probabilidad tiene de ser spam?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Spam: 0.4 · 0.30 · 0.05 = 0.006.</li>
+        <li>Normal: 0.6 · 0.02 · 0.20 = 0.0024.</li>
+        <li>Normalizar dividiendo entre la suma 0.006 + 0.0024 = 0.0084: <div class="eq">P(spam | pistas) = 0.006 / 0.0084 ≈ 0.71</div></li>
+      </ol>
+      <p class="ej-res">Resultado: ≈ 71 % spam (con solo «gratis» era 91 %).</p>
+      <p class="ej-ml">En ML: cada palabra multiplica por su propia evidencia; «reunión» empuja hacia «normal» y baja la probabilidad de spam. Es Bayes del <a href="09-probabilidad.html">módulo 09</a> aplicado pista por pista.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
