@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cómo funciona un LLM · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="llm">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 15 DE 16</span><h1>Cómo funciona un LLM: predecir la siguiente palabra</h1><p class="lede">Un modelo de lenguaje solo hace una cosa: calcular qué tan probable es cada palabra posible como continuación de un texto. Aquí se arma esa idea paso a paso con vectores, matrices, softmax y probabilidad.</p></header>
+<style>
+.llm-bars{display:grid;gap:6px}
+.llm-row{display:grid;grid-template-columns:minmax(70px,auto) 1fr 64px;gap:10px;align-items:center;font:500 .92rem var(--f-display)}
+.llm-row .w{color:var(--ink)}
+.llm-row .p{font:600 .82rem var(--f-mono);text-align:right;color:var(--muted)}
+.llm-track{height:16px;border-radius:4px;background:var(--paper);overflow:hidden}
+.llm-track i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .15s}
+.llm-row.off .w{color:var(--muted);text-decoration:line-through}
+.llm-row.off .llm-track i{background:var(--line)}
+.llm-row.hit .llm-track i{background:var(--warm)}
+.llm-text{font:500 1.15rem/1.6 var(--f-body);padding:10px 14px;border-radius:8px;background:var(--paper);min-height:2.4em}
+.llm-text b{color:var(--warm)}
+.llm-toks{display:flex;flex-wrap:wrap;gap:6px}
+.llm-tok{display:grid;gap:2px;justify-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:500 .95rem var(--f-display)}
+.llm-tok small{font:600 .72rem var(--f-mono);color:var(--accent)}
+.llm-heat{border-collapse:collapse;font:500 .8rem var(--f-mono)}
+.llm-heat td,.llm-heat th{padding:6px 8px;text-align:center;border:1px solid var(--line)}
+.llm-heat th{font:600 .78rem var(--f-display);color:var(--muted)}
+</style>
+
+<section>
+  <h2>La idea completa en una frase</h2>
+  <div class="prose">
+    <p>Un modelo de lenguaje grande (LLM, por <i>Large Language Model</i>), como el que hay detrás de ChatGPT o Claude, hace una sola cosa: <span class="hl">mira un texto y calcula qué tan probable es cada palabra posible como continuación</span>. Elige una, la pega al final y vuelve a empezar. Escribir un párrafo entero es repetir ese paso cientos de veces.</p>
+    <p>Todo lo que viste en este repaso aparece aquí: vectores para representar palabras, matrices para transformarlos, la función softmax para convertir puntajes en probabilidades, la entropía cruzada para medir el error y el descenso del gradiente para aprender.</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Tokenizar:</b> partir el texto en pedazos (tokens) y darle a cada uno un número.</span></li>
+    <li><span><b>Embeddings:</b> convertir cada número en un vector que representa su significado.</span></li>
+    <li><span><b>Atención y capas:</b> mezclar los vectores entre sí para que cada palabra entienda su contexto.</span></li>
+    <li><span><b>Puntajes:</b> calcular un puntaje (logit) para cada token del vocabulario.</span></li>
+    <li><span><b>Softmax y muestreo:</b> convertir los puntajes en probabilidades y elegir el siguiente token.</span></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Paso 1 y 2: de texto a números, y de números a vectores</h2>
+  <div class="prose">
+    <p>Una computadora no entiende letras, solo números. El <b>tokenizador</b> corta el texto en pedazos frecuentes, que pueden ser palabras completas, partes de palabras o signos, y reemplaza cada pedazo por su posición en un diccionario fijo, el <b>vocabulario</b>. Un vocabulario típico tiene entre 30 000 y 200 000 tokens.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Un tokenizador de juguete</h3></div>
+    <label class="ctl"><span>Escribe una frase</span><input type="text" id="tk-in" value="Los gatos durmieron sobre el sofá." style="font:500 1rem var(--f-body);padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)"></label>
+    <div class="llm-toks" id="tk-out" aria-live="polite"></div>
+    <div class="readout" id="tk-sum"></div>
+    <p class="hint">Este tokenizador separa las terminaciones frecuentes del español, como «-s» o «-ron», y les da números inventados. Los tokenizadores reales (BPE) aprenden sus pedazos contando qué combinaciones de letras se repiten más en millones de textos.</p>
+  </div>
+  <div class="prose">
+    <p>Un número suelto no dice nada del significado: que «gato» sea el 4721 y «perro» el 4722 es casualidad. Por eso cada token se cambia por un <b>embedding</b>, un <a href="04-vectores.html">vector</a> de cientos o miles de números que el modelo aprende durante el entrenamiento. Palabras con significados parecidos terminan con vectores que apuntan en direcciones parecidas, y eso se mide con la <b>similitud coseno</b>.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Token → entero</h3><span class="ex">«gato» → 4721</span><p>Una consulta en una tabla. No hay ninguna matemática todavía.</p></div>
+    <div class="fact"><h3>Entero → vector</h3><span class="ex">4721 → [0.21, −1.3, …, 0.08]</span><p>Es la fila 4721 de una matriz enorme de embeddings, de tamaño vocabulario × dimensión.</p></div>
+    <div class="fact"><h3>Cercanía = parecido</h3><span class="ex">cos(gato, perro) ≈ 0.8</span><p>Los vectores de palabras relacionadas quedan cerca. cos(gato, impuesto) estaría cerca de 0.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Paso 4 y 5: de puntajes a probabilidades</h2>
+  <div class="prose">
+    <p>Al final de la red sale un puntaje <var>z</var> para cada token del vocabulario: el <b>logit</b>. Un puntaje alto significa «esta palabra encaja bien aquí». La función <b>softmax</b>, la misma de la <a href="11-neurona.html">neurona</a>, los convierte en una <a href="10-probabilidad.html">distribución de probabilidad</a>: todos positivos y sumando 1.</p>
+  </div>
+  <div class="eq">P(siguiente = i | contexto) = e<sup>z<sub>i</sub> / T</sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub> / T</sup></div>
+  <div class="prose">
+    <p>La <var>T</var> es la <b>temperatura</b>. Con <var>T</var> = 1 es el softmax normal. Con <var>T</var> pequeña, las diferencias entre puntajes se agrandan y el modelo casi siempre elige la palabra favorita: es predecible. Con <var>T</var> grande, las probabilidades se emparejan y el modelo se arriesga más: es creativo, pero también puede decir disparates.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Temperatura y muestreo</h3></div>
+    <div class="llm-text" id="tp-text"></div>
+    <div class="llm-bars" id="tp-bars" role="img" aria-label="Probabilidad de cada palabra candidata"></div>
+    <div class="ctls">
+      <label class="ctl"><span>Temperatura T</span><output id="tp-t-o"></output><input type="range" id="tp-t" min="0.1" max="3" step="0.05" value="1"></label>
+      <label class="ctl"><span>Top-k: candidatos permitidos</span><output id="tp-k-o"></output><input type="range" id="tp-k" min="1" max="8" step="1" value="8"></label>
+    </div>
+    <div class="btns"><button class="primary" id="tp-gen">Elegir la siguiente palabra</button><button id="tp-many">Elegir 100 veces</button><button id="tp-reset">Reiniciar</button></div>
+    <div class="readout" id="tp-out"></div>
+    <p class="hint">Los logits son fijos e inventados. Con k = 1 y cualquier temperatura el modelo es <b>codicioso</b> (<i>greedy</i>): siempre toma la favorita. Top-k descarta todo menos los k mejores candidatos y reparte la probabilidad entre ellos.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Escribir es predecir, una palabra a la vez</h2>
+  <div class="prose">
+    <p>¿Cómo asigna un modelo probabilidad a una frase entera? Con la <b>regla de la cadena</b> de la probabilidad: la probabilidad de toda la secuencia es el producto de las probabilidades de cada token dado todo lo anterior.</p>
+  </div>
+  <div class="eq">P(t<sub>1</sub>, t<sub>2</sub>, …, t<sub>n</sub>) = P(t<sub>1</sub>) · P(t<sub>2</sub> | t<sub>1</sub>) · P(t<sub>3</sub> | t<sub>1</sub>, t<sub>2</sub>) ⋯ = Π<sub>i</sub> P(t<sub>i</sub> | t<sub>&lt;i</sub>)</div>
+  <div class="prose">
+    <p>Por eso la generación es <b>autorregresiva</b>: el modelo produce un token, lo agrega al contexto y lo usa para predecir el siguiente. El ejemplo más simple posible es un <b>modelo de bigramas</b>, que solo mira la última palabra y cuenta, en un texto de entrenamiento, qué palabras la siguieron. Un LLM hace lo mismo, pero mirando miles de tokens hacia atrás y con una red neuronal en lugar de una tabla de conteos.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Un modelo de bigramas de juguete</h3></div>
+    <div class="readout" id="bg-corpus" style="font-family:var(--f-body);font-size:.92rem"></div>
+    <div class="llm-text" id="bg-text"></div>
+    <div class="llm-bars" id="bg-bars" role="img" aria-label="Probabilidad de la siguiente palabra según los conteos"></div>
+    <div class="btns"><button class="primary" id="bg-step">Siguiente palabra</button><button id="bg-run">Generar 12 palabras</button><button id="bg-reset">Empezar de nuevo</button></div>
+    <div class="readout" id="bg-out"></div>
+    <p class="hint">Las probabilidades salen de contar: P(siguiente | actual) = veces que aparece «actual siguiente» / veces que aparece «actual». Con solo una palabra de memoria el texto suena gramatical a ratos, pero no tiene rumbo. Para eso hace falta la atención.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Paso 3: la atención, o cómo cada palabra mira a las demás</h2>
+  <div class="prose">
+    <p>La palabra «banco» significa cosas distintas en «el banco me dio un préstamo» y en «el banco del río estaba lleno». Su embedding inicial es el mismo en las dos frases. La <b>atención</b> es el mecanismo que permite que cada palabra tome información de las otras para ajustar su significado.</p>
+    <p>Cada token produce tres vectores, multiplicando su embedding por tres <a href="05-matrices.html">matrices</a> aprendidas:</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Q: la pregunta</h3><span class="ex">q = W<sub>Q</sub>·x</span><p>Lo que esta palabra está buscando. «Banco» pregunta: ¿hay algo cerca que me diga de qué tipo de banco se trata?</p></div>
+    <div class="fact"><h3>K: la etiqueta</h3><span class="ex">k = W<sub>K</sub>·x</span><p>Cómo se anuncia cada palabra ante las demás. «Río» dice: soy un lugar con agua y naturaleza.</p></div>
+    <div class="fact"><h3>V: el contenido</h3><span class="ex">v = W<sub>V</sub>·x</span><p>La información que la palabra entrega si alguien le presta atención.</p></div>
+  </div>
+  <div class="eq">Atención(Q, K, V) = softmax( Q·Kᵀ / √d ) · V</div>
+  <div class="prose">
+    <p>Se lee en tres pasos. <b>Primero</b>, el <a href="04-vectores.html">producto punto</a> q·k mide qué tan compatible es la pregunta de una palabra con la etiqueta de otra. <b>Segundo</b>, se divide entre √<var>d</var> (la dimensión de los vectores) para que los números no crezcan demasiado, y el softmax los vuelve pesos que suman 1. <b>Tercero</b>, la nueva representación de la palabra es el promedio de los contenidos <var>v</var>, ponderado por esos pesos. <span class="hl">Es un promedio ponderado, donde los pesos los decide la compatibilidad.</span></p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Un mapa de atención</h3></div>
+    <div class="btns" id="at-sent" role="group" aria-label="Elegir frase"></div>
+    <div class="btns" id="at-words" role="group" aria-label="Elegir la palabra que pregunta"></div>
+    <div class="split">
+      <div class="llm-bars" id="at-bars" role="img" aria-label="Peso de atención de la palabra elegida sobre cada palabra"></div>
+      <div class="tbl" id="at-heat"></div>
+    </div>
+    <div class="readout" id="at-out"></div>
+    <p class="hint">Los vectores q y k son de 3 dimensiones, inventados a mano para que se entienda la idea. Las columnas significan, a grosso modo: «finanzas», «naturaleza» y «es un sustantivo». En un modelo real tienen 64 o 128 dimensiones y nadie las elige: salen del entrenamiento. La tabla de la derecha muestra los pesos de todas las palabras: cada fila suma 1.</p>
+  </div>
+  <div class="prose">
+    <p>Un <b>transformer</b> es esto repetido: una capa de atención (en realidad varias en paralelo, las «cabezas») seguida de una capa densa como las del <a href="11-neurona.html">módulo 11</a>, y eso apilado decenas de veces. En cada piso las representaciones se vuelven más abstractas, y la última se usa para calcular los logits del siguiente token.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Cómo aprende: entropía cruzada a escala gigante</h2>
+  <div class="prose">
+    <p>El entrenamiento no necesita etiquetas hechas a mano: cualquier texto sirve. Se toma una frase, se le tapa el final y se le pide al modelo que prediga el siguiente token. El error es la <b>entropía cruzada</b>: menos el logaritmo de la probabilidad que el modelo le dio al token correcto.</p>
+  </div>
+  <div class="eq">pérdida = −ln P(token correcto | contexto)</div>
+  <div class="tbl"><table>
+    <thead><tr><th>Probabilidad dada al token correcto</th><th>Pérdida −ln p</th><th>Lectura</th></tr></thead>
+    <tbody>
+      <tr><td>0.9</td><td>0.11</td><td>Casi perfecto: castigo pequeño.</td></tr>
+      <tr><td>0.5</td><td>0.69</td><td>Dudaba entre dos opciones.</td></tr>
+      <tr><td>0.1</td><td>2.30</td><td>Le daba poca chance a la respuesta correcta.</td></tr>
+      <tr><td>0.001</td><td>6.91</td><td>Estaba seguro de otra cosa: castigo enorme.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <p>Se promedia esa pérdida sobre billones de tokens y se ajustan todos los parámetros con <a href="09-gradiente.html">descenso del gradiente</a>, usando backpropagation para calcular las derivadas. Una medida que se reporta mucho es la <b>perplejidad</b> = e<sup>pérdida promedio</sup>: se interpreta como «entre cuántas palabras, en promedio, sigue dudando el modelo». Una perplejidad de 10 equivale a dudar entre 10 opciones igual de probables.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Parámetros</h3><span class="ex">de 10⁹ a 10¹² números</span><p>Todas las matrices: embeddings, W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub> y las capas densas. «Un modelo de 70B» tiene 70 mil millones de perillas.</p></div>
+    <div class="fact"><h3>Ventana de contexto</h3><span class="ex">de miles a millones de tokens</span><p>Cuántos tokens hacia atrás puede mirar la atención. Lo que queda fuera, el modelo no lo ve.</p></div>
+    <div class="fact"><h3>Ajuste posterior</h3><span class="ex">instrucciones + preferencias humanas</span><p>Después del preentrenamiento se le enseña a seguir instrucciones y a responder de forma útil, con ejemplos y con retroalimentación de personas.</p></div>
+  </div>
+  <div class="ml"><b>En la práctica</b><p>Cuando usas un LLM por API, los parámetros <code>temperature</code> y <code>top_k</code> (o <code>top_p</code>) son exactamente los del laboratorio. Los costos se cobran por <b>token</b>, no por palabra: en español una palabra suele ocupar entre 1 y 2 tokens. Las búsquedas semánticas y los sistemas RAG usan los <b>embeddings</b> y la similitud coseno para encontrar los documentos más parecidos a una pregunta. Y cuando un modelo «alucina», está haciendo lo único que sabe hacer: elegir una continuación probable, aunque no sea verdadera.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Si los logits son [2, 1, 0], ¿qué palabra gana con T = 0.1? ¿Y qué pasa con T = 100?</summary><p>Con T = 0.1 los puntajes se vuelven [20, 10, 0] y la primera se lleva casi el 100 %. Con T = 100 quedan [0.02, 0.01, 0] y las tres tienen casi un tercio cada una.</p></details>
+    <details><summary>¿Por qué los pesos de atención de una palabra suman 1?</summary><p>Porque salen de un softmax. La nueva representación es un promedio ponderado de los vectores V de las demás palabras.</p></details>
+    <details><summary>El modelo le dio probabilidad 0.25 al token correcto. ¿Cuál es la pérdida? ¿Y la perplejidad si todos los tokens fueran así?</summary><p>−ln 0.25 ≈ 1.39. La perplejidad es e^1.39 = 4: es como dudar entre 4 opciones.</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=LPZh9BOjkQs" target="_blank" rel="noopener">Large Language Models explained briefly</a><span>El panorama completo en pocos minutos: predecir la siguiente palabra, repetido.</span></li><li><a href="https://www.youtube.com/watch?v=wjZofJX0v4M" target="_blank" rel="noopener">Transformers, the tech behind LLMs (Deep learning, cap. 5)</a><span>Embeddings, softmax con temperatura y cómo se apilan las capas de un transformer.</span></li><li><a href="https://www.youtube.com/watch?v=eMlx5fFNoYc" target="_blank" rel="noopener">Attention in transformers, step-by-step (Deep learning, cap. 6)</a><span>Las matrices de consulta, clave y valor, con el mismo ejemplo de palabras que cambian de significado.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=transformers" target="_blank" rel="noopener">Dot CSV · transformers y GPT</a>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=transformers" target="_blank" rel="noopener">Ringa Tech · cómo funcionan los transformers</a>
+    <a class="vid" href="https://www.youtube.com/@AndrejKarpathy/search?query=GPT" target="_blank" rel="noopener">Andrej Karpathy · construye un GPT desde cero <small>EN</small></a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 15 Utilidades del LLM ---------- */
+const llmRng=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+const llmPick=(ps,r)=>{let a=0;for(let i=0;i<ps.length;i++){a+=ps[i];if(r<a)return i;}return ps.length-1;};
+const llmBars=(el,rows)=>{el.innerHTML=rows.map(r=>`<div class="llm-row${r.off?' off':''}${r.hit?' hit':''}"><span class="w">${r.w}</span><span class="llm-track"><i style="width:${(100*r.p).toFixed(1)}%"></i></span><span class="p">${r.txt??fmt(100*r.p,1)+' %'}</span></div>`).join('');};
+
+/* ---------- 15 Tokenizador ---------- */
+(function(){
+  const IN=$('#tk-in'),SUF=['ción','mente','ron','mos','ndo','s'];
+  const hash=s=>{let h=2166136261;for(const c of s){h^=c.codePointAt(0);h=Math.imul(h,16777619);}return 100+((h>>>0)%49900);};
+  function tokens(t){
+    const out=[];
+    (t.toLowerCase().match(/[\p{L}\p{N}]+|[^\s\p{L}\p{N}]/gu)||[]).forEach(w=>{
+      const s=SUF.find(x=>w.length>x.length+2&&w.endsWith(x));
+      if(s){out.push(w.slice(0,-s.length));out.push('-'+s);}else out.push(w);
+    });
+    return out;
+  }
+  function out(){
+    const t=tokens(IN.value);
+    $('#tk-out').innerHTML=t.map(w=>`<span class="llm-tok">${w.replace(/</g,'&lt;')}<small>${hash(w)}</small></span>`).join('')||'<span class="hint">Escribe algo para ver los tokens.</span>';
+    $('#tk-sum').innerHTML=`<span>${IN.value.length} caracteres → ${t.length} tokens. El modelo solo ve la lista: [${t.slice(0,12).map(hash).join(', ')}${t.length>12?', …':''}]</span>`;
+  }
+  IN.addEventListener('input',out);out();
+})();
+
+/* ---------- 15 Temperatura y muestreo ---------- */
+(function(){
+  const C=[['sofá',3.2],['suelo',2.8],['tejado',2.1],['cojín',1.9],['alféizar',1.0],['teclado',0.8],['río',-0.5],['impuesto',-2]];
+  const T=$('#tp-t'),K=$('#tp-k'),rnd=llmRng(42);let hit=-1,counts=null,word='…';
+  function probs(){
+    const t=+T.value,k=+K.value,m=Math.max(...C.map(c=>c[1]/t));
+    const e=C.map((c,i)=>i<k?Math.exp(c[1]/t-m):0),s=e.reduce((a,b)=>a+b,0);
+    return e.map(x=>x/s);
+  }
+  function out(){
+    const p=probs(),k=+K.value;
+    $('#tp-t-o').textContent=short(+T.value);$('#tp-k-o').textContent=k===C.length?k+' (todos)':k;
+    $('#tp-text').innerHTML=`El gato se sentó en el <b>${word}</b>`;
+    llmBars($('#tp-bars'),C.map((c,i)=>({w:c[0],p:p[i],off:i>=k,hit:i===hit,txt:counts?counts[i]+' / 100':undefined})));
+    const H=-p.reduce((a,x)=>a+(x>0?x*Math.log(x):0),0),eff=Math.exp(H);
+    const t=+T.value;
+    $('#tp-out').innerHTML=`<span class="big">logits z = [${C.map(c=>short(c[1])).join(', ')}] → z / T con T = ${short(t)}</span>`+
+      `<span>La favorita tiene ${fmt(100*p[0],1)} %. El modelo «duda» como si eligiera entre ${fmt(eff,1)} opciones igual de probables.</span>`+
+      `<span>${k===1?'<span class="ok">Top-k = 1: siempre «sofá», sin azar (decodificación codiciosa).</span>':t<.4?'<span class="ok">Temperatura baja: casi determinista.</span>':t>1.8?'<span class="warn">Temperatura alta: hasta «impuesto» tiene chance. Más variedad, más disparates.</span>':'Temperatura media: variado pero razonable.'}</span>`;
+  }
+  $('#tp-gen').onclick=()=>{counts=null;hit=llmPick(probs(),rnd());word=C[hit][0];out();};
+  $('#tp-many').onclick=()=>{const p=probs();counts=C.map(()=>0);for(let i=0;i<100;i++)counts[llmPick(p,rnd())]++;hit=-1;word='…';out();};
+  $('#tp-reset').onclick=()=>{hit=-1;counts=null;word='…';out();};
+  [T,K].forEach(el=>el.addEventListener('input',()=>{counts=null;out();}));
+  out();
+})();
+
+/* ---------- 15 Bigramas ---------- */
+(function(){
+  const corpus='el gato come pescado . el perro come carne . el gato duerme en el sofá . el perro duerme en el suelo . la niña ve al gato . la niña juega con el perro . el gato mira a la niña .';
+  const W=corpus.split(' '),N={};
+  for(let i=0;i<W.length-1;i++){(N[W[i]]??={})[W[i+1]]=(N[W[i]][W[i+1]]||0)+1;}
+  const rnd=llmRng(7);let text=['el'],last=null;
+  $('#bg-corpus').innerHTML=`<span><b>Texto de entrenamiento:</b> «${corpus}»</span>`;
+  const next=()=>{const w=text[text.length-1],n=N[w]||{el:1},tot=Object.values(n).reduce((a,b)=>a+b,0);return {w,tot,opts:Object.entries(n).sort((a,b)=>b[1]-a[1])};};
+  function out(){
+    const {w,tot,opts}=next();
+    $('#bg-text').innerHTML=text.map((t,i)=>i===text.length-1&&last!==null?`<b>${t}</b>`:t).join(' ');
+    llmBars($('#bg-bars'),opts.map(([x,c])=>({w:x,p:c/tot,txt:c+' / '+tot})));
+    $('#bg-out').innerHTML=`<span class="big">P(siguiente | «${w}»)</span><span>«${w}» aparece ${tot} veces seguida de algo. ${opts.map(([x,c])=>`«${x}» ${c} veces`).join(', ')}. Cada probabilidad es su conteo dividido entre ${tot}.</span>`;
+  }
+  const step=()=>{const {tot,opts}=next();let r=rnd()*tot,i=0;while(r>=opts[i][1]){r-=opts[i][1];i++;}text.push(opts[i][0]);last=i;if(text.length>40)text=text.slice(-40);};
+  $('#bg-step').onclick=()=>{step();out();};
+  $('#bg-run').onclick=()=>{for(let i=0;i<12;i++)step();out();};
+  $('#bg-reset').onclick=()=>{text=['el'];last=null;out();};
+  out();
+})();
+
+/* ---------- 15 Atención ---------- */
+(function(){
+  // Vectores inventados: [finanzas, naturaleza, sustantivo]
+  const K={el:[0,0,.1],banco:[.5,.5,1],del:[0,0,.1],'río':[0,2,1],estaba:[0,.2,0],lleno:[.2,.3,0],me:[0,0,.3],dio:[.6,0,0],un:[0,0,.1],'préstamo':[2,0,1]};
+  const Q={banco:[1.6,1.6,.4],'río':[.3,1.2,.5],'préstamo':[1.2,.2,.5],lleno:[.2,.6,1.4],estaba:[0,0,1.2],dio:[.9,0,1.2]};
+  const qOf=w=>Q[w]||[0,0,1];
+  const S=[['el','banco','del','río','estaba','lleno'],['el','banco','me','dio','un','préstamo']];
+  let si=0,wi=1;
+  const dotp=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  const weights=(s,i)=>{const sc=s.map(w=>dotp(qOf(s[i]),K[w])/Math.sqrt(3)),m=Math.max(...sc),e=sc.map(x=>Math.exp(x-m)),t=e.reduce((a,b)=>a+b,0);return {sc,w:e.map(x=>x/t)};};
+  const vec=v=>'['+v.map(x=>fmt(x,2)).join(', ')+']';
+  function buttons(){
+    $('#at-sent').innerHTML='';S.forEach((s,i)=>{const b=document.createElement('button');b.textContent='«'+s.join(' ')+'»';b.setAttribute('aria-pressed',i===si);b.onclick=()=>{si=i;wi=1;buttons();out();};$('#at-sent').appendChild(b);});
+    $('#at-words').innerHTML='';S[si].forEach((w,i)=>{const b=document.createElement('button');b.textContent=w;b.setAttribute('aria-pressed',i===wi);b.onclick=()=>{wi=i;buttons();out();};$('#at-words').appendChild(b);});
+  }
+  function out(){
+    const s=S[si],{sc,w}=weights(s,wi),q=qOf(s[wi]);
+    llmBars($('#at-bars'),s.map((x,i)=>({w:x,p:w[i],hit:i===wi})));
+    $('#at-heat').innerHTML=`<table class="llm-heat"><thead><tr><th>pregunta ↓ · mira →</th>${s.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${s.map((x,i)=>{const r=weights(s,i).w;return `<tr><th${i===wi?' style="color:var(--accent)"':''}>${x}</th>${r.map(v=>`<td style="background:color-mix(in srgb,var(--accent) ${Math.round(v*100)}%,transparent);color:${v>.5?'var(--card)':'var(--ink)'}">${fmt(v,2)}</td>`).join('')}</tr>`;}).join('')}</tbody></table>`;
+    const mix=[0,1,2].map(j=>s.reduce((a,x,i)=>a+w[i]*K[x][j],0));
+    const top=s.map((x,i)=>[x,w[i]]).filter((_,i)=>i!==wi).sort((a,b)=>b[1]-a[1])[0];
+    let note='';
+    if(s[wi]==='banco')note=mix[1]>mix[0]?'<span class="ok">«banco» tomó sobre todo información de «río»: su nuevo vector se inclina hacia «naturaleza». Es un banco para sentarse junto al agua.</span>':'<span class="ok">«banco» tomó sobre todo información de «préstamo»: su nuevo vector se inclina hacia «finanzas». Es una entidad financiera.</span>';
+    else note=`Fuera de sí misma, «${s[wi]}» mira sobre todo a «${top[0]}» (${fmt(100*top[1],0)} %).`;
+    $('#at-out').innerHTML=`<span class="big">q(«${s[wi]}») = ${vec(q)}</span>`+
+      `<span>1. Compatibilidades q·k / √3: ${s.map((x,i)=>`${x} ${fmt(sc[i],2)}`).join(' · ')}</span>`+
+      `<span>2. Softmax → pesos: ${s.map((x,i)=>`${x} ${fmt(w[i],2)}`).join(' · ')} (suman 1)</span>`+
+      `<span>3. Promedio ponderado de los v: ${vec(mix)} = [finanzas, naturaleza, sustantivo]</span><span>${note}</span>`;
+  }
+  buttons();out();
+})();
+})();
+</script>
+</body>
+</html>

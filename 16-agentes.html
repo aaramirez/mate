@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agentes · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="agentes">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 16 DE 16</span><h1>Agentes: decidir, actuar y aprender</h1><p class="lede">Un agente observa, decide, actúa y recibe una recompensa. Aquí lo escribimos con matemática (estados, acciones, política, retorno y la ecuación de Bellman) y vemos que un asistente con LLM que usa herramientas es exactamente lo mismo.</p></header>
+<style>
+.lp-wrap{display:grid;gap:12px}
+.lp-ctx{display:grid;gap:6px;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--paper);min-height:120px}
+.lp-ctx .lp-m{font:500 .88rem/1.4 var(--f-mono);padding:6px 10px;border-radius:6px;border-left:3px solid var(--line);background:var(--card);overflow-wrap:anywhere}
+.lp-ctx .lp-m b{font-family:var(--f-display);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.lp-ctx .lp-u{border-left-color:var(--ink)}
+.lp-ctx .lp-a{border-left-color:var(--accent)}
+.lp-ctx .lp-o{border-left-color:var(--warm)}
+.lp-ctx .lp-new{outline:2px solid var(--accent);outline-offset:1px}
+.lp-loop{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
+.lp-loop li{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:3px;background:var(--card);transition:border-color .2s,background .2s}
+.lp-loop li b{font:700 .92rem var(--f-display)}
+.lp-loop li span{font-size:.86rem;color:var(--muted)}
+.lp-loop li.on{border-color:var(--accent);background:var(--accent-soft)}
+</style>
+
+<section>
+  <h2>¿Qué es un agente?</h2>
+  <div class="prose">
+    <p>Un <b>agente</b> es cualquier cosa que <b>observa</b> una situación, <b>decide</b> qué hacer, <b>actúa</b> y luego <b>ve qué pasó</b>. Un termostato, un robot aspiradora, un programa que juega ajedrez y un asistente con IA que busca en internet cumplen esa descripción. Lo que cambia es qué tan inteligente es la decisión.</p>
+    <p>La matemática de los agentes viene del <b>aprendizaje por refuerzo</b>. La idea es la de entrenar a una mascota: nadie le dice la respuesta correcta, solo recibe premios o castigos y aprende qué conviene hacer en cada situación.</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Observar:</b> el agente ve el estado del mundo, <var>s</var>ₜ.</span></li>
+    <li><span><b>Decidir:</b> su <b>política</b> π elige una acción <var>a</var>ₜ.</span></li>
+    <li><span><b>Actuar:</b> el entorno reacciona y pasa a un nuevo estado <var>s</var>ₜ₊₁.</span></li>
+    <li><span><b>Recibir:</b> el entorno le devuelve una recompensa <var>r</var>ₜ (un número: positivo es bueno, negativo es malo). Y se vuelve al paso 1.</span></li>
+  </ol>
+  <div class="prose">
+    <p>El subíndice <var>t</var> es el tiempo, contado en pasos: 0, 1, 2, … Todo el juego consiste en elegir acciones que junten la mayor recompensa posible <b>a largo plazo</b>, no solo en el próximo paso.</p>
+  </div>
+</section>
+
+<section>
+  <h2>La definición formal: un proceso de decisión de Markov</h2>
+  <div class="prose">
+    <p>Para escribirlo con matemática, el mundo del agente se describe con cinco piezas. A esa quíntupla se le llama <b>proceso de decisión de Markov</b> (MDP):</p>
+  </div>
+  <div class="eq">MDP = (S, A, P, R, γ)</div>
+  <div class="cards">
+    <div class="fact"><h3>S: estados</h3><span class="ex">s ∈ S</span><p>Todas las situaciones posibles. En un tablero, cada casilla donde puede estar el agente.</p></div>
+    <div class="fact"><h3>A: acciones</h3><span class="ex">a ∈ A</span><p>Lo que el agente puede hacer: ↑, ↓, ←, →; o «responder», «buscar», «calcular».</p></div>
+    <div class="fact"><h3>P: transición</h3><span class="ex">P(s′ | s, a)</span><p>La <a href="10-probabilidad.html">probabilidad</a> de llegar a s′ si estoy en s y hago a. El mundo puede ser imprevisible: a veces uno resbala.</p></div>
+    <div class="fact"><h3>R: recompensa</h3><span class="ex">R(s, a)</span><p>El premio o castigo inmediato. Es la única señal de «lo hiciste bien» que recibe el agente.</p></div>
+    <div class="fact"><h3>γ: descuento</h3><span class="ex">0 ≤ γ &lt; 1</span><p>Cuánto valen las recompensas futuras frente a las de hoy. Con γ = 0.9, un premio dentro de un paso vale el 90 %.</p></div>
+  </div>
+  <div class="prose">
+    <p>«De Markov» significa que <span class="hl">el futuro solo depende del estado actual, no de cómo se llegó a él</span>. El estado tiene que resumir todo lo importante.</p>
+    <p><b>La política</b> es el cerebro del agente. Es una <a href="03-funciones.html">función</a> que recibe un estado y devuelve una acción, o mejor, una <b>distribución de probabilidad</b> sobre las acciones:</p>
+  </div>
+  <div class="eq">π(a | s) = probabilidad de hacer a estando en s</div>
+  <div class="prose">
+    <p>Si el agente juega, deja un rastro llamado <b>trayectoria</b>: τ = (<var>s</var>₀, <var>a</var>₀, <var>r</var>₀, <var>s</var>₁, <var>a</var>₁, <var>r</var>₁, …). Y lo que se quiere hacer grande es el <b>retorno</b>, la suma de las recompensas con descuento:</p>
+  </div>
+  <div class="eq">G = r₀ + γ·r₁ + γ²·r₂ + γ³·r₃ + … = Σₜ γᵗ·rₜ</div>
+  <div class="prose">
+    <p>¿Por qué el descuento? Primero, porque «más vale pájaro en mano»: un premio seguro hoy vale más que uno incierto mañana. Segundo, por una razón matemática: si la tarea no termina nunca, la suma tiene infinitos términos. Con γ &lt; 1 los pesos γᵗ se achican tan rápido que la suma tiene un <a href="06-limites.html">límite</a> finito. Es una serie geométrica: si todas las recompensas valen 1, G = 1 + γ + γ² + … = 1 / (1 − γ). Con γ = 0.9 eso da 10.</p>
+    <p>El <b>objetivo</b> del agente se escribe en una línea: encontrar la política que, en promedio, consigue el mayor retorno.</p>
+  </div>
+  <div class="eq">π* = argmax<sub>π</sub> 𝔼<sub>π</sub>[G]</div>
+  <div class="prose"><p>Se lee: «π* es la política que hace más grande el valor esperado (𝔼, el promedio) del retorno». Hay que hablar de promedio porque tanto el mundo como la política pueden tener azar.</p></div>
+</section>
+
+<section>
+  <h2>El valor de un estado y la ecuación de Bellman</h2>
+  <div class="prose">
+    <p>¿Cómo sabe el agente qué tan buena es una casilla? Con la <b>función de valor</b>: V(<var>s</var>) es el retorno que se espera conseguir si se empieza en <var>s</var> y se juega bien desde ahí. Su prima, Q(<var>s</var>, <var>a</var>), es lo mismo pero fijando la primera acción: «¿cuánto espero ganar si estoy en <var>s</var> y hago <var>a</var>?».</p>
+    <p>Richard Bellman notó algo que lo simplifica todo: <span class="hl">el valor de donde estoy es lo que gano ahora más el valor, descontado, de donde llegaré</span>.</p>
+  </div>
+  <div class="eq">V(s) = max<sub>a</sub> [ R(s, a) + γ · Σ<sub>s′</sub> P(s′ | s, a) · V(s′) ]</div>
+  <div class="prose">
+    <p>En palabras: prueba cada acción; para cada una suma el premio inmediato y el promedio de los valores de las casillas a las que puedes llegar, multiplicado por γ; quédate con la mejor. Lo que está dentro del corchete es justamente Q(<var>s</var>, <var>a</var>), y la política óptima es elegir la acción con mayor Q.</p>
+    <p>La ecuación usa V en los dos lados, pero eso no es problema. Se arranca con V = 0 en todas partes y se aplica la fórmula una y otra vez: cada vuelta corrige los valores un poco. A eso se le llama <b>iteración de valores</b>, y los valores <a href="06-limites.html">convergen</a> a los verdaderos.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Mundo de cuadrícula: iteración de valores</h3></div>
+    <div class="split">
+      <canvas id="gw-cv" role="img" aria-label="Cuadrícula de 5 por 5 con meta, trampa y muros; cada casilla muestra su valor y una flecha con la mejor acción"></canvas>
+      <div style="display:grid;gap:12px;align-content:start">
+        <label class="ctl"><span>Descuento γ</span><output id="gw-g-o"></output><input type="range" id="gw-g" min="0" max="0.99" step="0.01" value="0.9"></label>
+        <label class="ctl"><span>Probabilidad de resbalar</span><output id="gw-s-o"></output><input type="range" id="gw-s" min="0" max="0.4" step="0.05" value="0"></label>
+        <div class="btns"><button class="primary" id="gw-step">Una iteración</button><button id="gw-run">Hasta converger</button><button id="gw-reset">Reiniciar</button></div>
+        <div class="legend"><span><i style="background:var(--good)"></i>Meta +10</span><span><i style="background:var(--warm)"></i>Trampa −10</span><span><i style="background:var(--ink)"></i>Muro</span></div>
+      </div>
+    </div>
+    <div class="readout" id="gw-out"></div>
+    <p class="hint">Cada paso cuesta −1, llegar a la meta da +10 y caer en la trampa, −10. Toca una casilla para ver la ecuación de Bellman con sus números. Con resbalones, la acción elegida solo se cumple a veces y el agente prefiere alejarse de la trampa.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Explorar o explotar</h2>
+  <div class="prose">
+    <p>En el laboratorio anterior el agente conocía el mapa: P y R eran datos. En la vida real casi nunca es así, y el agente tiene que <b>aprender probando</b>. Ahí aparece un dilema: ¿uso lo que ya sé que funciona (<b>explotar</b>) o pruebo algo nuevo que podría ser mejor (<b>explorar</b>)? Es como elegir restaurante: siempre al favorito, o de vez en cuando uno nuevo.</p>
+    <p>La solución más simple se llama <b>ε-greedy</b> (ε-codiciosa): con probabilidad ε elige una acción al azar; el resto del tiempo, la que hasta ahora le dio mejor promedio. El promedio se actualiza con cada jugada:</p>
+  </div>
+  <div class="eq">Q(a) ← Q(a) + (1 / n) · (r − Q(a))</div>
+  <div class="prose"><p>Es la misma idea del <a href="09-gradiente.html">descenso del gradiente</a>: corregir la estimación un poquito en la dirección del error (r − Q). Lo que en ese módulo era la tasa de aprendizaje η, aquí es 1/<var>n</var>.</p></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Cuatro máquinas tragamonedas (bandido multibrazo)</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Lo que el agente cree (Q) vs. la verdad oculta</span><canvas id="bd-cv1" role="img" aria-label="Barras con la estimación de cada máquina y su promedio real"></canvas></div>
+      <div class="fig"><span class="cap">Recompensa promedio a lo largo del tiempo</span><canvas id="bd-cv2" role="img" aria-label="Curva de la recompensa promedio por jugada"></canvas></div>
+    </div>
+    <div class="ctls">
+      <label class="ctl"><span>Exploración ε</span><output id="bd-e-o"></output><input type="range" id="bd-e" min="0" max="0.5" step="0.01" value="0.1"></label>
+    </div>
+    <div class="btns"><button class="primary" id="bd-play">Jugar 100 veces</button><button id="bd-cmp">Comparar ε = 0, 0.1 y 0.3</button><button id="bd-reset">Reiniciar</button></div>
+    <div class="readout" id="bd-out"></div>
+    <p class="hint">Cada máquina paga en promedio una cantidad distinta, con ruido. El agente no lo sabe. Con ε = 0 suele quedarse pegado a la primera máquina que le pareció buena; con ε grande explora tanto que desperdicia jugadas.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Un agente con LLM es el mismo esquema</h2>
+  <div class="prose">
+    <p>Los asistentes que usan herramientas (buscan en la web, ejecutan código, leen archivos) son agentes en el sentido exacto de este módulo. Solo cambian las piezas:</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Pieza</th><th>Aprendizaje por refuerzo clásico</th><th>Agente con LLM</th></tr></thead>
+    <tbody>
+      <tr><td>Estado <var>s</var></td><td>La casilla del tablero</td><td>El <b>contexto</b>: instrucciones, mensajes y resultados de herramientas hasta ahora</td></tr>
+      <tr><td>Acción <var>a</var></td><td>↑, ↓, ←, →</td><td>Escribir una respuesta o <b>llamar una herramienta</b> con ciertos argumentos</td></tr>
+      <tr><td>Política π</td><td>Una tabla o una red pequeña</td><td>El propio LLM: π<sub>θ</sub>(acción | contexto), con θ sus miles de millones de pesos</td></tr>
+      <tr><td>Entorno y P</td><td>Las reglas del tablero</td><td>Las herramientas y el mundo: lo que devuelve la búsqueda, el resultado del código</td></tr>
+      <tr><td>Recompensa <var>r</var></td><td>+10, −10, −1</td><td>Si la tarea quedó bien hecha; durante el entrenamiento, la calificación de personas o de pruebas automáticas</td></tr>
+      <tr><td>Fin del episodio</td><td>Llegar a la meta o a la trampa</td><td>El modelo decide responder y parar</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <p>Como viste en el <a href="15-llm.html">módulo 15</a>, un LLM solo sabe hacer una cosa: dar la probabilidad del <b>siguiente token</b> dado el texto anterior. Un agente aprovecha eso en un bucle: <span class="hl">la acción es un trozo de texto con un formato especial («llama a la calculadora con 240 × 0.15»), un programa ejecuta esa acción y pega el resultado al final del contexto</span>. El nuevo contexto es el nuevo estado, y el LLM vuelve a decidir.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Paso a paso</span><h3>El bucle de un agente con LLM</h3></div>
+    <div class="lp-wrap">
+      <ol class="lp-loop" id="lp-loop">
+        <li data-k="obs"><b>1 · Estado</b><span>El contexto completo sₜ</span></li>
+        <li data-k="pol"><b>2 · Política</b><span>El LLM elige aₜ ~ π<sub>θ</sub>(· | sₜ)</span></li>
+        <li data-k="env"><b>3 · Entorno</b><span>La herramienta se ejecuta</span></li>
+        <li data-k="upd"><b>4 · Nuevo estado</b><span>sₜ₊₁ = sₜ + aₜ + resultado</span></li>
+      </ol>
+      <div class="lp-ctx" id="lp-ctx" aria-live="polite"></div>
+      <div class="btns"><button class="primary" id="lp-next">Siguiente paso</button><button id="lp-reset">Reiniciar</button></div>
+      <div class="readout" id="lp-out"></div>
+    </div>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>El aprendizaje por refuerzo entrenó a AlphaGo, a robots que caminan y a sistemas que ajustan la temperatura de centros de datos. En los LLM aparece dos veces: en el <b>RLHF</b> (aprendizaje por refuerzo con retroalimentación humana), donde la recompensa es la preferencia de una persona entre dos respuestas, y en los <b>agentes</b>, donde el modelo actúa en bucle con herramientas. La exploración, el descuento y el valor de los estados siguen siendo las mismas ideas de este módulo.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Con γ = 0.9, un agente recibe las recompensas 1, 1, 10. ¿Cuál es su retorno?</summary><p>G = 1 + 0.9·1 + 0.9²·10 = 1 + 0.9 + 8.1 = 10</p></details>
+    <details><summary>¿Qué pasa si γ = 0?</summary><p>G = r₀: el agente es «miope» y solo le importa el premio inmediato. En la cuadrícula, solo las casillas vecinas a la meta saben a dónde ir.</p></details>
+    <details><summary>Si todas las recompensas valen 1 y γ = 0.99, ¿a cuánto tiende el retorno?</summary><p>1 / (1 − 0.99) = 100: una serie geométrica con límite finito.</p></details>
+    <details><summary>En un agente con LLM, ¿qué es el estado?</summary><p>El contexto completo: instrucciones, mensajes del usuario, las acciones que ya tomó el modelo y los resultados de las herramientas.</p></details>
+  </div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=aprendizaje%20por%20refuerzo" target="_blank" rel="noopener">Dot CSV · aprendizaje por refuerzo</a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=agentes" target="_blank" rel="noopener">Dot CSV · agentes de IA</a>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=aprendizaje%20por%20refuerzo" target="_blank" rel="noopener">Ringa Tech · aprendizaje por refuerzo</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=reinforcement%20learning" target="_blank" rel="noopener">StatQuest · reinforcement learning <small>EN</small></a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 16 Mundo de cuadrícula ---------- */
+(function(){
+  const N=5,GOAL=[0,4],TRAP=[1,4],START=[4,0],WALLS=['1,1','2,1','3,3'];
+  const ACT=[['↑',-1,0],['→',0,1],['↓',1,0],['←',0,-1]],NAMES=['arriba','derecha','abajo','izquierda'];
+  const G=$('#gw-g'),SL=$('#gw-s');
+  const eq=(a,b)=>a[0]===b[0]&&a[1]===b[1];
+  const pv=v=>v<0?"("+fmt(v,1)+")":fmt(v,1);
+  const wall=(r,c)=>WALLS.includes(r+','+c);
+  const term=s=>eq(s,GOAL)||eq(s,TRAP);
+  const rew=s=>eq(s,GOAL)?10:eq(s,TRAP)?-10:-1;
+  let V,k,delta,sel=null,timer=0,cell=1,ox=0,oy=0;
+  function reset(){V=Array.from({length:N},()=>Array(N).fill(0));k=0;delta=null;}
+  reset();
+  function move(s,d){const r=s[0]+d[1],c=s[1]+d[2];return (r<0||r>=N||c<0||c>=N||wall(r,c))?s:[r,c];}
+  function outcomes(s,a){ // [[prob, s'], ...]
+    const p=+SL.value,side=[(a+1)%4,(a+3)%4];
+    const o=[[1-p,move(s,ACT[a])]];if(p>0)side.forEach(b=>o.push([p/2,move(s,ACT[b])]));return o;
+  }
+  const Q=(s,a,Vt)=>outcomes(s,a).reduce((t,[p,s2])=>t+p*(rew(s2)+(+G.value)*(term(s2)?0:Vt[s2[0]][s2[1]])),0);
+  const best=(s,Vt)=>{let b=0,bv=-Infinity;ACT.forEach((_,a)=>{const q=Q(s,a,Vt);if(q>bv+1e-9){bv=q;b=a;}});return [b,bv];};
+  function iterate(){
+    const W=V.map(r=>r.slice());let d=0;
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){const s=[r,c];if(wall(r,c)||term(s))continue;W[r][c]=best(s,V)[1];d=Math.max(d,Math.abs(W[r][c]-V[r][c]));}
+    V=W;k++;delta=d;
+  }
+  const draw=canvasWidget($('#gw-cv'),1,(ctx,w,h)=>{
+    cell=Math.floor(Math.min(w,h)/N);ox=Math.floor((w-cell*N)/2);oy=Math.floor((h-cell*N)/2);
+    ctx.clearRect(0,0,w,h);
+    for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+      const x=ox+c*cell,y=oy+r*cell,s=[r,c];
+      ctx.fillStyle=tok('--card');ctx.fillRect(x,y,cell,cell);
+      if(wall(r,c)){ctx.fillStyle=tok('--ink');ctx.fillRect(x,y,cell,cell);continue;}
+      const v=term(s)?rew(s):V[r][c],t=Math.max(-1,Math.min(1,v/10));
+      ctx.globalAlpha=Math.abs(t)*(term(s)?.85:.6);ctx.fillStyle=t>=0?tok('--good'):tok('--warm');ctx.fillRect(x,y,cell,cell);ctx.globalAlpha=1;
+      ctx.fillStyle=tok('--ink');ctx.textAlign='center';ctx.textBaseline='middle';
+      if(term(s)){ctx.font='700 '+Math.round(cell*.22)+'px '+tok('--f-display');ctx.fillText(eq(s,GOAL)?'+10':'−10',x+cell/2,y+cell/2);continue;}
+      ctx.font='600 '+Math.round(cell*.17)+'px '+tok('--f-mono');ctx.fillText(fmt(V[r][c],1),x+cell/2,y+cell*.3);
+      if(k>0){const [a]=best(s,V),d=ACT[a],L=cell*.2,cx=x+cell/2,cy=y+cell*.64;
+        arrow(ctx,cx-d[2]*L,cy-d[1]*L,cx+d[2]*L,cy+d[1]*L,tok('--accent'),2.5);}
+      if(eq(s,START)){ctx.font='600 '+Math.round(cell*.13)+'px '+tok('--f-display');ctx.fillStyle=tok('--muted');ctx.fillText('inicio',x+cell/2,y+cell*.9);}
+    }
+    ctx.strokeStyle=tok('--line');ctx.lineWidth=1;
+    for(let i=0;i<=N;i++){ctx.beginPath();ctx.moveTo(ox+i*cell,oy);ctx.lineTo(ox+i*cell,oy+N*cell);ctx.stroke();ctx.beginPath();ctx.moveTo(ox,oy+i*cell);ctx.lineTo(ox+N*cell,oy+i*cell);ctx.stroke();}
+    if(sel){ctx.strokeStyle=tok('--accent');ctx.lineWidth=3;ctx.strokeRect(ox+sel[1]*cell+1.5,oy+sel[0]*cell+1.5,cell-3,cell-3);}
+  });
+  function out(){
+    $('#gw-g-o').textContent=fmt(+G.value,2);$('#gw-s-o').textContent=Math.round(+SL.value*100)+' %';
+    const g=+G.value;
+    let head=`<span class="big">Iteración ${k}${delta===null?'':' · mayor cambio Δ = '+fmt(delta,3)} · V(inicio) = ${fmt(V[START[0]][START[1]],2)}</span>`;
+    let msg=k===0?'Todos los valores empiezan en 0. Pulsa «Una iteración»: solo las casillas vecinas de la meta y de la trampa notarán algo.'
+      :delta<1e-3?'<span class="ok">Convergió: otra iteración ya no cambia nada. Las flechas son la política óptima π*.</span>'
+      :`La información de la meta viaja una casilla por iteración. Cada vuelta, el valor de una casilla se corrige con el de sus vecinas.`;
+    let bell='';
+    if(sel&&!wall(...sel)&&!term(sel)){
+      const qs=ACT.map((d,a)=>{const o=outcomes(sel,a);
+        const parts=o.map(([p,s2])=>`${p<1?fmt(p,2)+'·':''}(${rew(s2)} + ${fmt(g,2)}·${pv(term(s2)?0:V[s2[0]][s2[1]])})`).join(' + ');
+        return [d[0],parts,Q(sel,a,V)];});
+      const bi=qs.reduce((b,q,i)=>q[2]>qs[b][2]?i:b,0);
+      bell=`<span style="font-family:var(--f-body);font-size:.95rem">Bellman en la casilla (fila ${sel[0]+1}, columna ${sel[1]+1}), con los valores actuales:</span>`+
+        qs.map((q,i)=>`<span${i===bi?' class="ok"':''}>Q(s, ${q[0]}) = ${q[1]} = ${fmt(q[2],2)}</span>`).join('')+
+        `<span>V(s) ← máx = ${fmt(qs[bi][2],2)}, con la acción ${NAMES[bi]}.</span>`;
+    }else bell='<span style="font-family:var(--f-body);font-size:.95rem">Toca una casilla para ver su ecuación de Bellman.</span>';
+    $('#gw-out').innerHTML=head+`<span>${msg}</span>`+bell;
+    draw();
+  }
+  const stop=()=>{clearInterval(timer);timer=0;};
+  $('#gw-step').onclick=()=>{stop();iterate();out();};
+  $('#gw-run').onclick=()=>{stop();timer=setInterval(()=>{iterate();out();if(delta<1e-3||k>300)stop();},110);};
+  $('#gw-reset').onclick=()=>{stop();reset();out();};
+  [G,SL].forEach(el=>el.addEventListener('input',()=>{stop();reset();out();}));
+  $('#gw-cv').addEventListener('click',e=>{const c=Math.floor((e.offsetX-ox)/cell),r=Math.floor((e.offsetY-oy)/cell);if(r>=0&&r<N&&c>=0&&c<N){sel=[r,c];out();}});
+  reset();sel=[4,0];out();
+})();
+
+/* ---------- 16 Bandido multibrazo ---------- */
+(function(){
+  const MU=[1.2,2.0,3.0,2.4],SD=1.5,NAMES=['A','B','C','D'],BEST=2,E=$('#bd-e');
+  let seed=11;
+  const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const gauss=()=>Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd());
+  let Qv,n,hist,sum,cmp=null;
+  function reset(){Qv=[0,0,0,0];n=[0,0,0,0];hist=[];sum=0;}
+  reset();
+  function choose(Q,eps){
+    if(rnd()<eps)return Math.floor(rnd()*4);
+    const m=Math.max(...Q),ties=Q.map((q,i)=>q===m?i:-1).filter(i=>i>=0);return ties[Math.floor(rnd()*ties.length)];
+  }
+  function pull(Q,cnt,eps){const a=choose(Q,eps),r=MU[a]+SD*gauss();cnt[a]++;Q[a]+=(r-Q[a])/cnt[a];return [a,r];}
+  const c1=canvasWidget($('#bd-cv1'),.8,(ctx,w,h)=>{
+    const F=frame(ctx,w,h,{x0:0,x1:4,y0:-1,y1:5,sx:1,sy:1}),bw=(F.X(1)-F.X(0))*.5;
+    for(let i=0;i<4;i++){
+      const cx=F.X(i+.5);
+      ctx.fillStyle=tok('--accent');ctx.globalAlpha=.85;const y=F.Y(Math.max(-1,Qv[i]));ctx.fillRect(cx-bw/2,Math.min(y,F.Y(0)),bw,Math.abs(F.Y(0)-y));ctx.globalAlpha=1;
+      ctx.strokeStyle=tok('--warm');ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx-bw*.75,F.Y(MU[i]));ctx.lineTo(cx+bw*.75,F.Y(MU[i]));ctx.stroke();
+      ctx.font='600 12px '+tok('--f-mono');ctx.fillStyle=tok('--muted');ctx.textAlign='center';ctx.textBaseline='bottom';
+      ctx.fillText(NAMES[i]+' · n='+n[i],cx,F.Y(4.6));
+    }
+  });
+  const c2=canvasWidget($('#bd-cv2'),.8,(ctx,w,h)=>{
+    const x1=Math.max(100,hist.length,cmp?cmp.T:0);
+    const F=frame(ctx,w,h,{x0:0,x1,y0:0,y1:3.5,sy:.5});
+    ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(F.X(0),F.Y(MU[BEST]));ctx.lineTo(F.X(x1),F.Y(MU[BEST]));ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'la mejor máquina: 3',F.X(x1)-6,F.Y(MU[BEST])-10,tok('--muted'),'right');
+    const line=(arr,col,lw)=>{ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.beginPath();arr.forEach((v,i)=>{const X=F.X(i+1),Y=F.Y(Math.max(0,Math.min(3.5,v)));i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.stroke();};
+    if(cmp){const cols=[tok('--warm'),tok('--good'),tok('--accent')];
+      cmp.curves.forEach((c,i)=>{line(c,cols[i],2);label(ctx,'ε = '+cmp.eps[i],F.X(x1)-6,F.Y(.3+i*.35),cols[i],'right');});}
+    if(hist.length)line(hist,tok('--ink'),2);
+  });
+  function out(){
+    $('#bd-e-o').textContent=fmt(+E.value,2);
+    let s;
+    if(!hist.length&&!cmp)s=`<span class="big">0 jugadas</span><span>El agente aún no sabe nada: Q = 0 para las cuatro máquinas. Las rayas de color muestran el pago promedio real, que el agente no ve.</span>`;
+    else{
+      const fav=Qv.indexOf(Math.max(...Qv)),pb=n[BEST]/Math.max(1,hist.length);
+      s=hist.length?`<span class="big">${hist.length} jugadas · recompensa promedio ${fmt(sum/hist.length,2)}</span>`+
+        `<span>Máquina favorita del agente: ${NAMES[fav]} (Q = ${fmt(Qv[fav],2)}). Jugó la mejor, ${NAMES[BEST]}, el ${fmt(100*pb,0)} % de las veces. ${fav===BEST?'<span class="ok">Encontró la mejor.</span>':'<span class="warn">Todavía no encontró la mejor máquina.</span>'}</span>`:'';
+      if(cmp)s+=`<span>Comparación (promedio de ${cmp.runs} agentes, últimas 100 jugadas): `+cmp.eps.map((e,i)=>`ε = ${e} → ${fmt(cmp.tail[i],2)}`).join(' · ')+`. Explorar un poco gana; no explorar nada o explorar demasiado, pierde.</span>`;
+    }
+    $('#bd-out').innerHTML=s;c1();c2();
+  }
+  $('#bd-play').onclick=()=>{const eps=+E.value;for(let i=0;i<100;i++){const [,r]=pull(Qv,n,eps);sum+=r;hist.push(sum/(hist.length+1));}out();};
+  $('#bd-cmp').onclick=()=>{
+    const eps=[0,.1,.3],T=500,runs=300;
+    const curves=eps.map(e=>{const acc=new Array(T).fill(0);
+      for(let k=0;k<runs;k++){const Q=[0,0,0,0],c=[0,0,0,0];for(let t=0;t<T;t++){acc[t]+=pull(Q,c,e)[1];}}
+      return acc.map(v=>v/runs);});
+    const smooth=curves.map(c=>c.map((_,i)=>{const a=Math.max(0,i-9);let s=0;for(let j=a;j<=i;j++)s+=c[j];return s/(i-a+1);}));
+    cmp={eps,T,runs,curves:smooth,tail:curves.map(c=>c.slice(-100).reduce((s,v)=>s+v,0)/100)};out();
+  };
+  $('#bd-reset').onclick=()=>{reset();cmp=null;out();};
+  E.addEventListener('input',out);
+  reset();out();
+})();
+
+/* ---------- 16 Bucle de un agente con LLM ---------- */
+(function(){
+  const SYS=['u','Sistema','Eres un asistente. Herramientas: calculadora(expresión), buscar(texto).'];
+  const USR=['u','Usuario','Mi factura es de 240 USD y quiero dejar 15 % de propina. ¿Cuánto pago en total?'];
+  const STEPS=[
+    {k:'obs',msgs:[SYS,USR],t:'s₀ es el contexto inicial: las instrucciones y la pregunta. Es todo lo que el modelo «ve».'},
+    {k:'pol',add:['a','Acción a₀','calculadora("240 * 0.15")'],t:'El LLM genera, token a token, el texto de la acción. Entre responder de una vez o usar la calculadora, π<sub>θ</sub> le dio más probabilidad a la calculadora.'},
+    {k:'env',add:['o','Resultado','36'],t:'Un programa, fuera del modelo, ejecuta la herramienta. Este es el entorno respondiendo, como la cuadrícula al moverse.'},
+    {k:'upd',t:'s₁ = s₀ + a₀ + resultado. El contexto creció: el nuevo estado incluye lo que pasó. Vuelta al paso 1.'},
+    {k:'pol',add:['a','Acción a₁','calculadora("240 + 36")'],t:'Con el nuevo estado, la política elige otra acción: falta sumar la propina a la factura.'},
+    {k:'env',add:['o','Resultado','276'],t:'La herramienta devuelve el total.'},
+    {k:'upd',t:'s₂ = s₁ + a₁ + resultado. Ya está toda la información necesaria en el contexto.'},
+    {k:'pol',add:['a','Acción a₂: responder','Pagas 276 USD: 240 de la factura más 36 de propina.'],t:'Ahora la acción más probable es responder. Al responder, el agente termina el episodio: <b>decidió parar</b>.'},
+    {k:'',t:'<span class="ok">Fin del episodio.</span> Si la respuesta es correcta, la recompensa es r = 1. Durante el entrenamiento, recompensas como esta ajustan los pesos θ para que la política elija mejores acciones.'}
+  ];
+  let i=0,ctxm=[];
+  const ctxEl=$('#lp-ctx'),loop=$('#lp-loop');
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  function render(newest){
+    ctxEl.innerHTML=ctxm.map((m,j)=>`<div class="lp-m lp-${m[0]}${j===newest?' lp-new':''}"><b>${m[1]}</b>${esc(m[2])}</div>`).join('');
+  }
+  function show(){
+    const s=STEPS[i];let newest=-1;
+    if(s.msgs){ctxm=s.msgs.slice();}
+    if(s.add){ctxm.push(s.add);newest=ctxm.length-1;}
+    render(newest);
+    loop.querySelectorAll('li').forEach(li=>li.classList.toggle('on',li.dataset.k===s.k));
+    $('#lp-out').innerHTML=`<span class="big">Paso ${i+1} de ${STEPS.length} · el contexto tiene ${ctxm.length} mensajes</span><span>${s.t}</span>`;
+    $('#lp-next').disabled=i===STEPS.length-1;
+  }
+  $('#lp-next').onclick=()=>{if(i<STEPS.length-1){i++;show();}};
+  $('#lp-reset').onclick=()=>{i=0;ctxm=[];show();};
+  show();
+})();
+})();
+</script>
+</body>
+</html>

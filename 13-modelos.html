@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Modelos clásicos de ML · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="modelos">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 13 DE 16</span><h1>Los modelos clásicos de Machine Learning</h1><p class="lede">Regresión logística, k vecinos, árboles, k-means, Naive Bayes, SVM y ensambles. Cada uno es una forma de función, una medida del error y una manera de reducirlo.</p></header>
+<section>
+  <h2>Todos los modelos siguen la misma receta</h2>
+  <div class="prose">
+    <p>Hay decenas de algoritmos de Machine Learning con nombres intimidantes, pero casi todos se construyen con los mismos tres ingredientes. Si los identificas, cualquier modelo nuevo deja de ser una caja negra:</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Una forma de función.</b> Qué tipo de máquina vamos a usar: una recta, una curva en S, un árbol de preguntas, una lista de ejemplos guardados.</span></li>
+    <li><span><b>Una medida del error</b> (la <i>función de pérdida</i>). Un número que dice qué tan mal lo está haciendo el modelo con los datos de entrenamiento.</span></li>
+    <li><span><b>Una forma de reducir ese error.</b> Descenso del gradiente, buscar el mejor corte, mover promedios… Entrenar es exactamente esto.</span></li>
+  </ol>
+  <div class="cards">
+    <div class="fact"><h3>Regresión</h3><span class="ex">predice un número</span><p>¿Cuánto costará esta casa? ¿Cuántas ventas habrá el lunes?</p></div>
+    <div class="fact"><h3>Clasificación</h3><span class="ex">predice una categoría</span><p>¿Este correo es spam? ¿El cliente se dará de baja? ¿Es un gato o un perro?</p></div>
+    <div class="fact"><h3>Agrupamiento</h3><span class="ex">sin respuestas correctas</span><p>No hay etiquetas: el modelo descubre por sí solo qué datos se parecen entre sí.</p></div>
+  </div>
+  <div class="prose">
+    <p>Los dos primeros son <b>aprendizaje supervisado</b>: aprendemos de ejemplos que ya traen la respuesta. El tercero es <b>no supervisado</b>. Recorramos los modelos más importantes, cada uno con su idea, su fórmula mínima y lo que aprende.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Regresión logística: una recta que da probabilidades</h2>
+  <div class="prose">
+    <p><b>La idea en una frase:</b> calcular un puntaje como en la regresión lineal y aplastarlo con la sigmoide para que salga una probabilidad entre 0 y 1.</p>
+  </div>
+  <div class="eq"><var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> &nbsp;&nbsp;→&nbsp;&nbsp; <var>p</var> = σ(<var>z</var>) = 1 / (1 + e<sup>−<var>z</var></sup>)</div>
+  <div class="prose">
+    <p>Si <var>p</var> &gt; 0.5 decimos «sí»; si no, «no». El punto donde <var>p</var> = 0.5 es justo donde <var>z</var> = 0, así que la <b>frontera de decisión</b> es la recta <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> = 0: de un lado todo es «sí» y del otro todo es «no».</p>
+    <p><b>Qué minimiza:</b> la <b>entropía cruzada</b>. Para un ejemplo cuya respuesta real es <var>y</var> (1 o 0):</p>
+  </div>
+  <div class="eq">pérdida = −[ <var>y</var>·ln(<var>p</var>) + (1 − <var>y</var>)·ln(1 − <var>p</var>) ]</div>
+  <div class="cards">
+    <div class="fact"><h3>Acierta con seguridad</h3><span class="ex">y = 1, p = 0.95 → 0.05</span><p>Castigo casi nulo.</p></div>
+    <div class="fact"><h3>Duda</h3><span class="ex">y = 1, p = 0.5 → 0.69</span><p>Castigo moderado: «no sé».</p></div>
+    <div class="fact"><h3>Se equivoca muy seguro</h3><span class="ex">y = 1, p = 0.01 → 4.6</span><p>El logaritmo dispara el castigo. Equivocarse con confianza sale carísimo.</p></div>
+  </div>
+  <div class="prose">
+    <p>Los pesos <var>w</var> y <var>b</var> se ajustan con <a href="09-gradiente.html">descenso del gradiente</a>. Y el gradiente sale sorprendentemente simple: (<var>p</var> − <var>y</var>)·<var>x</var>, es decir, «cuánto me equivoqué» por «cuánto pesaba esa entrada». <b>Ejemplo cotidiano:</b> un filtro de spam que suma puntos por cada palabra sospechosa y convierte el total en una probabilidad.</p>
+    <p><span class="hl">Una neurona con sigmoide es exactamente una regresión logística.</span> Una red neuronal es muchas de ellas apiladas (<a href="11-neurona.html">módulo 11</a>).</p>
+  </div>
+</section>
+
+<section>
+  <h2>k vecinos más cercanos: dime con quién andas</h2>
+  <div class="prose">
+    <p><b>La idea en una frase:</b> para clasificar un punto nuevo, mira los <var>k</var> ejemplos más parecidos y haz que voten.</p>
+    <p>«Parecido» significa «cerca», y la cercanía se mide con la distancia euclídea, el teorema de Pitágoras aplicado a <a href="04-vectores.html">vectores</a>:</p>
+  </div>
+  <div class="eq"><var>d</var>(<b>a</b>, <b>b</b>) = √[ (<var>a</var>₁ − <var>b</var>₁)² + (<var>a</var>₂ − <var>b</var>₂)² + … ]</div>
+  <div class="prose">
+    <p><b>Qué aprende:</b> nada. Solo guarda los datos y hace todo el trabajo al predecir. Por eso es fácil de entender, pero lento con millones de ejemplos. <b>Ejemplo cotidiano:</b> recomendar una película porque les gustó a las cinco personas con gustos más parecidos a los tuyos.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Vota con tus vecinos</h3></div>
+    <canvas id="kn-cv" role="img" aria-label="Puntos de dos clases, un punto nuevo y sus k vecinos más cercanos" style="touch-action:none;cursor:crosshair"></canvas>
+    <div class="ctls">
+      <label class="ctl"><span><var>k</var> (número de vecinos)</span><output id="kn-k-o"></output><input type="range" id="kn-k" min="1" max="21" step="2" value="5"></label>
+      <div class="btns"><button id="kn-reg" aria-pressed="false">Pintar las regiones</button></div>
+    </div>
+    <div class="readout" id="kn-out"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Clase A</span><span><i style="background:var(--warm)"></i>Clase B</span><span><i style="background:var(--ink)"></i>Punto nuevo</span></div>
+    <p class="hint">Toca o arrastra sobre el gráfico para mover el punto nuevo. Pinta las regiones y compara <var>k</var> = 1, que dibuja islas alrededor de cada punto raro, con <var>k</var> = 21, que suaviza tanto que empieza a ignorar los detalles.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Árboles de decisión: veinte preguntas con los datos</h2>
+  <div class="prose">
+    <p><b>La idea en una frase:</b> partir los datos con preguntas de sí o no («¿x₁ ≤ 5?») elegidas para que cada grupo quede lo más «puro» posible.</p>
+    <p>Para elegir la mejor pregunta hace falta medir el desorden de un grupo. La medida más usada es la <b>impureza de Gini</b>, donde <var>p</var>ᵢ es la proporción de cada clase en el grupo:</p>
+  </div>
+  <div class="eq">Gini = 1 − Σ <var>p</var>ᵢ² &nbsp;&nbsp;·&nbsp;&nbsp; Entropía = −Σ <var>p</var>ᵢ·log₂(<var>p</var>ᵢ)</div>
+  <div class="cards">
+    <div class="fact"><h3>Grupo puro</h3><span class="ex">10 A y 0 B → Gini = 0</span><p>No queda nada que separar.</p></div>
+    <div class="fact"><h3>Mitad y mitad</h3><span class="ex">5 A y 5 B → Gini = 0.5</span><p>El máximo desorden con dos clases.</p></div>
+    <div class="fact"><h3>Ganancia</h3><span class="ex">Gini antes − Gini después</span><p>El «después» es el promedio de los dos lados, pesado por cuántos datos tiene cada uno.</p></div>
+  </div>
+  <div class="prose">
+    <p><b>Qué aprende:</b> las preguntas y sus umbrales. Prueba todos los cortes posibles, se queda con el de mayor ganancia y repite dentro de cada lado. <b>Ejemplo cotidiano:</b> un médico que pregunta «¿hay fiebre?», luego «¿hace más de tres días?», y así hasta un diagnóstico.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Busca el corte con más ganancia</h3></div>
+    <div class="btns" id="dt-axis" role="group" aria-label="Variable de corte"><button data-a="0" aria-pressed="true">Cortar en x₁ (vertical)</button><button data-a="1" aria-pressed="false">Cortar en x₂ (horizontal)</button></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Los datos y tu corte</span><canvas id="dt-cv1" role="img" aria-label="Puntos de dos clases divididos por una recta de corte"></canvas></div>
+      <div class="fig"><span class="cap">Ganancia según dónde cortes</span><canvas id="dt-cv2" role="img" aria-label="Ganancia de Gini en función del umbral de corte"></canvas></div>
+    </div>
+    <div class="ctls">
+      <label class="ctl"><span>Umbral del corte</span><output id="dt-t-o"></output><input type="range" id="dt-t" min="0" max="10" step="0.1" value="3"></label>
+      <div class="btns"><button class="primary" id="dt-best">Buscar el mejor corte</button></div>
+    </div>
+    <div class="readout" id="dt-out"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Clase A</span><span><i style="background:var(--warm)"></i>Clase B</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>k-means: agrupar sin respuestas</h2>
+  <div class="prose">
+    <p><b>La idea en una frase:</b> elegir <var>k</var> centros al azar y repetir dos pasos, asignar y mover, hasta que nada cambie.</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>Asignar:</b> cada punto se une al centro más cercano.</span></li>
+    <li><span><b>Mover:</b> cada centro se muda al promedio de sus puntos.</span></li>
+  </ol>
+  <div class="prose">
+    <p><b>Qué minimiza:</b> la <b>inercia</b>, la suma de las distancias al cuadrado de cada punto a su centro. <span class="hl">Cada uno de los dos pasos solo puede bajarla o dejarla igual</span>, así que el algoritmo siempre termina. Eso sí, puede quedarse en una solución mediocre si los centros empezaron mal; por eso en la práctica se corre varias veces.</p>
+  </div>
+  <div class="eq">inercia = Σ ‖<b>x</b> − <b>μ</b><sub>c(x)</sub>‖²</div>
+  <div class="prose">
+    <p><b>Ejemplo cotidiano:</b> segmentar clientes por cuánto compran y cada cuánto, sin decirle al modelo qué segmentos existen.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Paso a paso</span><h3>k-means en acción</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Los puntos y los centros</span><canvas id="km-cv1" role="img" aria-label="Puntos coloreados según su centro más cercano"></canvas></div>
+      <div class="fig"><span class="cap">La inercia en cada paso</span><canvas id="km-cv2" role="img" aria-label="Inercia de cada paso del algoritmo, siempre bajando"></canvas></div>
+    </div>
+    <div class="ctls">
+      <label class="ctl"><span><var>k</var> (número de grupos)</span><output id="km-k-o"></output><input type="range" id="km-k" min="2" max="4" step="1" value="3"></label>
+      <div class="btns"><button class="primary" id="km-step">1. Asignar</button><button id="km-run">Hasta converger</button><button id="km-reset">Otros centros iniciales</button></div>
+    </div>
+    <div class="readout" id="km-out"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Naive Bayes: sumar evidencias</h2>
+  <div class="prose">
+    <p><b>La idea en una frase:</b> usar el <a href="10-probabilidad.html">teorema de Bayes</a> y suponer, con «ingenuidad», que cada pista es independiente de las demás.</p>
+  </div>
+  <div class="eq">P(clase | pistas) ∝ P(clase) · P(pista₁ | clase) · P(pista₂ | clase) · …</div>
+  <div class="prose">
+    <p><b>Qué aprende:</b> solo cuenta frecuencias en los datos. <b>Ejemplo:</b> el 40 % de los correos son spam. La palabra «gratis» aparece en el 30 % del spam y en el 2 % del correo normal. Llega un correo con «gratis»:</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>P(clase)</th><th>P(«gratis» | clase)</th><th>Producto</th><th>Normalizado</th></tr></thead>
+    <tbody>
+      <tr><td>Spam</td><td>0.40</td><td>0.30</td><td>0.120</td><td><b>0.91</b></td></tr>
+      <tr><td>Normal</td><td>0.60</td><td>0.02</td><td>0.012</td><td>0.09</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <p>Se multiplica, y luego se divide por la suma (0.132) para que todo sume 1: 91 % de probabilidad de spam. Con más palabras se agregan más factores. Como multiplicar muchas probabilidades pequeñas da números diminutos, en la práctica se suman sus <a href="03-funciones.html">logaritmos</a>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Máquinas de soporte vectorial (SVM): la calle más ancha</h2>
+  <div class="prose">
+    <p><b>La idea en una frase:</b> entre todas las rectas que separan dos clases, elegir la que deja la «calle» más ancha entre ellas.</p>
+  </div>
+  <div class="eq">ancho de la calle = 2 / ‖<b>w</b>‖ &nbsp;&nbsp;→&nbsp;&nbsp; minimizar ‖<b>w</b>‖² con todos los puntos del lado correcto</div>
+  <div class="prose">
+    <p>La frontera es la misma recta <b>w</b>·<b>x</b> + <var>b</var> = 0 que en la regresión logística. Lo que cambia es el criterio: aquí importa el <b>margen</b>. Solo los puntos que tocan el borde de la calle, los <b>vectores de soporte</b>, definen la solución; los demás podrían moverse sin cambiar nada. Con el <b>truco del kernel</b>, una SVM puede trazar fronteras curvas: mide la similitud de los puntos como si vivieran en un espacio con más dimensiones, donde sí se pueden separar con un plano.</p>
+    <p><b>Ejemplo cotidiano:</b> trazar la línea entre dos barrios dejando la mayor distancia posible a las casas de ambos lados.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Ensambles: la sabiduría de muchos modelos</h2>
+  <div class="cards">
+    <div class="fact"><h3>Random forest</h3><span class="ex">ŷ = promedio de T árboles</span><p>Cientos de árboles, cada uno entrenado con una muestra al azar de los datos y de las variables. Cada árbol se equivoca distinto y al promediarlos los errores se cancelan. Es como preguntar a muchas personas en lugar de a una.</p></div>
+    <div class="fact"><h3>Boosting</h3><span class="ex">F<sub>nuevo</sub> = F<sub>anterior</sub> + η · h</span><p>Árboles en fila: cada uno nuevo, <var>h</var>, aprende a corregir los errores (residuos) que dejaron los anteriores, y se suma con un paso pequeño η. Es descenso del gradiente, pero sumando árboles en lugar de mover pesos. XGBoost y LightGBM son de esta familia.</p></div>
+  </div>
+  <div class="prose">
+    <p><span class="hl">Con datos en tabla (filas y columnas, como una hoja de cálculo), el boosting suele ser el modelo más preciso.</span> Las redes neuronales dominan con imágenes, audio y texto.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Resumen</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Modelo</th><th>Tipo</th><th>Qué aprende</th><th>Qué minimiza o busca</th></tr></thead>
+    <tbody>
+      <tr><td>Regresión lineal</td><td>Regresión</td><td>Pesos <b>w</b> y sesgo <var>b</var> de una recta</td><td>Error cuadrático medio</td></tr>
+      <tr><td>Regresión logística</td><td>Clasificación</td><td>Pesos de una frontera recta</td><td>Entropía cruzada</td></tr>
+      <tr><td>k vecinos</td><td>Ambos</td><td>Nada: guarda los datos</td><td>Nada; vota entre los <var>k</var> más cercanos</td></tr>
+      <tr><td>Árbol de decisión</td><td>Ambos</td><td>Preguntas y umbrales</td><td>Impureza (Gini o entropía) en cada corte</td></tr>
+      <tr><td>k-means</td><td>Agrupamiento</td><td>Posición de <var>k</var> centros</td><td>Inercia</td></tr>
+      <tr><td>Naive Bayes</td><td>Clasificación</td><td>Frecuencias de cada pista por clase</td><td>Nada: cuenta y aplica Bayes</td></tr>
+      <tr><td>SVM</td><td>Clasificación</td><td>Frontera y vectores de soporte</td><td>‖<b>w</b>‖², para maximizar el margen</td></tr>
+      <tr><td>Random forest / boosting</td><td>Ambos</td><td>Muchos árboles</td><td>La pérdida del problema, árbol por árbol</td></tr>
+      <tr><td>Red neuronal</td><td>Ambos</td><td>Millones de pesos en capas</td><td>Entropía cruzada o error cuadrático</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ml"><b>En la práctica</b><p>Empieza siempre por un modelo simple, como una regresión lineal o logística, que sirva de línea base. Luego prueba un árbol o un ensamble. Con <code>scikit-learn</code>, todos estos modelos se usan igual: <code>modelo.fit(X, y)</code> para entrenar y <code>modelo.predict(X_nuevo)</code> para predecir. Lo que cambia por dentro es la matemática de esta página.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Un grupo tiene 8 de la clase A y 2 de la clase B. ¿Cuál es su Gini?</summary><p>1 − (0.8² + 0.2²) = 1 − (0.64 + 0.04) = 0.32</p></details>
+    <details><summary>Con <var>p</var> = σ(<var>z</var>), ¿qué valor de <var>z</var> está justo sobre la frontera de decisión?</summary><p><var>z</var> = 0, porque σ(0) = 0.5.</p></details>
+    <details><summary>¿Por qué k-means siempre termina?</summary><p>Porque asignar y mover nunca suben la inercia, y hay un número finito de formas de repartir los puntos entre los centros.</p></details>
+    <details><summary>¿Qué modelo no hace nada al entrenar?</summary><p>k vecinos: solo guarda los datos y calcula distancias al predecir.</p></details>
+  </div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=logistic%20regression" target="_blank" rel="noopener">StatQuest · regresión logística <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=decision%20trees" target="_blank" rel="noopener">StatQuest · árboles de decisión <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=k-means%20clustering" target="_blank" rel="noopener">StatQuest · k-means <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=naive%20bayes" target="_blank" rel="noopener">StatQuest · Naive Bayes <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=support%20vector%20machines" target="_blank" rel="noopener">StatQuest · SVM <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=gradient%20boost" target="_blank" rel="noopener">StatQuest · gradient boosting <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=machine%20learning" target="_blank" rel="noopener">Dot CSV · machine learning</a>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=machine%20learning" target="_blank" rel="noopener">Ringa Tech · machine learning</a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 13 Utilidades de datos ---------- */
+const rng=s=>()=>{s=(s*16807)%2147483647;return s/2147483647;};
+const gauss=r=>Math.sqrt(-2*Math.log(r()+1e-12))*Math.cos(2*Math.PI*r());
+const clamp=v=>Math.min(9.7,Math.max(.3,v));
+const blobs=(seed,spec)=>{const r=rng(seed),pts=[];spec.forEach(([cx,cy,sd,n,c])=>{for(let i=0;i<n;i++)pts.push([clamp(cx+gauss(r)*sd),clamp(cy+gauss(r)*sd),c]);});return pts;};
+const SQ=w=>(w-12)/w;
+const BOX={x0:0,x1:10,y0:0,y1:10,sx:2,sy:2};
+const d2=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2;
+
+/* ---------- 13 k vecinos ---------- */
+(function(){
+  const pts=blobs(23,[[3,7,1.1,16,0],[7,3,1.1,16,0],[7,7,1.1,16,1],[3,3,1.1,16,1],[5,5,1.4,6,1]]);
+  const K=$('#kn-k'),reg=$('#kn-reg'),cv=$('#kn-cv');let q=[5.2,6.1],F=null,show=false;
+  const knn=(p,k)=>pts.map(t=>[d2(p,t),t]).sort((a,b)=>a[0]-b[0]).slice(0,k);
+  const vote=nb=>{const v=[0,0];nb.forEach(([,t])=>v[t[2]]++);return v;};
+  const draw=canvasWidget(cv,w=>w<560?SQ(w):.62,(ctx,w,h)=>{
+    const k=+K.value,col=[tok('--accent'),tok('--warm')];
+    F=frame(ctx,w,h,BOX);F.clip();
+    if(show){const st=.25;ctx.globalAlpha=.13;
+      for(let x=0;x<10;x+=st)for(let y=0;y<10;y+=st){const v=vote(knn([x+st/2,y+st/2],k));ctx.fillStyle=col[v[1]>v[0]?1:0];ctx.fillRect(F.X(x),F.Y(y+st),F.X(x+st)-F.X(x)+.5,F.Y(y)-F.Y(y+st)+.5);}
+      ctx.globalAlpha=1;}
+    const nb=knn(q,k),r=Math.sqrt(nb[nb.length-1][0]);
+    ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(F.X(q[0]),F.Y(q[1]),F.X(r)-F.X(0),0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+    ctx.globalAlpha=.6;nb.forEach(([,t])=>{ctx.strokeStyle=col[t[2]];ctx.beginPath();ctx.moveTo(F.X(q[0]),F.Y(q[1]));ctx.lineTo(F.X(t[0]),F.Y(t[1]));ctx.stroke();});ctx.globalAlpha=1;
+    pts.forEach(t=>dot(ctx,F.X(t[0]),F.Y(t[1]),col[t[2]],4));
+    nb.forEach(([,t])=>{ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(F.X(t[0]),F.Y(t[1]),6.5,0,2*Math.PI);ctx.stroke();});
+    const v=vote(nb);ring(ctx,F.X(q[0]),F.Y(q[1]),tok('--ink'),col[v[1]>v[0]?1:0]);
+    ctx.restore();
+  });
+  function out(){
+    const k=+K.value,nb=knn(q,k),v=vote(nb),c=v[1]>v[0]?'B':'A';
+    $('#kn-k-o').textContent=k;
+    $('#kn-out').innerHTML=`<span class="big">${v[0]} votos A · ${v[1]} votos B → predicción: clase ${c}</span><span>Punto nuevo en (${fmt(q[0],1)}, ${fmt(q[1],1)}). El vecino más lejano de los ${k} está a distancia ${fmt(Math.sqrt(nb[nb.length-1][0]),2)}.${k===1?' Con k = 1 basta un solo punto raro cerca para cambiar la respuesta.':k>=15?' Con k tan grande el voto incluye puntos lejanos, que ya no se parecen al nuevo.':''}</span>`;
+    draw();
+  }
+  function move(e){if(!F)return;const b=cv.getBoundingClientRect();q=[Math.min(10,Math.max(0,F.IX(e.clientX-b.left))),Math.min(10,Math.max(0,F.IY(e.clientY-b.top)))];out();}
+  let drag=false;
+  cv.addEventListener('pointerdown',e=>{drag=true;cv.setPointerCapture(e.pointerId);move(e);});
+  cv.addEventListener('pointermove',e=>{if(drag)move(e);});
+  cv.addEventListener("pointerup",()=>drag=false);cv.addEventListener("pointercancel",()=>drag=false);
+  reg.onclick=()=>{show=!show;reg.setAttribute('aria-pressed',show);out();};
+  K.addEventListener('input',out);out();
+})();
+
+/* ---------- 13 Árbol de decisión (Gini) ---------- */
+(function(){
+  const pts=blobs(7,[[3.2,6,1.35,40,0],[6.8,4.2,1.35,40,1]]);
+  const T=$('#dt-t');let ax=0;
+  const gini=(a,b)=>{const n=a+b;return n?1-(a/n)**2-(b/n)**2:0;};
+  const cnt=arr=>[arr.filter(p=>p[2]===0).length,arr.filter(p=>p[2]===1).length];
+  const G0=gini(...cnt(pts));
+  function split(a,t){
+    const L=cnt(pts.filter(p=>p[a]<=t)),R=cnt(pts.filter(p=>p[a]>t)),nL=L[0]+L[1],nR=R[0]+R[1],n=nL+nR;
+    const gL=gini(...L),gR=gini(...R),gw=(nL*gL+nR*gR)/n;
+    return {L,R,nL,nR,gL,gR,gw,gain:G0-gw};
+  }
+  function best(){
+    let b={gain:-1};
+    [0,1].forEach(a=>{const xs=[...new Set(pts.map(p=>p[a]))].sort((p,q)=>p-q);
+      for(let i=0;i<xs.length-1;i++){const t=(xs[i]+xs[i+1])/2,s=split(a,t);if(s.gain>b.gain+1e-12)b={...s,a,t};}});
+    return b;
+  }
+  const B=best();
+  const c1=canvasWidget($('#dt-cv1'),SQ,(ctx,w,h)=>{
+    const t=+T.value,s=split(ax,t),col=[tok('--accent'),tok('--warm')],F=frame(ctx,w,h,BOX);
+    F.clip();
+    const side=(c,x0,y0,x1,y1)=>{if(!c[0]&&!c[1])return;ctx.fillStyle=col[c[1]>c[0]?1:0];ctx.globalAlpha=.1;ctx.fillRect(F.X(x0),F.Y(y1),F.X(x1)-F.X(x0),F.Y(y0)-F.Y(y1));ctx.globalAlpha=1;};
+    if(ax===0){side(s.L,0,0,t,10);side(s.R,t,0,10,10);}else{side(s.L,0,0,10,t);side(s.R,0,t,10,10);}
+    ctx.strokeStyle=tok('--ink');ctx.lineWidth=2.5;ctx.beginPath();
+    if(ax===0){ctx.moveTo(F.X(t),F.Y(0));ctx.lineTo(F.X(t),F.Y(10));}else{ctx.moveTo(F.X(0),F.Y(t));ctx.lineTo(F.X(10),F.Y(t));}ctx.stroke();
+    pts.forEach(p=>dot(ctx,F.X(p[0]),F.Y(p[1]),col[p[2]],4));
+    ctx.restore();
+  });
+  const c2=canvasWidget($('#dt-cv2'),SQ,(ctx,w,h)=>{
+    const F=frame(ctx,w,h,{x0:0,x1:10,y0:0,y1:.5,sx:2,sy:.1});
+    if(B.a===ax){ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(F.X(0),F.Y(B.gain));ctx.lineTo(F.X(10),F.Y(B.gain));ctx.stroke();ctx.setLineDash([]);label(ctx,'mejor',F.X(0)+6,F.Y(B.gain)-10,tok('--muted'));}
+    curve(ctx,F,t=>split(ax,t).gain,tok('--accent'),2.5);
+    const t=+T.value;F.clip();dot(ctx,F.X(t),F.Y(split(ax,t).gain),tok('--ink'),7);ctx.restore();
+  });
+  function out(){
+    const t=+T.value,s=split(ax,t),v=ax===0?'x₁':'x₂';
+    $('#dt-t-o').textContent=short(t);
+    const isBest=B.a===ax&&Math.abs(s.gain-B.gain)<1e-9;
+    $('#dt-out').innerHTML=`<span class="big">Pregunta: ¿${v} ≤ ${short(t)}? · ganancia = ${fmt(G0,3)} − ${fmt(s.gw,3)} = ${fmt(s.gain,3)}</span>`+
+      `<span>Sí: ${s.L[0]} A y ${s.L[1]} B → Gini ${fmt(s.gL,3)} · No: ${s.R[0]} A y ${s.R[1]} B → Gini ${fmt(s.gR,3)} · Gini ponderado = (${s.nL}·${fmt(s.gL,3)} + ${s.nR}·${fmt(s.gR,3)}) / ${s.nL+s.nR} = ${fmt(s.gw,3)}</span>`+
+      `<span>${isBest?'<span class="ok">Este es el mejor corte posible.</span> Un árbol lo tomaría como primera pregunta y luego repetiría la búsqueda dentro de cada lado.':s.gain<.02?'<span class="warn">Este corte casi no separa nada:</span> los dos lados quedan tan mezclados como al principio, que tenía Gini '+fmt(G0,3)+'.':'Mueve el umbral o cambia de variable para buscar una ganancia mayor.'}</span>`;
+    c1();c2();
+  }
+  $('#dt-axis').querySelectorAll('button').forEach(b=>b.onclick=()=>{ax=+b.dataset.a;$('#dt-axis').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));out();});
+  $('#dt-best').onclick=()=>{ax=B.a;T.value=Math.round(B.t*10)/10;$('#dt-axis').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.a===ax));
+    // con el redondeo del control el corte puede cambiar: usar el umbral redondeado más cercano que conserve la ganancia
+    if(Math.abs(split(ax,+T.value).gain-B.gain)>1e-9)for(const d of [.1,-.1,.2,-.2]){const t=Math.round((B.t+d)*10)/10;if(Math.abs(split(ax,t).gain-B.gain)<1e-9){T.value=t;break;}}
+    out();};
+  T.addEventListener('input',out);out();
+})();
+
+/* ---------- 13 k-means ---------- */
+(function(){
+  const pts=blobs(42,[[2.6,7.2,.95,25],[7.3,7.4,.95,25],[5,2.7,.95,25]]).map(p=>[p[0],p[1]]);
+  const K=$('#km-k'),stepB=$('#km-step');let seed=5,cen=[],prev=null,asg=[],hist=[],it=0,phase='assign',done=false,msg='',timer=0;
+  const col=()=>[tok('--accent'),tok('--warm'),tok('--good'),tok('--ink')];
+  const near=p=>{let b=0,bd=Infinity;cen.forEach((c,i)=>{const d=d2(p,c);if(d<bd){bd=d;b=i;}});return b;};
+  const inertia=()=>pts.reduce((s,p,i)=>s+d2(p,cen[asg[i]]),0);
+  function init(){
+    clearTimeout(timer);const r=rng(seed),k=+K.value;cen=[];for(let i=0;i<k;i++)cen.push([1+r()*8,1+r()*8]);
+    prev=null;asg=pts.map(()=>-1);hist=[];it=0;phase='assign';done=false;
+    msg='Los centros empezaron en lugares al azar. Pulsa «1. Asignar».';out();
+  }
+  function step(){
+    if(done)return;
+    if(phase==='assign'){
+      const na=pts.map(near),ch=na.filter((a,i)=>a!==asg[i]).length,first=asg[0]===-1;asg=na;
+      if(!first&&ch===0){done=true;msg='<span class="ok">Ningún punto cambió de grupo: el algoritmo convergió.</span> Mover los centros ya no cambiaría nada.';out();return;}
+      hist.push(inertia());prev=null;phase='move';
+      msg=first?'Cada punto tomó el color de su centro más cercano.':`${ch} punto${ch===1?'':'s'} cambi${ch===1?'ó':'aron'} de grupo. La inercia bajó porque cada punto quedó más cerca de su centro.`;
+    }else{
+      prev=cen.map(c=>c.slice());
+      cen=cen.map((c,j)=>{const m=pts.filter((p,i)=>asg[i]===j);return m.length?[m.reduce((s,p)=>s+p[0],0)/m.length,m.reduce((s,p)=>s+p[1],0)/m.length]:c;});
+      const mv=Math.max(...cen.map((c,j)=>Math.sqrt(d2(c,prev[j]))));
+      hist.push(inertia());phase='assign';it++;
+      msg=`Cada centro se mudó al promedio de sus puntos (el mayor salto fue de ${fmt(mv,2)}). El promedio es el punto que minimiza la suma de distancias al cuadrado, así que la inercia volvió a bajar.`;
+    }
+    out();
+  }
+  const c1=canvasWidget($('#km-cv1'),SQ,(ctx,w,h)=>{
+    const C=col(),F=frame(ctx,w,h,BOX);F.clip();
+    pts.forEach((p,i)=>dot(ctx,F.X(p[0]),F.Y(p[1]),asg[i]<0?tok('--muted'):C[asg[i]],4));
+    if(prev)prev.forEach((p,j)=>{if(d2(p,cen[j])>1e-4)arrow(ctx,F.X(p[0]),F.Y(p[1]),F.X(cen[j][0]),F.Y(cen[j][1]),C[j],2);});
+    cen.forEach((c,j)=>{const x=F.X(c[0]),y=F.Y(c[1]);ctx.fillStyle=C[j];ctx.strokeStyle=tok('--card');ctx.lineWidth=2.5;ctx.beginPath();ctx.rect(x-8,y-8,16,16);ctx.fill();ctx.stroke();});
+    ctx.restore();
+  });
+  const c2=canvasWidget($('#km-cv2'),SQ,(ctx,w,h)=>{
+    const top=hist.length?hist[0]*1.1:100,F=frame(ctx,w,h,{x0:0,x1:Math.max(6,hist.length+1),y0:0,y1:top,sx:1});
+    if(!hist.length){label(ctx,'Aún sin pasos',F.X(.4),F.Y(top/2),tok('--muted'));return;}
+    ctx.strokeStyle=tok('--accent');ctx.lineWidth=2;ctx.beginPath();hist.forEach((v,i)=>i?ctx.lineTo(F.X(i+1),F.Y(v)):ctx.moveTo(F.X(i+1),F.Y(v)));ctx.stroke();
+    hist.forEach((v,i)=>dot(ctx,F.X(i+1),F.Y(v),i%2?tok('--warm'):tok('--accent'),5));
+  });
+  function out(){
+    $('#km-k-o').textContent=K.value;
+    stepB.textContent=done?'Convergió':phase==='assign'?'1. Asignar':'2. Mover centros';stepB.disabled=done;
+    const J=asg[0]===-1?null:inertia();
+    $('#km-out').innerHTML=`<span class="big">Iteración ${it} · inercia = ${J===null?'—':fmt(J,1)}</span><span>${msg}</span><span style="font-family:var(--f-body);font-size:.95rem">En la gráfica de la derecha, los puntos azules son pasos de asignar y los rojizos, pasos de mover. La curva nunca sube.${+K.value!==3?' Los datos tienen 3 grupos naturales: con otro k el algoritmo igual termina, pero parte o junta grupos.':''}</span>`;
+    c1();c2();
+  }
+  stepB.onclick=step;
+  $('#km-run').onclick=()=>{clearTimeout(timer);const go=()=>{if(done||hist.length>60)return;step();timer=setTimeout(go,450);};go();};
+  $('#km-reset').onclick=()=>{seed=seed*7+13;init();};
+  K.addEventListener('input',init);init();
+})();
+})();
+</script>
+</body>
+</html>

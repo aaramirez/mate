@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Regresión y error · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="regresion">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 12 DE 16</span><h1>Regresión: el error y cómo se reduce</h1><p class="lede">Cómo se mide qué tan equivocado está un modelo, cómo el entrenamiento baja ese error paso a paso y por qué el error que importa es el de los datos nuevos.</p></header>
+<section>
+  <h2>Qué es el error de una predicción</h2>
+  <div class="prose">
+    <p>Una regresión predice un número: el precio de una casa, la nota de un examen, la demanda de mañana. El modelo más simple es una recta, ŷ = <var>m</var>·<var>x</var> + <var>b</var> (la viste en el <a href="03-funciones.html">módulo 03</a>). Para saber si la recta es buena, comparamos lo que predice con lo que pasó de verdad.</p>
+    <p>Para cada dato, el <b>residuo</b> o error es la distancia vertical entre el punto real y la recta:</p>
+  </div>
+  <div class="eq"><var>e</var>ᵢ = <var>y</var>ᵢ − ŷᵢ &nbsp;&nbsp;(real menos predicho)</div>
+  <div class="prose">
+    <p>Si <var>e</var> es positivo, el modelo se quedó corto; si es negativo, se pasó. Ahora hay que resumir todos los errores en <b>un solo número</b>, para poder decir «esta recta es mejor que aquella». Sumarlos tal cual no sirve: un error de +5 y otro de −5 se cancelan y parecería que el modelo es perfecto. Hay dos arreglos:</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>MAE: error absoluto medio</h3><span class="ex">MAE = (1/n) Σ |yᵢ − ŷᵢ|</span><p>El promedio de los errores sin signo. Se lee fácil: «en promedio me equivoco por 1.2 puntos».</p></div>
+    <div class="fact"><h3>MSE: error cuadrático medio</h3><span class="ex">MSE = (1/n) Σ (yᵢ − ŷᵢ)²</span><p>Eleva cada error al cuadrado: castiga mucho más los errores grandes. Es suave, así que se puede derivar; por eso es la pérdida favorita para entrenar.</p></div>
+    <div class="fact"><h3>RMSE</h3><span class="ex">RMSE = √MSE</span><p>Deshace el cuadrado para volver a las unidades originales (puntos, dólares, metros).</p></div>
+    <div class="fact"><h3>R²</h3><span class="ex">R² = 1 − MSE / Var(y)</span><p>Compara tu modelo con el más tonto posible: predecir siempre el promedio. R² = 1 es perfecto y R² = 0 no mejora nada.</p></div>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Ajusta la recta a mano y mira los cuadrados</h3></div>
+    <canvas id="rg-cv" role="img" aria-label="Datos de horas de estudio y nota, una recta y los cuadrados de los errores"></canvas>
+    <div class="ctls">
+      <label class="ctl"><span><var>m</var> (pendiente)</span><output id="rg-m-o"></output><input type="range" id="rg-m" min="-2" max="7" step="0.05" value="0.5"></label>
+      <label class="ctl"><span><var>b</var> (corte)</span><output id="rg-b-o"></output><input type="range" id="rg-b" min="0" max="16" step="0.1" value="12"></label>
+    </div>
+    <div class="btns"><button id="rg-sq" aria-pressed="true">Ver los cuadrados</button><button class="primary" id="rg-best">Mostrar la mejor recta</button></div>
+    <div class="readout" id="rg-out"></div>
+    <p class="hint">Cada cuadrado tiene de lado el error de ese punto: su área es el error al cuadrado. El MSE es el área promedio. Mover la recta para que la suma de áreas sea mínima es exactamente el método de <b>mínimos cuadrados</b>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Cómo disminuye el error: el entrenamiento</h2>
+  <div class="prose">
+    <p>Para cada pareja (<var>m</var>, <var>b</var>) hay un MSE. Si dibujamos el MSE de todas las parejas posibles, obtenemos una <b>superficie de error</b> con forma de cuenco: el fondo del cuenco es la mejor recta. Entrenar es bajar al fondo, y para eso se usa el <a href="09-gradiente.html">descenso del gradiente</a>: mirar hacia dónde sube el error y dar un paso hacia el lado contrario.</p>
+    <p>Las derivadas parciales del MSE (<a href="07-derivadas.html">módulo 07</a>) dicen cuánto cambia el error al mover cada perilla:</p>
+  </div>
+  <div class="eq">∂MSE/∂<var>m</var> = −(2/n) Σ <var>x</var>ᵢ·<var>e</var>ᵢ &nbsp;&nbsp;&nbsp; ∂MSE/∂<var>b</var> = −(2/n) Σ <var>e</var>ᵢ</div>
+  <div class="prose">
+    <p>Se leen así: si los errores son mayormente positivos (la recta está por debajo de los puntos), la derivada respecto de <var>b</var> es negativa, y el paso <var>b</var> ← <var>b</var> − η·∂MSE/∂<var>b</var> <b>sube</b> la recta. Cada paso usa los errores actuales para corregirse un poco.</p>
+  </div>
+  <ol class="steps">
+    <li><span>Predecir con los valores actuales: ŷᵢ = <var>m</var>·<var>x</var>ᵢ + <var>b</var>.</span></li>
+    <li><span>Medir los errores <var>e</var>ᵢ = <var>y</var>ᵢ − ŷᵢ y el MSE.</span></li>
+    <li><span>Calcular el gradiente: las dos derivadas de arriba.</span></li>
+    <li><span>Dar un paso: <var>m</var> ← <var>m</var> − η·∂MSE/∂<var>m</var> y <var>b</var> ← <var>b</var> − η·∂MSE/∂<var>b</var>, con η la tasa de aprendizaje.</span></li>
+    <li><span>Repetir hasta que el MSE deje de bajar.</span></li>
+  </ol>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Bajar por la superficie de error</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Superficie de error MSE(m, b) vista desde arriba</span><canvas id="gd2-cv1" role="img" aria-label="Mapa de curvas de nivel del error con el camino del descenso del gradiente"></canvas></div>
+      <div class="fig"><span class="cap">El MSE en cada paso del entrenamiento</span><canvas id="gd2-cv2" role="img" aria-label="Curva de aprendizaje: el error baja con cada iteración"></canvas></div>
+    </div>
+    <div class="ctls">
+      <label class="ctl"><span>Tasa de aprendizaje η</span><output id="gd2-lr-o"></output><input type="range" id="gd2-lr" min="0.01" max="0.2" step="0.005" value="0.08"></label>
+    </div>
+    <div class="btns"><button id="gd2-step">Un paso</button><button class="primary" id="gd2-run">Entrenar 100 pasos</button><button id="gd2-reset">Volver al inicio</button></div>
+    <div class="readout" id="gd2-out"></div>
+    <p class="hint">Empieza desde la recta que dejaste en el laboratorio anterior. Haz clic en el mapa para elegir otro punto de partida. Prueba una η grande: el error rebota y puede crecer sin control.</p>
+  </div>
+  <div class="prose">
+    <p>Para la regresión lineal existe también un atajo exacto, sin pasos: la <b>ecuación normal</b> θ = (XᵀX)⁻¹Xᵀ<b>y</b>, que usa las <a href="05-matrices.html">matrices</a> del módulo 05. Es lo que hace el botón «Mostrar la mejor recta». En modelos grandes, como las redes neuronales, no hay atajo y solo queda bajar paso a paso.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Menos error en entrenamiento no siempre es mejor</h2>
+  <div class="prose">
+    <p>Un modelo más flexible, como un polinomio de grado alto, siempre puede bajar más el error con los datos que ya vio. Pero puede estar <b>memorizando el ruido</b> en lugar de aprender la tendencia. Por eso se separan los datos: unos para <b>entrenar</b> y otros, que el modelo nunca vio, para <b>probar</b>. <span class="hl">El error que importa es el de prueba.</span></p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Subajuste y sobreajuste</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Polinomio ajustado a <span class="fa">10 puntos de entrenamiento</span>; <span class="fw">puntos de prueba</span></span><canvas id="ov-cv1" role="img" aria-label="Polinomio ajustado a los datos"></canvas></div>
+      <div class="fig"><span class="cap">Error según el grado: <span class="fa">entrenamiento</span> y <span class="fw">prueba</span></span><canvas id="ov-cv2" role="img" aria-label="Error de entrenamiento y de prueba según el grado del polinomio"></canvas></div>
+    </div>
+    <div class="ctls"><label class="ctl"><span>Grado del polinomio</span><output id="ov-d-o"></output><input type="range" id="ov-d" min="0" max="9" step="1" value="1"></label></div>
+    <div class="readout" id="ov-out"></div>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Subajuste</h3><span class="ex">error alto en ambos</span><p>El modelo es demasiado simple para la forma de los datos: una recta para una curva.</p></div>
+    <div class="fact"><h3>Buen ajuste</h3><span class="ex">error de prueba mínimo</span><p>Captura la tendencia y deja pasar el ruido. Es el punto que buscamos.</p></div>
+    <div class="fact"><h3>Sobreajuste</h3><span class="ex">entrenamiento ≈ 0, prueba alto</span><p>Pasa por todos los puntos de entrenamiento y se dispara entre ellos. Memorizó, no aprendió.</p></div>
+    <div class="fact"><h3>Regularización</h3><span class="ex">pérdida = MSE + λ·Σ wⱼ²</span><p>Suma un castigo a los coeficientes grandes, para que el modelo prefiera curvas tranquilas.</p></div>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Todo entrenamiento sigue este guion: una <b>función de pérdida</b> que mide el error (MSE en regresión; entropía cruzada en clasificación), el descenso del gradiente para reducirla y un conjunto de validación para vigilar el sobreajuste. Las curvas de pérdida de entrenamiento y validación que verás en el curso son la gráfica de la derecha, contada en épocas en lugar de grados.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Errores de un modelo: 2, −2, 1, −1. ¿Cuánto valen la suma, el MAE y el MSE?</summary><p>Suma = 0 (engañosa) · MAE = (2 + 2 + 1 + 1) / 4 = 1.5 · MSE = (4 + 4 + 1 + 1) / 4 = 2.5</p></details>
+    <details><summary>Si la recta queda por debajo de casi todos los puntos, ¿qué signo tiene ∂MSE/∂b y hacia dónde se mueve b?</summary><p>Los errores son positivos, así que ∂MSE/∂b = −(2/n)Σeᵢ es negativa. Como b ← b − η·(negativo), b aumenta y la recta sube.</p></details>
+    <details><summary>Error de entrenamiento 0.01 y de prueba 4.7. ¿Qué pasa?</summary><p>Sobreajuste: el modelo memorizó los datos de entrenamiento. Hay que simplificarlo, regularizarlo o conseguir más datos.</p></details>
+  </div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=linear%20regression" target="_blank" rel="noopener">StatQuest · linear regression <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=gradient%20descent" target="_blank" rel="noopener">StatQuest · gradient descent <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=bias%20variance" target="_blank" rel="noopener">StatQuest · bias and variance <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=regresi%C3%B3n%20lineal" target="_blank" rel="noopener">Dot CSV · regresión lineal</a>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=regresi%C3%B3n" target="_blank" rel="noopener">Ringa Tech · regresión</a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 12 Regresión: datos ---------- */
+const RG=(function(){
+  let s=11;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647;};
+  const g=()=>Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd());
+  const pts=[];for(let i=0;i<14;i++){const x=.2+3.7*i/13+(rnd()-.5)*.2;pts.push([x,Math.min(20,Math.max(0,3*x+5+1.6*g()))]);}
+  const n=pts.length,mx=pts.reduce((a,p)=>a+p[0],0)/n,my=pts.reduce((a,p)=>a+p[1],0)/n;
+  const sxy=pts.reduce((a,p)=>a+(p[0]-mx)*(p[1]-my),0),sxx=pts.reduce((a,p)=>a+(p[0]-mx)**2,0);
+  const bm=sxy/sxx,bb=my-bm*mx,vy=pts.reduce((a,p)=>a+(p[1]-my)**2,0)/n;
+  const mse=(m,b)=>pts.reduce((a,p)=>a+(p[1]-m*p[0]-b)**2,0)/n;
+  const mae=(m,b)=>pts.reduce((a,p)=>a+Math.abs(p[1]-m*p[0]-b),0)/n;
+  const grad=(m,b)=>{let gm=0,gb=0;pts.forEach(([x,y])=>{const e=y-m*x-b;gm+=-2*x*e/n;gb+=-2*e/n;});return [gm,gb];};
+  return {pts,bm,bb,vy,mse,mae,grad,listeners:[]};
+})();
+
+/* ---------- 12 Recta a mano ---------- */
+(function(){
+  const M=$('#rg-m'),B=$('#rg-b'),SQ=$('#rg-sq');let sq=true,best=false;
+  const draw=canvasWidget($('#rg-cv'),w=>w<520?.8:.5,(ctx,w,h)=>{
+    const m=+M.value,b=+B.value,F=frame(ctx,w,h,{x0:0,x1:4.2,y0:0,y1:22,sx:.5,sy:2});
+    F.clip();
+    if(best){ctx.globalAlpha=.6;curve(ctx,F,x=>RG.bm*x+RG.bb,tok('--good'),2,[6,5]);ctx.globalAlpha=1;}
+    RG.pts.forEach(([x,y])=>{
+      const yh=m*x+b,px=F.X(x),py=F.Y(y),ph=F.Y(yh),side=Math.abs(py-ph);
+      if(sq){const left=px+side>F.X(F.x1)-2;ctx.fillStyle=tok('--warm');ctx.globalAlpha=.16;ctx.fillRect(left?px-side:px,Math.min(py,ph),side,side);ctx.globalAlpha=.5;ctx.strokeStyle=tok('--warm');ctx.lineWidth=1;ctx.strokeRect(left?px-side:px,Math.min(py,ph),side,side);ctx.globalAlpha=1;}
+      ctx.strokeStyle=tok('--warm');ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,ph);ctx.stroke();
+    });
+    curve(ctx,F,x=>m*x+b,tok('--accent'),3);
+    RG.pts.forEach(([x,y])=>dot(ctx,F.X(x),F.Y(y),tok('--ink'),5));
+    ctx.restore();
+    ctx.font='11px '+tok('--f-mono');ctx.fillStyle=tok('--muted');ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('horas de estudio →',w-12,h-24);
+    ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('nota ↑',38,12);
+  });
+  function out(notify){
+    const m=+M.value,b=+B.value,e=RG.mse(m,b),eb=RG.mse(RG.bm,RG.bb);
+    $('#rg-m-o').textContent=short(m);$('#rg-b-o').textContent=short(b);
+    const r2=1-e/RG.vy,gap=e/eb;
+    $('#rg-out').innerHTML=`<span class="big">ŷ = ${short(m)}·x + ${short(b)} · MSE = ${fmt(e,2)} · MAE = ${fmt(e?RG.mae(m,b):0,2)} · RMSE = ${fmt(Math.sqrt(e),2)} · R² = ${fmt(r2,2)}</span>`+
+      `<span>${gap<1.02?'<span class="ok">Estás en la mejor recta posible: ningún otro par (m, b) tiene un MSE menor.</span>':`La mejor recta tiene MSE = ${fmt(eb,2)}. La tuya tiene ${fmt(gap,1)} veces ese error.`}${r2<0?' <span class="warn">R² negativo: predecir siempre el promedio sería mejor que esta recta.</span>':''}</span>`+
+      (best?`<span>Mínimos cuadrados (línea punteada verde): m = ${fmt(RG.bm,2)}, b = ${fmt(RG.bb,2)}. En palabras: cada hora de estudio suma unos ${fmt(RG.bm,1)} puntos a la nota.</span>`:'');
+    draw();if(notify!==false)RG.listeners.forEach(f=>f(m,b));
+  }
+  [M,B].forEach(el=>el.addEventListener('input',out));
+  SQ.onclick=()=>{sq=!sq;SQ.setAttribute('aria-pressed',sq);out();};
+  $('#rg-best').onclick=()=>{best=true;M.value=RG.bm;B.value=RG.bb;out(false);};
+  RG.set=(m,b)=>{M.value=m;B.value=b;out(false);};
+  out();
+})();
+
+/* ---------- 12 Descenso sobre la superficie de error ---------- */
+(function(){
+  const LR=$('#gd2-lr'),V={x0:-2,x1:7,y0:0,y1:16,sx:1,sy:2};
+  let start=[+$('#rg-m').value,+$('#rg-b').value],path=[start],anim=0,F1=null,blown=false;
+  const loss=()=>path.map(([m,b])=>RG.mse(m,b));
+  let cache=null,cacheKey='';
+  function heat(F,w,h){
+    const key=w+'x'+h+tok('--accent')+tok('--card');if(key===cacheKey)return cache;
+    const N=90,off=document.createElement('canvas');off.width=N;off.height=N;const o=off.getContext('2d'),img=o.createImageData(N,N);
+    const ca=hexRgb(tok('--accent')),cc=hexRgb(tok('--card')),lmin=Math.log(RG.mse(RG.bm,RG.bb)),lmax=Math.log(RG.mse(-2,16));
+    for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+      const m=V.x0+(i+.5)/N*(V.x1-V.x0),b=V.y1-(j+.5)/N*(V.y1-V.y0),t=(Math.log(RG.mse(m,b))-lmin)/(lmax-lmin);
+      const band=Math.abs((t*10)%1-.5)<.06?.25:0,c=lerp(ca,cc,Math.min(1,Math.max(0,Math.sqrt(t)*.95+band)));
+      const k=4*(j*N+i);img.data[k]=c[0];img.data[k+1]=c[1];img.data[k+2]=c[2];img.data[k+3]=255;}
+    o.putImageData(img,0,0);cache=off;cacheKey=key;return off;
+  }
+  const c1=canvasWidget($('#gd2-cv1'),1,(ctx,w,h)=>{
+    const F=frame(ctx,w,h,V);F1=F;
+    ctx.imageSmoothingEnabled=true;ctx.globalAlpha=.85;ctx.drawImage(heat(F,w,h),F.X(V.x0),F.Y(V.y1),F.pw,F.ph);ctx.globalAlpha=1;
+    F.clip();
+    ctx.strokeStyle=tok('--warm');ctx.lineWidth=2;ctx.beginPath();path.forEach(([m,b],i)=>i?ctx.lineTo(F.X(m),F.Y(b)):ctx.moveTo(F.X(m),F.Y(b)));ctx.stroke();
+    path.forEach(([m,b],i)=>{if(i%5===0||i===path.length-1)dot(ctx,F.X(m),F.Y(b),tok('--warm'),i===path.length-1?6:2.5);});
+    ring(ctx,F.X(RG.bm),F.Y(RG.bb),tok('--good'),tok('--card'));
+    ctx.restore();
+    ctx.font='11px '+tok('--f-mono');ctx.fillStyle=tok('--ink');ctx.textAlign='right';ctx.textBaseline='bottom';ctx.fillText('m →',w-12,h-24);ctx.textAlign='left';ctx.textBaseline='top';ctx.fillText('b ↑',38,12);
+  });
+  const c2=canvasWidget($('#gd2-cv2'),1,(ctx,w,h)=>{
+    const L=loss(),top=Math.min(Math.max(...L.slice(0,3))*1.1,L[0]*3),F=frame(ctx,w,h,{x0:0,x1:Math.max(20,L.length),y0:0,y1:Math.max(top,1)});
+    const eb=RG.mse(RG.bm,RG.bb);ctx.strokeStyle=tok('--good');ctx.setLineDash([5,4]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(F.X(0),F.Y(eb));ctx.lineTo(F.X(F.x1),F.Y(eb));ctx.stroke();ctx.setLineDash([]);
+    F.clip();ctx.strokeStyle=tok('--accent');ctx.lineWidth=2.5;ctx.beginPath();L.forEach((l,i)=>i?ctx.lineTo(F.X(i),F.Y(l)):ctx.moveTo(F.X(i),F.Y(l)));ctx.stroke();
+    dot(ctx,F.X(L.length-1),F.Y(L[L.length-1]),tok('--accent'),5);ctx.restore();
+    label(ctx,'mínimo posible',F.X(F.x1)-6,F.Y(eb)-10,tok('--good'),'right');
+  });
+  function out(){
+    const L=loss(),[m,b]=path[path.length-1],[gm,gb]=RG.grad(m,b),eb=RG.mse(RG.bm,RG.bb),k=path.length-1;
+    $('#gd2-lr-o').textContent=short(+LR.value);
+    const st=blown?'<span class="warn">El error explotó: la tasa de aprendizaje es tan grande que cada paso salta al otro lado del cuenco y cae más alto. Baja η y vuelve al inicio.</span>'
+      :L[k]-eb<.01?`<span class="ok">Llegaste al fondo en ${k} pasos: el gradiente es casi cero y ya no hay hacia dónde bajar.</span>`
+      :k&&L[k]>L[k-1]?'<span class="warn">El error subió en el último paso: η es demasiado grande.</span>':k?`El error bajó de ${fmt(L[0],2)} a ${fmt(L[k],2)}.`:'Pulsa «Un paso» o «Entrenar».';
+    $('#gd2-out').innerHTML=`<span class="big">Paso ${k} · m = ${fmt(m,2)} · b = ${fmt(b,2)} · MSE = ${fmt(L[k],2)}</span><span>Gradiente: ∂MSE/∂m = ${fmt(gm,2)}, ∂MSE/∂b = ${fmt(gb,2)}</span><span>${st}</span>`;
+    c1();c2();
+  }
+  function step(){
+    if(blown)return false;const [m,b]=path[path.length-1],[gm,gb]=RG.grad(m,b),lr=+LR.value,nm=m-lr*gm,nb=b-lr*gb;
+    path.push([nm,nb]);if(!isFinite(RG.mse(nm,nb))||RG.mse(nm,nb)>1e5){blown=true;}
+    RG.set(Math.max(-2,Math.min(7,nm)),Math.max(0,Math.min(16,nb)));return !blown;
+  }
+  function reset(p){cancelAnimationFrame(anim);start=p||start;path=[start];blown=false;out();}
+  $('#gd2-step').onclick=()=>{cancelAnimationFrame(anim);step();out();};
+  $('#gd2-run').onclick=()=>{cancelAnimationFrame(anim);let n=0;const f=()=>{const ok=step();n++;out();if(ok&&n<100)anim=requestAnimationFrame(f);};anim=requestAnimationFrame(f);};
+  $('#gd2-reset').onclick=()=>{reset();RG.set(start[0],start[1]);};
+  LR.addEventListener('input',out);
+  $('#gd2-cv1').addEventListener('pointerdown',e=>{if(!F1)return;const r=e.currentTarget.getBoundingClientRect(),m=F1.IX(e.clientX-r.left),b=F1.IY(e.clientY-r.top);
+    if(m<V.x0||m>V.x1||b<V.y0||b>V.y1)return;reset([m,b]);RG.set(m,b);});
+  RG.listeners.push((m,b)=>reset([m,b]));
+  out();
+})();
+
+/* ---------- 12 Sobreajuste ---------- */
+(function(){
+  let s=5;const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647;};
+  const g=()=>Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd());
+  const truth=x=>Math.sin(2*Math.PI*x);
+  const tr=[],te=[];for(let i=0;i<10;i++){const x=.04+.92*i/9;tr.push([x,truth(x)+.28*g()]);}
+  for(let i=0;i<40;i++){const x=rnd();te.push([x,truth(x)+.28*g()]);}
+  const t=x=>2*x-1;
+  function fit(d){
+    const k=d+1,A=Array.from({length:k},()=>new Array(k+1).fill(0));
+    tr.forEach(([x,y])=>{const p=[];for(let j=0;j<k;j++)p.push(t(x)**j);for(let r=0;r<k;r++){for(let c=0;c<k;c++)A[r][c]+=p[r]*p[c];A[r][k]+=p[r]*y;}});
+    for(let r=0;r<k;r++)A[r][r]+=1e-10;
+    for(let c=0;c<k;c++){let piv=c;for(let r=c+1;r<k;r++)if(Math.abs(A[r][c])>Math.abs(A[piv][c]))piv=r;[A[c],A[piv]]=[A[piv],A[c]];
+      for(let r=0;r<k;r++)if(r!==c){const f=A[r][c]/A[c][c];for(let q=c;q<=k;q++)A[r][q]-=f*A[c][q];}}
+    const w=A.map((row,r)=>row[k]/row[r]);return x=>w.reduce((a,wj,j)=>a+wj*t(x)**j,0);
+  }
+  const mse=(f,D)=>D.reduce((a,[x,y])=>a+(y-f(x))**2,0)/D.length;
+  const FITS=[...Array(10)].map((_,d)=>{const f=fit(d);return {f,tr:mse(f,tr),te:mse(f,te)};});
+  const best=FITS.reduce((bi,o,i)=>o.te<FITS[bi].te?i:bi,0);
+  const D=$('#ov-d');
+  const c1=canvasWidget($('#ov-cv1'),.8,(ctx,w,h)=>{
+    const F=frame(ctx,w,h,{x0:0,x1:1,y0:-2,y1:2,sx:.2,sy:.5});
+    curve(ctx,F,truth,tok('--muted'),1.5,[5,5]);
+    te.forEach(([x,y])=>{F.clip();dot(ctx,F.X(x),F.Y(y),tok('--warm'),3);ctx.restore();});
+    F.clip();curve(ctx,F,FITS[+D.value].f,tok('--accent'),3);ctx.restore();
+    tr.forEach(([x,y])=>dot(ctx,F.X(x),F.Y(y),tok('--accent'),5.5));
+  });
+  const c2=canvasWidget($('#ov-cv2'),.8,(ctx,w,h)=>{
+    const F=frame(ctx,w,h,{x0:-.3,x1:9.3,y0:0,y1:.8,sx:1,sy:.1});
+    [['tr','--accent'],['te','--warm']].forEach(([k,c])=>{F.clip();ctx.strokeStyle=tok(c);ctx.lineWidth=2.5;ctx.beginPath();FITS.forEach((o,d)=>{const y=Math.min(o[k],.95);d?ctx.lineTo(F.X(d),F.Y(y)):ctx.moveTo(F.X(d),F.Y(y));});ctx.stroke();
+      FITS.forEach((o,d)=>dot(ctx,F.X(d),F.Y(Math.min(o[k],.95)),tok(c),d===+D.value?7:3.5));ctx.restore();});
+    ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(F.X(+D.value),F.Y(0));ctx.lineTo(F.X(+D.value),F.Y(.8));ctx.stroke();ctx.setLineDash([]);
+  });
+  function out(){
+    const d=+D.value,o=FITS[d];$('#ov-d-o').textContent=d;
+    const msg=d<best-1||d<=1?'<span class="warn">Subajuste:</span> el polinomio es demasiado rígido para la curva; el error es alto incluso con los datos de entrenamiento.'
+      :d>=8?'<span class="warn">Sobreajuste:</span> la curva pasa casi exactamente por los 10 puntos de entrenamiento (error ≈ 0), pero oscila entre ellos y falla con los datos nuevos.'
+      :d===best?'<span class="ok">Buen ajuste:</span> el menor error de prueba. Sigue la forma real (la línea punteada) sin perseguir el ruido.'
+      :'Zona razonable: el error de prueba está cerca de su mínimo.';
+    $('#ov-out').innerHTML=`<span class="big">Grado ${d} · error de entrenamiento = ${fmt(o.tr,3)} · error de prueba = ${o.te>9.99?'> 10':fmt(o.te,3)}</span><span>${msg}</span>`;
+    c1();c2();
+  }
+  D.addEventListener('input',out);out();
+})();
+})();
+</script>
+</body>
+</html>
