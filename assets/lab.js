@@ -86,6 +86,7 @@ const PAGES=[
   ['cnn','14-cnn.html','14','Redes convolucionales'],
   ['llm','15-llm.html','15','Cómo funciona un LLM'],
   ['agentes','16-agentes.html','16','Agentes'],
+  ['refuerzo','17-refuerzo.html','17','Aprendizaje por refuerzo'],
   ['recursos','recursos.html','','Canales y plan']
 ];
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
