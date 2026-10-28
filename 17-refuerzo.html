@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aprendizaje por refuerzo · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="refuerzo">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 17 DE 17</span><h1>Aprendizaje por refuerzo: aprender probando</h1><p class="lede">Cómo un agente aprende a decidir sin conocer las reglas del mundo: solo con recompensas, la sorpresa de cada paso y muchas repeticiones. De Q-learning al RLHF de los LLM.</p></header>
+<section>
+  <h2>Aprender sin conocer las reglas</h2>
+  <div class="prose">
+    <p>En el <a href="16-agentes.html">módulo 16</a> resolvimos la ecuación de Bellman <b>conociendo el mundo</b>: sabíamos la probabilidad de cada transición P(s′ | s, a) y cada recompensa R(s, a). Eso es <b>planificar</b>. En la vida real casi nunca se conocen esas tablas. Un robot no sabe de antemano cómo responde el piso, y un juego no te entrega sus reglas en una matriz.</p>
+    <p>El <b>aprendizaje por refuerzo</b> (<i>reinforcement learning</i>, RL) resuelve el mismo problema <span class="hl">solo con experiencia: probar, ver qué pasa y corregir</span>. El agente nunca ve P ni R; solo ve tripletas (estado, acción, recompensa, siguiente estado) una tras otra.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Aprendizaje supervisado</th><th>Aprendizaje por refuerzo</th></tr></thead>
+    <tbody>
+      <tr><td>Qué recibe</td><td>La respuesta correcta para cada ejemplo</td><td>Solo una recompensa: buena o mala, a veces mucho después</td></tr>
+      <tr><td>Datos</td><td>Un dataset fijo</td><td>Los genera el propio agente al actuar</td></tr>
+      <tr><td>Qué aprende</td><td>Una función entrada → salida</td><td>Una política π(a | s): qué hacer en cada situación</td></tr>
+      <tr><td>Dificultad típica</td><td>Sobreajuste</td><td>Recompensa retrasada y equilibrio entre explorar y explotar</td></tr>
+    </tbody>
+  </table></div>
+  <div class="cards">
+    <div class="fact"><h3>Basado en valores</h3><span class="ex">aprende Q(s, a)</span><p>Estima qué tan buena es cada acción en cada estado y elige la mejor. Ejemplo: Q-learning, DQN.</p></div>
+    <div class="fact"><h3>Basado en política</h3><span class="ex">aprende π_θ(a | s)</span><p>Ajusta directamente las probabilidades de actuar. Ejemplo: REINFORCE, PPO.</p></div>
+    <div class="fact"><h3>Actor-crítico</h3><span class="ex">π_θ y V_w a la vez</span><p>El actor decide y el crítico le dice si la jugada fue mejor o peor de lo esperado.</p></div>
+    <div class="fact"><h3>Con o sin modelo</h3><span class="ex">aprender P o no</span><p>Algunos agentes aprenden también una simulación del mundo para planificar dentro de ella, como AlphaZero o MuZero.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>La idea clave: corregir con la sorpresa</h2>
+  <div class="prose">
+    <p>Todo el RL descansa en una regla de actualización que ya conoces del <a href="09-gradiente.html">descenso del gradiente</a>: tomar la estimación actual y moverla un poco hacia un objetivo mejor.</p>
+  </div>
+  <div class="eq">estimación ← estimación + α · (objetivo − estimación)</div>
+  <div class="prose">
+    <p>α es la tasa de aprendizaje. La diferencia (objetivo − estimación) es el <b>error</b> o, más intuitivo, la <b>sorpresa</b>: si el resultado fue mejor de lo que esperabas, subes tu estimación; si fue peor, la bajas. Si α = 1/n, esta regla calcula exactamente el promedio de lo que has visto. El truco del RL está en <b>qué se usa como objetivo</b>.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Q-learning: aprender el valor de cada acción</h2>
+  <div class="prose">
+    <p>Q(s, a) es el retorno que esperas si en el estado s haces la acción a y después juegas lo mejor posible. Si conocieras Q, actuar sería trivial: en cada estado, elegir la acción con el Q más alto. Q-learning la aprende con un paso a la vez:</p>
+  </div>
+  <div class="eq">Q(s, a) ← Q(s, a) + α · [ <span style="color:var(--good)">r + γ · máx<sub>a′</sub> Q(s′, a′)</span> − Q(s, a) ]</div>
+  <ol class="steps">
+    <li><span>Estás en s, eliges a (con ε-greedy: casi siempre la mejor, a veces al azar), recibes la recompensa r y llegas a s′.</span></li>
+    <li><span>El <b>objetivo</b> (en verde) es lo que acabas de ganar más lo mejor que crees que puedes ganar desde s′, descontado por γ. Es la ecuación de Bellman, pero con una muestra real en vez de las probabilidades.</span></li>
+    <li><span>La diferencia δ = objetivo − Q(s, a) se llama <b>error de diferencia temporal</b> (TD): la sorpresa de este paso.</span></li>
+    <li><span>Mueves Q(s, a) una fracción α de esa sorpresa. Repites miles de veces y Q converge al valor verdadero.</span></li>
+  </ol>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Q-learning en el borde del acantilado</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">El mundo: color = valor aprendido, flecha = mejor acción</span><canvas id="ql-cv1" role="img" aria-label="Cuadrícula con un acantilado, la meta y las flechas de la política aprendida"></canvas></div>
+      <div class="fig"><span class="cap">Retorno de cada episodio (puntos) y su promedio móvil</span><canvas id="ql-cv2" role="img" aria-label="Retorno por episodio, que sube a medida que el agente aprende"></canvas></div>
+    </div>
+    <div class="ctls">
+      <label class="ctl"><span>α (tasa de aprendizaje)</span><output id="ql-a-o"></output><input type="range" id="ql-a" min="0.05" max="1" step="0.05" value="0.5"></label>
+      <label class="ctl"><span>γ (descuento)</span><output id="ql-g-o"></output><input type="range" id="ql-g" min="0.5" max="1" step="0.01" value="0.95"></label>
+      <label class="ctl"><span>ε (exploración)</span><output id="ql-e-o"></output><input type="range" id="ql-e" min="0" max="0.5" step="0.01" value="0.1"></label>
+    </div>
+    <div class="btns"><button id="ql-step">Un paso</button><button id="ql-ep">Ver un episodio</button><button class="primary" id="ql-100">Entrenar 100 episodios</button><button id="ql-reset">Olvidar todo</button></div>
+    <div class="readout" id="ql-out"></div>
+    <p class="hint">Cada paso cuesta −1. Caer al acantilado cuesta −20 y te devuelve a la salida S. El agente no sabe nada de esto al empezar: todos sus Q valen 0. Con «Un paso» verás la cuenta exacta de cada actualización.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Gradiente de política: ajustar las probabilidades directamente</h2>
+  <div class="prose">
+    <p>Otra familia de métodos no aprende valores: aprende la política misma. La política es una función con parámetros θ que da probabilidades de cada acción, normalmente con un <a href="11-neurona.html">softmax</a>. La idea de <b>REINFORCE</b> se dice en una línea: <span class="hl">si una acción salió mejor que el promedio, súbele la probabilidad; si salió peor, bájasela</span>.</p>
+  </div>
+  <div class="eq">θ ← θ + α · (G − b) · ∇<sub>θ</sub> ln π<sub>θ</sub>(a | s)</div>
+  <div class="prose">
+    <p>G es el retorno que se obtuvo y b una <b>línea base</b>, como el retorno promedio. El factor (G − b) es la ventaja: positivo empuja hacia la acción, negativo la aleja. ∇ ln π apunta en la dirección que más aumenta la probabilidad de la acción tomada. Es descenso del gradiente al revés: <b>ascenso</b>, porque queremos maximizar la recompensa, no minimizar un error.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Una política que aprende a elegir</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Probabilidades actuales π(a) = softmax(h)</span><canvas id="pg-cv1" role="img" aria-label="Barras con la probabilidad de cada acción"></canvas></div>
+      <div class="fig"><span class="cap">Cómo cambian las probabilidades con la práctica</span><canvas id="pg-cv2" role="img" aria-label="Probabilidad de cada acción a lo largo de los pasos"></canvas></div>
+    </div>
+    <div class="ctls"><label class="ctl"><span>α (tasa de aprendizaje)</span><output id="pg-a-o"></output><input type="range" id="pg-a" min="0.02" max="0.5" step="0.01" value="0.1"></label></div>
+    <div class="btns"><button id="pg-1">Un intento</button><button class="primary" id="pg-50">50 intentos</button><button id="pg-reset">Reiniciar</button></div>
+    <div class="readout" id="pg-out"></div>
+    <p class="hint">Tres botones dan premios con ruido: en promedio A da 1, B da 2 y C da 1.5. El agente no conoce esos promedios. Con cada intento actualiza sus preferencias h con la regla de arriba y la probabilidad se va concentrando en la mejor acción.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Deep RL y RLHF: cuando la tabla no alcanza</h2>
+  <div class="prose">
+    <p>En el acantilado hay 28 estados y cabe una tabla. En el ajedrez hay más posiciones que átomos en el universo, y en un videojuego el estado es una imagen. La solución es reemplazar la tabla por una <b>red neuronal</b>: Q<sub>θ</sub>(s, a) o π<sub>θ</sub>(a | s). Eso es el <b>deep reinforcement learning</b>.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>DQN</h3><span class="ex">pérdida = (r + γ máx Q′ − Q<sub>θ</sub>)²</span><p>La regla de Q-learning convertida en un <a href="12-regresion.html">error cuadrático</a> que se baja con descenso del gradiente. Aprendió a jugar Atari a partir de los píxeles.</p></div>
+    <div class="fact"><h3>PPO</h3><span class="ex">gradiente de política con freno</span><p>Como REINFORCE, pero recorta cada actualización para que la política no cambie demasiado de golpe. Es el método más usado en la práctica.</p></div>
+    <div class="fact"><h3>AlphaGo / AlphaZero</h3><span class="ex">red + búsqueda + autojuego</span><p>Una red que propone jugadas y evalúa posiciones, entrenada jugando millones de partidas contra sí misma.</p></div>
+  </div>
+  <div class="prose">
+    <p><b>RLHF</b> (refuerzo con retroalimentación humana) es cómo se pule un <a href="15-llm.html">LLM</a> para que sea útil y seguro. Las piezas encajan una por una:</p>
+  </div>
+  <ol class="steps">
+    <li><span><b>La política</b> es el propio LLM: el estado es el texto hasta ahora y la acción es el siguiente token.</span></li>
+    <li><span><b>El modelo de recompensa:</b> personas comparan dos respuestas y eligen la mejor. Se entrena una red r(x, y) para que P(A gana a B) = σ(r<sub>A</sub> − r<sub>B</sub>), la sigmoide de la diferencia de puntajes (modelo de Bradley-Terry).</span></li>
+    <li><span><b>La optimización:</b> se ajusta el LLM con PPO para maximizar E[r] − β·KL(π<sub>θ</sub> ‖ π<sub>ref</sub>). El segundo término castiga alejarse demasiado del modelo original, para que no aprenda a «engañar» al juez con texto raro.</span></li>
+    <li><span><b>Recompensas verificables:</b> en matemáticas y programación la recompensa puede ser automática (¿la respuesta es correcta?, ¿pasan las pruebas?). Así se entrenan los modelos que «razonan» paso a paso.</span></li>
+  </ol>
+  <div class="ml"><b>Dónde aparece en ML</b><p>RL entrena a los agentes del <a href="16-agentes.html">módulo 16</a>, a los LLM con RLHF y con recompensas verificables, a robots, a sistemas de recomendación que optimizan a largo plazo y a controladores industriales. Los ingredientes son siempre los mismos: una política, una recompensa, una estimación del valor y una actualización que corrige con la sorpresa.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Q(s, →) = 2, r = −1, γ = 0.9, máx Q(s′, ·) = 5, α = 0.5. ¿Cuál es el nuevo Q(s, →)?</summary><p>Objetivo = −1 + 0.9·5 = 3.5. Sorpresa δ = 3.5 − 2 = 1.5. Nuevo Q = 2 + 0.5·1.5 = 2.75.</p></details>
+    <details><summary>¿Qué pasa si ε = 0 desde el principio?</summary><p>El agente nunca explora: repite la primera acción que le pareció aceptable y puede quedarse para siempre con una política mala.</p></details>
+    <details><summary>En REINFORCE, una acción dio G = 3 y la línea base es b = 5. ¿Su probabilidad sube o baja?</summary><p>Baja: la ventaja G − b = −2 es negativa. Salió peor de lo esperado aunque la recompensa fuera positiva.</p></details>
+    <details><summary>En RLHF, ¿para qué sirve el término β·KL?</summary><p>Mantiene al modelo cerca del original. Sin él, la política puede explotar los defectos del modelo de recompensa y producir textos con puntaje alto pero sin sentido.</p></details>
+  </div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=aprendizaje%20por%20refuerzo" target="_blank" rel="noopener">Dot CSV · aprendizaje por refuerzo</a>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=aprendizaje%20por%20refuerzo" target="_blank" rel="noopener">Ringa Tech · aprendizaje por refuerzo</a>
+    <a class="vid" href="https://www.youtube.com/@Eigensteve/search?query=reinforcement%20learning" target="_blank" rel="noopener">Steve Brunton · reinforcement learning <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=reinforcement%20learning" target="_blank" rel="noopener">StatQuest · reinforcement learning <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@AndrejKarpathy/search?query=RLHF" target="_blank" rel="noopener">Andrej Karpathy · RLHF <small>EN</small></a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 17 Q-learning en el acantilado ---------- */
+(function(){
+  const R=4,C=7,START=[3,0],GOAL=[3,6],cliff=(r,c)=>r===3&&c>0&&c<6,goal=(r,c)=>r===GOAL[0]&&c===GOAL[1];
+  const A=[[-1,0],[0,1],[1,0],[0,-1]],AN=['↑','→','↓','←'],OPT=-8;
+  const al=$('#ql-a'),ga=$('#ql-g'),eps=$('#ql-e');
+  let Q,s,epRet,epSteps,rets,last,anim=0,seed=3;
+  const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const id=([r,c])=>r*C+c,mx=q=>Math.max(...q);
+  const best=q=>{const m=mx(q),b=[0,1,2,3].filter(i=>q[i]===m);return b[Math.floor(rnd()*b.length)];};
+  const first=q=>q.indexOf(mx(q));
+  function reset(){cancelAnimationFrame(anim);Q=[...Array(R*C)].map(()=>[0,0,0,0]);s=[...START];epRet=0;epSteps=0;rets=[];last=null;seed=3;}
+  function step(){
+    const q=Q[id(s)],explore=rnd()<+eps.value,a=explore?Math.floor(rnd()*4):best(q);
+    const n=[Math.min(R-1,Math.max(0,s[0]+A[a][0])),Math.min(C-1,Math.max(0,s[1]+A[a][1]))];
+    const fell=cliff(...n),done=goal(...n),r=fell?-20:-1,nx=fell?[...START]:n;
+    const mq=done?0:mx(Q[id(nx)]),target=r+(+ga.value)*mq,old=q[a],delta=target-old;
+    q[a]=old+(+al.value)*delta;
+    last={s:[...s],a,r,mq,target,old,delta,nw:q[a],fell,done,explore};
+    epRet+=r;epSteps++;s=nx;
+    if(done||epSteps>=200){rets.push(epRet);last.end=done?'Llegó a la meta':'Se agotaron los 200 pasos';last.ret=epRet;epRet=0;epSteps=0;s=[...START];return true;}
+    return false;
+  }
+  reset();
+  const c1=canvasWidget($('#ql-cv1'),R/C,(ctx,w,h)=>{
+    const cw=w/C,ch=h/R,ca=hexRgb(tok('--accent')),cc=hexRgb(tok('--card'));
+    const vals=[];for(let r=0;r<R;r++)for(let c=0;c<C;c++)if(!cliff(r,c)&&!goal(r,c)&&Q[id([r,c])].some(v=>v))vals.push(mx(Q[id([r,c])]));
+    const lo=Math.min(...vals,-1),hi=Math.max(...vals,0);
+    ctx.clearRect(0,0,w,h);ctx.textAlign='center';ctx.textBaseline='middle';
+    for(let r=0;r<R;r++)for(let c=0;c<C;c++){
+      const x=c*cw,y=r*ch,q=Q[id([r,c])];
+      if(cliff(r,c)){ctx.fillStyle=tok('--warm');ctx.globalAlpha=.35;ctx.fillRect(x,y,cw,ch);ctx.globalAlpha=1;ctx.fillStyle=tok('--warm');ctx.font='600 12px '+tok('--f-mono');ctx.fillText('−20',x+cw/2,y+ch/2);}
+      else if(goal(r,c)){ctx.fillStyle=tok('--good');ctx.globalAlpha=.3;ctx.fillRect(x,y,cw,ch);ctx.globalAlpha=1;ctx.fillStyle=tok('--good');ctx.font='700 13px '+tok('--f-display');ctx.fillText('META',x+cw/2,y+ch/2);}
+      else{
+        const seen=q.some(v=>v),t=seen?(mx(q)-lo)/((hi-lo)||1):0,col=lerp(cc,ca,seen?.12+.6*t:0);
+        ctx.fillStyle=`rgb(${col})`;ctx.fillRect(x,y,cw,ch);
+        if(seen){ctx.fillStyle=t>.6?tok('--card'):tok('--ink');ctx.font='700 '+Math.round(Math.min(cw,ch)*.38)+'px '+tok('--f-body');ctx.fillText(AN[first(q)],x+cw/2,y+ch/2-4);
+          ctx.font='10px '+tok('--f-mono');ctx.fillText(fmt(mx(q),1),x+cw/2,y+ch-10);}
+        if(r===START[0]&&c===START[1]){ctx.fillStyle=tok('--muted');ctx.font='700 11px '+tok('--f-display');ctx.fillText('S',x+10,y+12);}
+      }
+      ctx.strokeStyle=tok('--line');ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,cw-1,ch-1);
+    }
+    dot(ctx,s[1]*cw+cw/2,s[0]*ch+ch/2-(Q[id(s)].some(v=>v)?0:0),tok('--warm'),Math.min(cw,ch)*.16);
+  });
+  const c2=canvasWidget($('#ql-cv2'),R/C+.12,(ctx,w,h)=>{
+    const n=rets.length,F=frame(ctx,w,h,{x0:0,x1:Math.max(20,n),y0:-120,y1:0,sy:20});
+    ctx.strokeStyle=tok('--good');ctx.setLineDash([5,4]);ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(F.X(0),F.Y(OPT));ctx.lineTo(F.X(F.x1),F.Y(OPT));ctx.stroke();ctx.setLineDash([]);
+    label(ctx,'óptimo = −8',F.X(F.x1)-4,F.Y(OPT)+12,tok('--good'),'right');
+    F.clip();
+    rets.forEach((g,i)=>dot(ctx,F.X(i+1),F.Y(Math.max(g,-118)),tok('--muted'),2));
+    ctx.strokeStyle=tok('--accent');ctx.lineWidth=2.5;ctx.beginPath();
+    rets.forEach((g,i)=>{const a=rets.slice(Math.max(0,i-9),i+1),m=a.reduce((p,q)=>p+q,0)/a.length;i?ctx.lineTo(F.X(i+1),F.Y(Math.max(m,-118))):ctx.moveTo(F.X(i+1),F.Y(Math.max(m,-118)));});
+    ctx.stroke();ctx.restore();
+  });
+  function out(){
+    ['a','g','e'].forEach(k=>$('#ql-'+k+'-o').textContent=short(+$('#ql-'+k).value));
+    let html=`<span class="big">Episodios: ${rets.length}${rets.length?` · último retorno: ${rets[rets.length-1]}`:''}${rets.length>=10?` · promedio de los últimos 10: ${fmt(rets.slice(-10).reduce((p,q)=>p+q,0)/10,1)}`:''}</span>`;
+    if(last){const P=v=>v<0?'('+fmt(v,2).replace('-','−')+')':fmt(v,2),L=last,cell=`(${L.s[0]+1}, ${L.s[1]+1})`;
+      html+=`<span>Paso: en ${cell} eligió ${AN[L.a]} ${L.explore?'<b>al azar</b> (explorando)':'(la mejor según su Q)'} y recibió r = ${L.r}${L.fell?': <span class="warn">cayó al acantilado y volvió a S</span>':''}${L.done?': <span class="ok">llegó a la meta</span>':''}.</span>`+
+        `<span>Q(s, ${AN[L.a]}) ← ${fmt(L.old,2)} + ${short(+al.value)}·[${L.r} + ${short(+ga.value)}·${P(L.mq)} − ${P(L.old)}] = ${fmt(L.old,2)} + ${short(+al.value)}·${P(L.delta)} = <b>${fmt(L.nw,2)}</b> · sorpresa δ = ${fmt(L.delta,2)}</span>`+
+        (L.end?`<span>${L.end} con retorno ${L.ret}. Empieza un episodio nuevo desde S.</span>`:'');}
+    else html+='<span>Todos los Q valen 0: el agente no sabe nada. Pulsa «Un paso» para ver la primera actualización, o entrena 100 episodios.</span>';
+    if(rets.length>=100){const m=rets.slice(-10).reduce((p,q)=>p+q,0)/10;html+=`<span>${+eps.value>0?`Las flechas ya marcan el camino corto, pegado al acantilado. Con ε = ${short(+eps.value)} el agente todavía explora a veces y se cae, por eso su promedio (${fmt(m,1)}) no llega a −8. Baja ε a 0 y entrena otra vez: verás el retorno óptimo.`:m>-9?'<span class="ok">Sin exploración, el agente sigue el camino óptimo de 8 pasos.</span>':''}</span>`;}
+    $('#ql-out').innerHTML=html;c1();c2();
+  }
+  $('#ql-step').onclick=()=>{cancelAnimationFrame(anim);step();out();};
+  $('#ql-ep').onclick=()=>{cancelAnimationFrame(anim);let t=0;const f=ts=>{if(ts-t>70){t=ts;if(step()){out();return;}out();}anim=requestAnimationFrame(f);};anim=requestAnimationFrame(f);};
+  $('#ql-100').onclick=()=>{cancelAnimationFrame(anim);let k=0;while(k<100){if(step())k++;}out();};
+  $('#ql-reset').onclick=()=>{reset();out();};
+  [al,ga,eps].forEach(el=>el.addEventListener('input',out));
+  reset();out();
+})();
+
+/* ---------- 17 Gradiente de política ---------- */
+(function(){
+  const MU=[1,2,1.5],NAMES=['A','B','C'],COL=['--accent','--warm','--good'],Aa=$('#pg-a');
+  let h,base,n,hist,last,seed=9;
+  const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const gauss=()=>Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd());
+  const pi=()=>{const m=Math.max(...h),e=h.map(v=>Math.exp(v-m)),s=e.reduce((p,q)=>p+q,0);return e.map(v=>v/s);};
+  function reset(){h=[0,0,0];base=0;n=0;hist=[pi()];last=null;seed=9;}
+  function act(){
+    const p=pi(),u=rnd();let a=0,acc=p[0];while(u>acc&&a<2){a++;acc+=p[a];}
+    const r=MU[a]+gauss(),adv=r-base,al=+Aa.value;
+    h=h.map((v,i)=>v+al*adv*((i===a?1:0)-p[i]));
+    n++;base+=(r-base)/n;hist.push(pi());last={a,r,adv,p:p[a]};
+  }
+  reset();
+  const c1=canvasWidget($('#pg-cv1'),.8,(ctx,w,h0)=>{
+    const p=pi(),F=frame(ctx,w,h0,{x0:-.5,x1:2.5,y0:0,y1:1,sx:1,sy:.25});
+    p.forEach((v,i)=>{const bw=(F.X(1)-F.X(0))*.6;ctx.fillStyle=tok(COL[i]);ctx.fillRect(F.X(i)-bw/2,F.Y(v),bw,F.Y(0)-F.Y(v));
+      label(ctx,NAMES[i]+' · '+Math.round(v*100)+' %',F.X(i),Math.max(F.Y(v)-12,14),tok('--ink'),'center');});
+  });
+  const c2=canvasWidget($('#pg-cv2'),.8,(ctx,w,h0)=>{
+    const F=frame(ctx,w,h0,{x0:0,x1:Math.max(50,hist.length-1),y0:0,y1:1,sy:.25});
+    F.clip();[0,1,2].forEach(i=>{ctx.strokeStyle=tok(COL[i]);ctx.lineWidth=2.5;ctx.beginPath();hist.forEach((p,k)=>k?ctx.lineTo(F.X(k),F.Y(p[i])):ctx.moveTo(F.X(k),F.Y(p[i])));ctx.stroke();});ctx.restore();
+  });
+  function out(){
+    $('#pg-a-o').textContent=short(+Aa.value);const p=pi();
+    let html=`<span class="big">Intentos: ${n} · π = [${p.map((v,i)=>NAMES[i]+' '+Math.round(v*100)+' %').join(', ')}] · línea base b = ${fmt(base,2)}</span>`;
+    if(last){const L=last;html+=`<span>Eligió ${NAMES[L.a]} (tenía ${Math.round(L.p*100)} % de probabilidad) y ganó r = ${fmt(L.r,2)}. Ventaja r − b = ${fmt(L.adv,2)}: ${L.adv>0?`<span class="ok">mejor de lo esperado, así que la probabilidad de ${NAMES[L.a]} sube</span>`:`<span class="warn">peor de lo esperado, así que la probabilidad de ${NAMES[L.a]} baja</span>`}.</span>`;}
+    else html+='<span>Al principio las tres acciones tienen la misma probabilidad: el agente no sabe cuál es mejor.</span>';
+    if(n>=100)html+=`<span>${p[1]>.8?'<span class="ok">La política aprendió que B es la mejor acción,</span> sin que nadie le dijera los promedios.':'Todavía duda. Prueba más intentos o una α más grande.'}</span>`;
+    $('#pg-out').innerHTML=html;c1();c2();
+  }
+  $('#pg-1').onclick=()=>{act();out();};
+  $('#pg-50').onclick=()=>{for(let i=0;i<50;i++)act();out();};
+  $('#pg-reset').onclick=()=>{reset();out();};
+  Aa.addEventListener('input',out);
+  reset();out();
+})();
+})();
+</script>
+</body>
+</html>
