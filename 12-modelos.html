@@ -17,7 +17,7 @@
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 13 DE 17</span><h1>Los modelos clásicos de Machine Learning</h1><p class="lede">Regresión logística, k vecinos, árboles, k-means, Naive Bayes, SVM y ensambles. Cada uno es una forma de función, una medida del error y una manera de reducirlo.</p></header>
+<header class="page-head"><span class="num">MÓDULO 12 DE 17</span><h1>Los modelos clásicos de Machine Learning</h1><p class="lede">Regresión logística, k vecinos, árboles, k-means, Naive Bayes, SVM y ensambles. Cada uno es una forma de función, una medida del error y una manera de reducirlo.</p></header>
 <section>
   <h2>Todos los modelos siguen la misma receta</h2>
   <div class="prose">
@@ -55,8 +55,8 @@
     <div class="fact"><h3>Se equivoca muy seguro</h3><span class="ex">y = 1, p = 0.01 → 4.6</span><p>El logaritmo dispara el castigo. Equivocarse con confianza sale carísimo.</p></div>
   </div>
   <div class="prose">
-    <p>Los pesos <var>w</var> y <var>b</var> se ajustan con <a href="09-gradiente.html">descenso del gradiente</a>. Y el gradiente sale sorprendentemente simple: (<var>p</var> − <var>y</var>)·<var>x</var>, es decir, «cuánto me equivoqué» por «cuánto pesaba esa entrada». <b>Ejemplo cotidiano:</b> un filtro de spam que suma puntos por cada palabra sospechosa y convierte el total en una probabilidad.</p>
-    <p><span class="hl">Una neurona con sigmoide es exactamente una regresión logística.</span> Una red neuronal es muchas de ellas apiladas (<a href="11-neurona.html">módulo 11</a>).</p>
+    <p>Los pesos <var>w</var> y <var>b</var> se ajustan con <a href="10-gradiente.html">descenso del gradiente</a>. Y el gradiente sale sorprendentemente simple: (<var>p</var> − <var>y</var>)·<var>x</var>, es decir, «cuánto me equivoqué» por «cuánto pesaba esa entrada». <b>Ejemplo cotidiano:</b> un filtro de spam que suma puntos por cada palabra sospechosa y convierte el total en una probabilidad.</p>
+    <p><span class="hl">Una neurona con sigmoide es exactamente una regresión logística.</span> Una red neuronal es muchas de ellas apiladas (<a href="13-neurona.html">módulo 13</a>).</p>
   </div>
 </section>
 
@@ -147,7 +147,7 @@
 <section>
   <h2>Naive Bayes: sumar evidencias</h2>
   <div class="prose">
-    <p><b>La idea en una frase:</b> usar el <a href="10-probabilidad.html">teorema de Bayes</a> y suponer, con «ingenuidad», que cada pista es independiente de las demás.</p>
+    <p><b>La idea en una frase:</b> usar el <a href="09-probabilidad.html">teorema de Bayes</a> y suponer, con «ingenuidad», que cada pista es independiente de las demás.</p>
   </div>
   <div class="eq">P(clase | pistas) ∝ P(clase) · P(pista₁ | clase) · P(pista₂ | clase) · …</div>
   <div class="prose">

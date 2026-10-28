@@ -68,27 +68,7 @@ function seg(ctx,F,f,xa,xb,color,lw,N){
 function ring(ctx,x,y,color,fill){ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=2.5;ctx.strokeStyle=color;ctx.stroke();}
 
 /* ---------- Navegación entre páginas y avance ---------- */
-const PAGES=[
-  ['index','index.html','','Inicio'],
-  ['aritmetica','01-aritmetica.html','01','Aritmética y razones'],
-  ['notacion','02-notacion.html','02','Notación sin miedo'],
-  ['funciones','03-funciones.html','03','Funciones'],
-  ['vectores','04-vectores.html','04','Vectores'],
-  ['matrices','05-matrices.html','05','Matrices'],
-  ['limites','06-limites.html','06','Límites y continuidad'],
-  ['derivadas','07-derivadas.html','07','Derivadas'],
-  ['integrales','08-integrales.html','08','Integrales'],
-  ['gradiente','09-gradiente.html','09','Descenso del gradiente'],
-  ['probabilidad','10-probabilidad.html','10','Probabilidad'],
-  ['neurona','11-neurona.html','11','La neurona y la red'],
-  ['regresion','12-regresion.html','12','Regresión y error'],
-  ['modelos','13-modelos.html','13','Modelos clásicos de ML'],
-  ['cnn','14-cnn.html','14','Redes convolucionales'],
-  ['llm','15-llm.html','15','Cómo funciona un LLM'],
-  ['agentes','16-agentes.html','16','Agentes'],
-  ['refuerzo','17-refuerzo.html','17','Aprendizaje por refuerzo'],
-  ['recursos','recursos.html','','Canales y plan']
-];
+const PAGES=[["index","index.html","","Inicio"],["aritmetica","01-aritmetica.html","01","Aritmética y razones"],["notacion","02-notacion.html","02","Notación sin miedo"],["funciones","03-funciones.html","03","Funciones"],["vectores","04-vectores.html","04","Vectores"],["matrices","05-matrices.html","05","Matrices"],["limites","06-limites.html","06","Límites y continuidad"],["derivadas","07-derivadas.html","07","Derivadas"],["integrales","08-integrales.html","08","Integrales"],["probabilidad","09-probabilidad.html","09","Probabilidad"],["gradiente","10-gradiente.html","10","Descenso del gradiente"],["regresion","11-regresion.html","11","Regresión y error"],["modelos","12-modelos.html","12","Modelos clásicos de ML"],["neurona","13-neurona.html","13","La neurona y la red"],["cnn","14-cnn.html","14","Redes convolucionales"],["llm","15-llm.html","15","Cómo funciona un LLM"],["agentes","16-agentes.html","16","Agentes"],["refuerzo","17-refuerzo.html","17","Aprendizaje por refuerzo"],["recursos","recursos.html","","Canales y plan"]];
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
 const holder=document.querySelector('[data-page]');
 const page=holder?holder.getAttribute('data-page'):'';

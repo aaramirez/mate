@@ -110,7 +110,7 @@
 
 <section>
   <h2>Repaso del módulo</h2>
-  <div class="ml"><b>Dónde aparece en ML</b><p>En probabilidad, <b>el área es la probabilidad</b>: P(<var>a</var> &lt; <var>X</var> &lt; <var>b</var>) es la integral de la función de densidad (<a href="10-probabilidad.html">módulo 10</a>). El valor esperado es otra integral: E[<var>X</var>] = ∫ <var>x</var>·<var>p</var>(<var>x</var>) <var>dx</var>. La métrica AUC-ROC es literalmente el área bajo una curva, y scikit-learn la calcula con trapecios, es decir, con una suma de Riemann. En la práctica casi todas las integrales de ML se aproximan con sumas.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>En probabilidad, <b>el área es la probabilidad</b>: P(<var>a</var> &lt; <var>X</var> &lt; <var>b</var>) es la integral de la función de densidad (<a href="09-probabilidad.html">módulo 09</a>). El valor esperado es otra integral: E[<var>X</var>] = ∫ <var>x</var>·<var>p</var>(<var>x</var>) <var>dx</var>. La métrica AUC-ROC es literalmente el área bajo una curva, y scikit-learn la calcula con trapecios, es decir, con una suma de Riemann. En la práctica casi todas las integrales de ML se aproximan con sumas.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Suma de Riemann por la izquierda de f(x) = x en [0, 2] con n = 2. ¿Cuánto da y cuál es el área real?</summary><p>Δx = 1; f(0)·1 + f(1)·1 = 0 + 1 = 1. El área real es 2 (un triángulo de base 2 y alto 2).</p></details>
     <details><summary>¿Es integrable la función escalón en [−1, 1]? ¿Cuánto vale?</summary><p>Sí: tiene un solo salto y está acotada. Vale 1 (un rectángulo de 1 × 1).</p></details>

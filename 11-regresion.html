@@ -17,7 +17,7 @@
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 12 DE 17</span><h1>Regresión: el error y cómo se reduce</h1><p class="lede">Cómo se mide qué tan equivocado está un modelo, cómo el entrenamiento baja ese error paso a paso y por qué el error que importa es el de los datos nuevos.</p></header>
+<header class="page-head"><span class="num">MÓDULO 11 DE 17</span><h1>Regresión: el error y cómo se reduce</h1><p class="lede">Cómo se mide qué tan equivocado está un modelo, cómo el entrenamiento baja ese error paso a paso y por qué el error que importa es el de los datos nuevos.</p></header>
 <section>
   <h2>Qué es el error de una predicción</h2>
   <div class="prose">
@@ -50,7 +50,7 @@
 <section>
   <h2>Cómo disminuye el error: el entrenamiento</h2>
   <div class="prose">
-    <p>Para cada pareja (<var>m</var>, <var>b</var>) hay un MSE. Si dibujamos el MSE de todas las parejas posibles, obtenemos una <b>superficie de error</b> con forma de cuenco: el fondo del cuenco es la mejor recta. Entrenar es bajar al fondo, y para eso se usa el <a href="09-gradiente.html">descenso del gradiente</a>: mirar hacia dónde sube el error y dar un paso hacia el lado contrario.</p>
+    <p>Para cada pareja (<var>m</var>, <var>b</var>) hay un MSE. Si dibujamos el MSE de todas las parejas posibles, obtenemos una <b>superficie de error</b> con forma de cuenco: el fondo del cuenco es la mejor recta. Entrenar es bajar al fondo, y para eso se usa el <a href="10-gradiente.html">descenso del gradiente</a>: mirar hacia dónde sube el error y dar un paso hacia el lado contrario.</p>
     <p>Las derivadas parciales del MSE (<a href="07-derivadas.html">módulo 07</a>) dicen cuánto cambia el error al mover cada perilla:</p>
   </div>
   <div class="eq">∂MSE/∂<var>m</var> = −(2/n) Σ <var>x</var>ᵢ·<var>e</var>ᵢ &nbsp;&nbsp;&nbsp; ∂MSE/∂<var>b</var> = −(2/n) Σ <var>e</var>ᵢ</div>

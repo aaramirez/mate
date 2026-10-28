@@ -17,7 +17,7 @@
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 10 DE 17</span><h1>Probabilidad: densidad y distribución</h1><p class="lede">Variables aleatorias, la función de masa, la función de densidad, la función de distribución acumulada, la normal y el teorema de Bayes.</p></header>
+<header class="page-head"><span class="num">MÓDULO 09 DE 17</span><h1>Probabilidad: densidad y distribución</h1><p class="lede">Variables aleatorias, la función de masa, la función de densidad, la función de distribución acumulada, la normal, la probabilidad condicional y el teorema de Bayes.</p></header>
 <section>
   <h2>Probabilidad: una razón entre 0 y 1</h2>
   <div class="prose">
@@ -118,11 +118,59 @@
 </section>
 
 <section>
-  <h2>Teorema de Bayes: actualizar con evidencia</h2>
+  <h2>Probabilidad condicional: preguntar dentro de un mundo más pequeño</h2>
   <div class="prose">
-    <p>El 20% de los correos son spam. La palabra «gratis» aparece en el 60% del spam y en el 5% del correo normal. Si un correo dice «gratis», ¿qué probabilidad hay de que sea spam?</p>
+    <p>Toda probabilidad se calcula <b>dentro de un espacio</b>: el conjunto Ω de todo lo que puede pasar. Con dos dados, Ω tiene 36 resultados y cada uno vale 1/36. Ahora alguien mira los dados y te da una pista: «la suma es 8». De golpe, 31 de los 36 resultados dejan de ser posibles. <span class="hl">Tu universo se achicó a los 5 resultados que suman 8, y ahora las preguntas se hacen ahí dentro.</span></p>
+    <p>Eso es la probabilidad condicional. P(A | B) se lee «la probabilidad de A <b>dado</b> B» y significa: <b>suponiendo que B ya pasó</b>, ¿qué fracción de B es también A?</p>
+  </div>
+  <div class="eq">P(A | B) = P(A ∩ B) / P(B) &nbsp;&nbsp;=&nbsp;&nbsp; casos de A dentro de B / casos de B</div>
+  <div class="prose">
+    <p>La fórmula hace dos cosas. <b>Recorta</b>: de A solo cuenta la parte que cae dentro de B (A ∩ B). Y <b>cambia el punto de vista</b>: divide entre P(B) para que B pase a valer 1, el 100 % del nuevo universo. Antes medías contra todo Ω; ahora mides contra B.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Dos dados: elige la pista y la pregunta</h3></div>
+    <div class="split">
+      <canvas id="cd2-cv" role="img" aria-label="Cuadrícula de 6 por 6 con los resultados de dos dados; se apagan los que no cumplen la condición"></canvas>
+      <div style="display:grid;gap:12px;align-content:start">
+        <div><span class="cap">La pista (condición B)</span><div class="btns" id="cd2-cond" role="group" aria-label="Condición"></div></div>
+        <label class="ctl" id="cd2-k-w"><span>Valor de la suma</span><output id="cd2-k-o"></output><input type="range" id="cd2-k" min="2" max="12" step="1" value="8"></label>
+        <div><span class="cap">La pregunta (evento A)</span><div class="btns" id="cd2-q" role="group" aria-label="Pregunta"></div></div>
+      </div>
+    </div>
+    <div class="readout" id="cd2-out"></div>
+    <p class="hint">Cada casilla es un resultado (dado 1, dado 2). Las casillas apagadas quedaron fuera del universo por la pista. Las marcadas con color cumplen la pregunta.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>El orden importa</h3><span class="ex">P(A | B) ≠ P(B | A)</span><p>Casi todos los que tienen gripe tosen, pero pocos de los que tosen tienen gripe. Son dos preguntas hechas en universos distintos: el de los enfermos y el de los que tosen.</p></div>
+    <div class="fact"><h3>Independencia</h3><span class="ex">P(A | B) = P(A)</span><p>Si la pista no cambia la respuesta, A y B son independientes. Saber que el primer dado es par no dice nada del segundo.</p></div>
+    <div class="fact"><h3>Regla del producto</h3><span class="ex">P(A ∩ B) = P(B) · P(A | B)</span><p>Despejando la definición. Encadenada muchas veces, es como un <a href="15-llm.html">LLM</a> calcula la probabilidad de una frase: palabra por palabra, cada una dado lo anterior.</p></div>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Cambiar el punto de vista: la parte se vuelve el todo</h3></div>
+    <div class="twin">
+      <div class="fig"><span class="cap">Todos los correos (Ω). El ancho es la proporción de spam y la parte <b>rayada</b> dice «gratis»</span><canvas id="cv3-cv1" role="img" aria-label="Diagrama de áreas: spam y normal, y la parte que dice gratis"></canvas></div>
+      <div class="fig"><span class="cap">El nuevo universo: solo lo que cumple la pista, estirado hasta valer 100 %</span><canvas id="cv3-cv2" role="img" aria-label="La región condicionada reescalada a 100 %"></canvas></div>
+    </div>
+    <div class="btns" id="cv3-cond" role="group" aria-label="Punto de vista"></div>
+    <div class="ctls">
+      <label class="ctl"><span>P(spam): spam entre todos los correos</span><output id="cv3-p-o"></output><input type="range" id="cv3-p" min="0.01" max="0.9" step="0.01" value="0.2"></label>
+      <label class="ctl"><span>P(gratis | spam)</span><output id="cv3-a-o"></output><input type="range" id="cv3-a" min="0" max="1" step="0.01" value="0.6"></label>
+      <label class="ctl"><span>P(gratis | normal)</span><output id="cv3-b-o"></output><input type="range" id="cv3-b" min="0" max="1" step="0.01" value="0.05"></label>
+    </div>
+    <div class="readout" id="cv3-out"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Teorema de Bayes: pasar de un punto de vista al otro</h2>
+  <div class="prose">
+    <p>El laboratorio de arriba ya es el teorema de Bayes. Los datos suelen venir desde un punto de vista: «el 60 % del spam dice "gratis"», que es P(gratis | spam), medido dentro del universo del spam. Pero la pregunta útil se hace desde el otro: «este correo dice "gratis", ¿es spam?», P(spam | gratis), medida dentro del universo de los que dicen «gratis».</p>
+    <p>Las dos miradas comparten la misma intersección, los correos spam que dicen «gratis»: P(spam ∩ gratis) = P(gratis | spam)·P(spam) = P(spam | gratis)·P(gratis). Despejando sale Bayes:</p>
   </div>
   <div class="eq">P(spam | gratis) = P(gratis | spam) · P(spam) / P(gratis) = (0.6 · 0.2) / (0.6 · 0.2 + 0.05 · 0.8) = 0.12 / 0.16 = 0.75</div>
+  <div class="prose">
+    <p>En palabras: de cada 1000 correos, 200 son spam y 120 de ellos dicen «gratis». De los 800 normales, 40 dicen «gratis». En el universo de los que dicen «gratis» hay 160 correos, y 120 son spam: 120 / 160 = 75 %. P(spam) = 0.2 es la creencia <b>antes</b> de leer el correo (a priori) y 0.75 la creencia <b>después</b> de ver la evidencia (a posteriori).</p>
+  </div>
 </section>
 
 <section>
@@ -254,6 +302,87 @@ function drawPdf(ctx,F,d,color){
   });
   ids.forEach(k=>$('#nd-'+k).addEventListener('input',draw));
   [1,2,3].forEach(k=>$('#nd-'+k+'s').onclick=()=>{const mu=num('#nd-mu'),sd=num('#nd-sd');$('#nd-a').value=(mu-k*sd).toFixed(1);$('#nd-b').value=(mu+k*sd).toFixed(1);draw();});
+})();
+/* ---------- 10 Condicional: dos dados ---------- */
+(function(){
+  const CONDS=[['Sin pista (Ω)',()=>true],['La suma es k',(a,b,k)=>a+b===k],['El primero es par',a=>a%2===0],['Al menos un 6',(a,b)=>a===6||b===6],['Son distintos',(a,b)=>a!==b]];
+  const QS=[['El primero es 6',a=>a===6],['Salen dobles',(a,b)=>a===b],['La suma es 10 o más',(a,b)=>a+b>=10],['El segundo es par',(a,b)=>b%2===0]];
+  const K=$('#cd2-k');let ci=1,qi=0;
+  const mk=(host,list,set)=>list.forEach(([t],i)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{set(i);out();};host.appendChild(b);});
+  mk($('#cd2-cond'),CONDS,i=>ci=i);mk($('#cd2-q'),QS,i=>qi=i);
+  const inB=(a,b)=>CONDS[ci][1](a,b,+K.value),inA=(a,b)=>QS[qi][1](a,b);
+  const draw=canvasWidget($('#cd2-cv'),1,(ctx,w,h)=>{
+    const pad=22,cs=(Math.min(w,h)-pad-4)/6;ctx.clearRect(0,0,w,h);ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='600 11px '+tok('--f-mono');ctx.fillStyle=tok('--muted');
+    for(let i=1;i<=6;i++){ctx.fillText(i,pad+(i-.5)*cs,10);ctx.fillText(i,9,pad+(i-.5)*cs);}
+    for(let a=1;a<=6;a++)for(let b=1;b<=6;b++){
+      const x=pad+(b-1)*cs,y=pad+(a-1)*cs,iB=inB(a,b),iA=inA(a,b);
+      ctx.globalAlpha=iB?1:.16;
+      ctx.fillStyle=iA?tok('--accent'):tok('--card');ctx.fillRect(x+2,y+2,cs-4,cs-4);
+      ctx.strokeStyle=iB?tok('--ink'):tok('--line');ctx.lineWidth=iB&&ci?1.6:1;ctx.strokeRect(x+2.5,y+2.5,cs-5,cs-5);
+      ctx.fillStyle=iA?tok('--card'):tok('--ink');ctx.font='600 '+Math.round(cs*.22)+'px '+tok('--f-mono');ctx.fillText(a+','+b,x+cs/2,y+cs/2);
+      ctx.globalAlpha=1;
+    }
+  });
+  function out(){
+    $('#cd2-k-w').style.display=ci===1?'':'none';$('#cd2-k-o').textContent=K.value;
+    $('#cd2-cond').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',i===ci));
+    $('#cd2-q').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',i===qi));
+    let nA=0,nB=0,nAB=0;for(let a=1;a<=6;a++)for(let b=1;b<=6;b++){const x=inA(a,b),y=inB(a,b);nA+=x;nB+=y;nAB+=x&&y;}
+    const q=QS[qi][0].toLowerCase(),c=ci===1?'la suma es '+K.value:CONDS[ci][0].toLowerCase(),pA=nA/36,pAB=nAB/nB;
+    let html=`<span class="big">${ci?`P(${q} | ${c}) = ${nAB} / ${nB} = ${fmt(pAB,3)}`:`P(${q}) = ${nA} / 36 = ${fmt(pA,3)}`}</span>`;
+    if(!ci)html+=`<span>Sin pista, el universo es Ω completo: 36 resultados igual de probables, y ${nA} cumplen la pregunta. Elige una pista para achicar el universo.</span>`;
+    else{
+      html+=`<span>La pista deja ${nB} de los 36 resultados: ese es el nuevo universo y ahora vale 100 %. Dentro de él, ${nAB} cumplen la pregunta. Con la fórmula: P(A ∩ B) / P(B) = (${nAB}/36) / (${nB}/36) = ${nAB} / ${nB}; los 36 se cancelan.</span>`;
+      const d=pAB-pA;
+      html+=`<span>Sin la pista era ${nA} / 36 = ${fmt(pA,3)}. ${Math.abs(d)<1e-9?'<span class="ok">No cambió: la pista no da información sobre la pregunta. Son independientes.</span>':pAB===0?'<span class="warn">Con esta pista la pregunta se volvió imposible.</span>':pAB===1?'<span class="ok">Con esta pista la pregunta se volvió segura.</span>':d>0?'La pista <b>subió</b> la probabilidad: la información cambió tu punto de vista.':'La pista <b>bajó</b> la probabilidad: la información cambió tu punto de vista.'}</span>`;
+    }
+    $('#cd2-out').innerHTML=html;draw();
+  }
+  K.addEventListener('input',out);out();
+})();
+
+/* ---------- 10 Condicional: cambio de punto de vista ---------- */
+(function(){
+  const P=$('#cv3-p'),Ag=$('#cv3-a'),Bg=$('#cv3-b');let ci=1;
+  ['Sin pista (Ω)','Dice «gratis»','No dice «gratis»','Es spam'].forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{ci=i;out();};$('#cv3-cond').appendChild(b);});
+  const v=()=>{const p=+P.value,a=+Ag.value,b=+Bg.value;return {p,a,b,sg:p*a,sn:p*(1-a),ng:(1-p)*b,nn:(1-p)*(1-b)};};
+  // región: [clave, x0, ancho, y0 desde abajo, alto, color, rayada]
+  const regs=V=>[['sg',0,V.p,0,V.a,'--warm',1],['sn',0,V.p,V.a,1-V.a,'--warm',0],['ng',V.p,1-V.p,0,V.b,'--accent',1],['nn',V.p,1-V.p,V.b,1-V.b,'--accent',0]];
+  const keep=[['sg','sn','ng','nn'],['sg','ng'],['sn','nn'],['sg','sn']];
+  function hatch(ctx,x,y,w,h,col){if(w<1||h<1)return;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.strokeStyle=col;ctx.lineWidth=1.5;for(let t=-h;t<w;t+=8){ctx.beginPath();ctx.moveTo(x+t,y+h);ctx.lineTo(x+t+h,y);ctx.stroke();}ctx.restore();}
+  const c1=canvasWidget($('#cv3-cv1'),.8,(ctx,w,h)=>{
+    const V=v(),m=8,W=w-2*m,H=h-2*m-18;ctx.clearRect(0,0,w,h);
+    regs(V).forEach(([k,x0,ww,y0,hh,c,hz])=>{const on=keep[ci].includes(k),X=m+x0*W,Y=m+(1-y0-hh)*H,RW=ww*W,RH=hh*H;if(RW<.5||RH<.5)return;
+      ctx.globalAlpha=on?(hz?.55:.22):.06;ctx.fillStyle=tok(c);ctx.fillRect(X,Y,RW,RH);ctx.globalAlpha=on?.9:.15;if(hz)hatch(ctx,X,Y,RW,RH,tok('--card'));
+      ctx.globalAlpha=1;ctx.strokeStyle=on&&ci?tok('--ink'):tok('--line');ctx.lineWidth=on&&ci?2:1;ctx.strokeRect(X+.5,Y+.5,RW-1,RH-1);});
+    ctx.font='600 12px '+tok('--f-display');ctx.textAlign='center';ctx.textBaseline='top';
+    if(V.p>.12){ctx.fillStyle=tok('--warm');ctx.fillText('spam '+Math.round(V.p*100)+' %',m+V.p*W/2,h-16);}
+    if(V.p<.88){ctx.fillStyle=tok('--accent');ctx.fillText('normal '+Math.round((1-V.p)*100)+' %',m+(V.p+(1-V.p)/2)*W,h-16);}
+  });
+  const c2=canvasWidget($('#cv3-cv2'),.8,(ctx,w,h)=>{
+    const V=v(),m=8,W=w-2*m,H=h-2*m-18;ctx.clearRect(0,0,w,h);
+    const parts=ci===0?[['spam',V.p,'--warm',0],['normal',1-V.p,'--accent',0]]:ci===1?[['spam',V.sg,'--warm',1],['normal',V.ng,'--accent',1]]:ci===2?[['spam',V.sn,'--warm',0],['normal',V.nn,'--accent',0]]:[['dice «gratis»',V.sg,'--warm',1],['no lo dice',V.sn,'--warm',0]];
+    const tot=parts.reduce((s,q)=>s+q[1],0);let x=m;
+    if(!tot){ctx.fillStyle=tok('--muted');ctx.font='14px '+tok('--f-body');ctx.textAlign='center';ctx.fillText('Este universo está vacío: la pista es imposible.',w/2,h/2);return;}
+    parts.forEach(([n,val,c,hz],i)=>{const ww=val/tot*W;if(ww<.5)return;ctx.globalAlpha=hz?.55:(ci===3&&i===1?.18:.3);ctx.fillStyle=tok(c);ctx.fillRect(x,m,ww,H);ctx.globalAlpha=1;if(hz)hatch(ctx,x,m,ww,H,tok('--card'));
+      ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.strokeRect(x+.5,m+.5,ww-1,H-1);
+      if(ww>44){ctx.fillStyle=tok('--ink');ctx.font='700 '+(ww>90?20:14)+'px '+tok('--f-display');ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(Math.round(val/tot*100)+' %',x+ww/2,m+H/2-10);
+        ctx.font='600 12px '+tok('--f-body');ctx.fillText(n,x+ww/2,m+H/2+12);}
+      x+=ww;});
+    ctx.font='600 12px '+tok('--f-display');ctx.fillStyle=tok('--muted');ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText('total del nuevo universo = 100 %',w/2,h-16);
+  });
+  function out(){
+    const V=v();$('#cv3-p-o').textContent=short(V.p);$('#cv3-a-o').textContent=short(V.a);$('#cv3-b-o').textContent=short(V.b);
+    $('#cv3-cond').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',i===ci));
+    const N=1000,r=x=>Math.round(x*N),g=V.sg+V.ng,pc=(a,b)=>b?Math.round(100*a/b):0;let big,txt;
+    if(ci===0){big=`P(spam) = ${fmt(V.p,2)}`;txt=`Sin información, la probabilidad de spam es la proporción de spam en todo Ω. De ${N} correos, ${r(V.p)} son spam.`;}
+    else if(ci===1){big=`P(spam | gratis) = ${fmt(V.sg,3)} / ${fmt(g,3)} = ${g?fmt(V.sg/g,3):'—'}`;txt=`Solo quedan los correos que dicen «gratis»: ${r(V.sg)} spam + ${r(V.ng)} normales = ${r(g)} de cada ${N}. Ese es el nuevo universo. Dentro de él, el spam es ${r(V.sg)} / ${r(g)} = ${pc(V.sg,g)} %, aunque en todo Ω era ${Math.round(V.p*100)} %. La pista cambió el punto de vista.`;}
+    else if(ci===2){const n=V.sn+V.nn;big=`P(spam | no gratis) = ${fmt(V.sn,3)} / ${fmt(n,3)} = ${n?fmt(V.sn/n,3):'—'}`;txt=`Ahora el universo son los ${r(n)} correos sin «gratis». El spam baja a ${pc(V.sn,n)} %: no ver la palabra también es información.`;}
+    else{big=`P(gratis | spam) = ${fmt(V.sg,3)} / ${fmt(V.p,3)} = ${fmt(V.a,2)}`;txt=`Ahora miramos desde el universo del spam (${r(V.p)} correos) y preguntamos otra cosa: ¿cuántos dicen «gratis»? ${r(V.sg)} de ${r(V.p)}, el ${Math.round(V.a*100)} %. Compara con P(spam | gratis) = ${pc(V.sg,g)} %: la misma intersección, dividida entre universos distintos.`;}
+    $('#cv3-out').innerHTML=`<span class="big">${big}</span><span>${txt}</span>`;c1();c2();
+  }
+  [P,Ag,Bg].forEach(el=>el.addEventListener('input',out));out();
 })();
 })();
 </script>

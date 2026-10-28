@@ -60,7 +60,7 @@
   <div class="cards">
     <div class="fact"><h3>S: estados</h3><span class="ex">s ∈ S</span><p>Todas las situaciones posibles. En un tablero, cada casilla donde puede estar el agente.</p></div>
     <div class="fact"><h3>A: acciones</h3><span class="ex">a ∈ A</span><p>Lo que el agente puede hacer: ↑, ↓, ←, →; o «responder», «buscar», «calcular».</p></div>
-    <div class="fact"><h3>P: transición</h3><span class="ex">P(s′ | s, a)</span><p>La <a href="10-probabilidad.html">probabilidad</a> de llegar a s′ si estoy en s y hago a. El mundo puede ser imprevisible: a veces uno resbala.</p></div>
+    <div class="fact"><h3>P: transición</h3><span class="ex">P(s′ | s, a)</span><p>La <a href="09-probabilidad.html">probabilidad</a> de llegar a s′ si estoy en s y hago a. El mundo puede ser imprevisible: a veces uno resbala.</p></div>
     <div class="fact"><h3>R: recompensa</h3><span class="ex">R(s, a)</span><p>El premio o castigo inmediato. Es la única señal de «lo hiciste bien» que recibe el agente.</p></div>
     <div class="fact"><h3>γ: descuento</h3><span class="ex">0 ≤ γ &lt; 1</span><p>Cuánto valen las recompensas futuras frente a las de hoy. Con γ = 0.9, un premio dentro de un paso vale el 90 %.</p></div>
   </div>
@@ -115,7 +115,7 @@
     <p>La solución más simple se llama <b>ε-greedy</b> (ε-codiciosa): con probabilidad ε elige una acción al azar; el resto del tiempo, la que hasta ahora le dio mejor promedio. El promedio se actualiza con cada jugada:</p>
   </div>
   <div class="eq">Q(a) ← Q(a) + (1 / n) · (r − Q(a))</div>
-  <div class="prose"><p>Es la misma idea del <a href="09-gradiente.html">descenso del gradiente</a>: corregir la estimación un poquito en la dirección del error (r − Q). Lo que en ese módulo era la tasa de aprendizaje η, aquí es 1/<var>n</var>.</p></div>
+  <div class="prose"><p>Es la misma idea del <a href="10-gradiente.html">descenso del gradiente</a>: corregir la estimación un poquito en la dirección del error (r − Q). Lo que en ese módulo era la tasa de aprendizaje η, aquí es 1/<var>n</var>.</p></div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Cuatro máquinas tragamonedas (bandido multibrazo)</h3></div>
     <div class="twin">

@@ -78,7 +78,7 @@
 <section>
   <h2>Paso 4 y 5: de puntajes a probabilidades</h2>
   <div class="prose">
-    <p>Al final de la red sale un puntaje <var>z</var> para cada token del vocabulario: el <b>logit</b>. Un puntaje alto significa «esta palabra encaja bien aquí». La función <b>softmax</b>, la misma de la <a href="11-neurona.html">neurona</a>, los convierte en una <a href="10-probabilidad.html">distribución de probabilidad</a>: todos positivos y sumando 1.</p>
+    <p>Al final de la red sale un puntaje <var>z</var> para cada token del vocabulario: el <b>logit</b>. Un puntaje alto significa «esta palabra encaja bien aquí». La función <b>softmax</b>, la misma de la <a href="13-neurona.html">neurona</a>, los convierte en una <a href="09-probabilidad.html">distribución de probabilidad</a>: todos positivos y sumando 1.</p>
   </div>
   <div class="eq">P(siguiente = i | contexto) = e<sup>z<sub>i</sub> / T</sup> / Σ<sub>j</sub> e<sup>z<sub>j</sub> / T</sup></div>
   <div class="prose">
@@ -145,7 +145,7 @@
     <p class="hint">Los vectores q y k son de 3 dimensiones, inventados a mano para que se entienda la idea. Las columnas significan, a grosso modo: «finanzas», «naturaleza» y «es un sustantivo». En un modelo real tienen 64 o 128 dimensiones y nadie las elige: salen del entrenamiento. La tabla de la derecha muestra los pesos de todas las palabras: cada fila suma 1.</p>
   </div>
   <div class="prose">
-    <p>Un <b>transformer</b> es esto repetido: una capa de atención (en realidad varias en paralelo, las «cabezas») seguida de una capa densa como las del <a href="11-neurona.html">módulo 11</a>, y eso apilado decenas de veces. En cada piso las representaciones se vuelven más abstractas, y la última se usa para calcular los logits del siguiente token.</p>
+    <p>Un <b>transformer</b> es esto repetido: una capa de atención (en realidad varias en paralelo, las «cabezas») seguida de una capa densa como las del <a href="13-neurona.html">módulo 13</a>, y eso apilado decenas de veces. En cada piso las representaciones se vuelven más abstractas, y la última se usa para calcular los logits del siguiente token.</p>
   </div>
 </section>
 
@@ -165,7 +165,7 @@
     </tbody>
   </table></div>
   <div class="prose">
-    <p>Se promedia esa pérdida sobre billones de tokens y se ajustan todos los parámetros con <a href="09-gradiente.html">descenso del gradiente</a>, usando backpropagation para calcular las derivadas. Una medida que se reporta mucho es la <b>perplejidad</b> = e<sup>pérdida promedio</sup>: se interpreta como «entre cuántas palabras, en promedio, sigue dudando el modelo». Una perplejidad de 10 equivale a dudar entre 10 opciones igual de probables.</p>
+    <p>Se promedia esa pérdida sobre billones de tokens y se ajustan todos los parámetros con <a href="10-gradiente.html">descenso del gradiente</a>, usando backpropagation para calcular las derivadas. Una medida que se reporta mucho es la <b>perplejidad</b> = e<sup>pérdida promedio</sup>: se interpreta como «entre cuántas palabras, en promedio, sigue dudando el modelo». Una perplejidad de 10 equivale a dudar entre 10 opciones igual de probables.</p>
   </div>
   <div class="cards">
     <div class="fact"><h3>Parámetros</h3><span class="ex">de 10⁹ a 10¹² números</span><p>Todas las matrices: embeddings, W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub> y las capas densas. «Un modelo de 70B» tiene 70 mil millones de perillas.</p></div>
