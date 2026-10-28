@@ -162,6 +162,83 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Una convolución a mano</b><p>Aplica el filtro de borde vertical <b>K</b> = [[−1, 0, 1], [−1, 0, 1], [−1, 0, 1]] a esta imagen de 3 × 5, sin padding y con stride 1:</p><div class="eq">fila 1: 0 0 1 1 1 · fila 2: 0 0 0 1 1 · fila 3: 0 0 0 1 1</div><p>¿Cuánto vale el mapa de activación?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>El filtro mide 3 × 3 y la imagen 3 × 5, así que caben 5 − 3 + 1 = <b>3 posiciones</b> en horizontal y 1 en vertical: el resultado es de 1 × 3.</li>
+        <li>En cada fila, el filtro calcula −(izquierda) + 0·(centro) + (derecha). Basta con mirar la primera y la tercera columna de la ventana.</li>
+        <li>Ventana 1 (columnas 1 a 3): fila 1 → −0 + 1 = 1; fila 2 → −0 + 0 = 0; fila 3 → −0 + 0 = 0. Suma = <b>1</b>.</li>
+        <li>Ventana 2 (columnas 2 a 4): fila 1 → −0 + 1 = 1; fila 2 → −0 + 1 = 1; fila 3 → −0 + 1 = 1. Suma = <b>3</b>.</li>
+        <li>Ventana 3 (columnas 3 a 5): fila 1 → −1 + 1 = 0; fila 2 → −0 + 1 = 1; fila 3 → −0 + 1 = 1. Suma = <b>2</b>.</li>
+      </ol>
+      <p class="ej-res">Resultado: mapa de activación = [1, 3, 2]. El máximo (3) está justo donde las tres filas pasan de 0 a 1.</p>
+      <p class="ej-ml">En ML: cada número del mapa es un producto punto (<a href="04-vectores.html">módulo 04</a>) entre el filtro y una ventana de la imagen.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>El tamaño de salida</b><p>Una imagen mide 32 × 32. Calcula el tamaño de salida en tres casos: (a) filtro 5 × 5, <var>p</var> = 0, <var>s</var> = 1; (b) filtro 5 × 5, <var>p</var> = 2, <var>s</var> = 1; (c) filtro 3 × 3, <var>p</var> = 1, <var>s</var> = 2.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Fórmula: <div class="eq">salida = (<var>n</var> + 2<var>p</var> − <var>k</var>) / <var>s</var> + 1</div> Si la división no es exacta, se redondea hacia abajo: el filtro no puede salirse de la imagen.</li>
+        <li>(a) (32 + 0 − 5) / 1 + 1 = 27 + 1 = <b>28</b>.</li>
+        <li>(b) (32 + 4 − 5) / 1 + 1 = 31 + 1 = <b>32</b>. El padding compensó lo que se comía el filtro.</li>
+        <li>(c) (32 + 2 − 3) / 2 + 1 = 31 / 2 + 1 = 15.5 + 1 → se redondea 15.5 a 15 → 15 + 1 = <b>16</b>.</li>
+      </ol>
+      <p class="ej-res">Resultado: (a) 28 × 28 · (b) 32 × 32 · (c) 16 × 16.</p>
+      <p class="ej-ml">En ML: el caso (b) se llama padding «same» y es el más común; el caso (c) reduce la imagen a la mitad sin pooling.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>ReLU y max pooling</b><p>Un mapa de activación de 4 × 4 es:</p><div class="eq">[1, −3, 0, 2] · [4, 2, −1, 0] · [0, 1, −5, 6] · [−2, 0, 3, 1]</div><p>Aplica ReLU y después max pooling de 2 × 2. ¿Qué queda?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>ReLU cambia cada negativo por 0: <div class="eq">[1, 0, 0, 2] · [4, 2, 0, 0] · [0, 1, 0, 6] · [0, 0, 3, 1]</div></li>
+        <li>Se parte el mapa en 4 bloques de 2 × 2 y de cada uno se toma el mayor.</li>
+        <li>Arriba a la izquierda: {1, 0, 4, 2} → <b>4</b>. Arriba a la derecha: {0, 2, 0, 0} → <b>2</b>.</li>
+        <li>Abajo a la izquierda: {0, 1, 0, 0} → <b>1</b>. Abajo a la derecha: {0, 6, 3, 1} → <b>6</b>.</li>
+      </ol>
+      <p class="ej-res">Resultado: [[4, 2], [1, 6]]. De 16 números quedan 4.</p>
+      <p class="ej-ml">En ML: el pooling guarda «aquí hubo una señal fuerte» sin importar en qué píxel exacto estaba.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Contar parámetros</b><p>Una imagen a color de 32 × 32 × 3 entra a (a) una capa convolucional con 16 filtros de 3 × 3, o a (b) una capa densa de 100 neuronas. Cada filtro y cada neurona tiene un sesgo. ¿Cuántos parámetros tiene cada capa?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>(a) Un filtro cubre 3 × 3 píxeles en los 3 canales: 3 · 3 · 3 = 27 pesos, más 1 sesgo = 28.</li>
+        <li>Con 16 filtros: 16 · 28 = <b>448</b> parámetros. No dependen del tamaño de la imagen.</li>
+        <li>(b) La imagen aplanada tiene 32 · 32 · 3 = 3072 números. Cada neurona tiene 3072 pesos + 1 sesgo = 3073.</li>
+        <li>Con 100 neuronas: 100 · 3073 = <b>307 300</b> parámetros.</li>
+      </ol>
+      <p class="ej-res">Resultado: 448 contra 307 300. La capa densa tiene unas 686 veces más parámetros.</p>
+      <p class="ej-ml">En ML: compartir los pesos del filtro es lo que permite entrenar redes de visión con imágenes grandes.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Seguir el tamaño por toda la red</b><p>Un dígito de MNIST (28 × 28, gris) pasa por: conv 3 × 3 con 8 filtros (<var>p</var> = 0, <var>s</var> = 1) → max pool 2 × 2 → conv 3 × 3 con 8 filtros → max pool 2 × 2 → aplanar. ¿Cuántos números tiene el vector final?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Conv 1: (28 − 3) / 1 + 1 = 26 → 26 × 26 × 8 (un mapa por filtro).</li>
+        <li>Pool 1: 26 / 2 = 13 → 13 × 13 × 8.</li>
+        <li>Conv 2: (13 − 3) / 1 + 1 = 11 → 11 × 11 × 8.</li>
+        <li>Pool 2: 11 / 2 = 5.5 → se redondea hacia abajo → 5 × 5 × 8 (la última fila y columna se descartan).</li>
+        <li>Aplanar: 5 · 5 · 8 = 200.</li>
+      </ol>
+      <p class="ej-res">Resultado: un vector de 200 números, que entra a la capa densa con softmax.</p>
+      <p class="ej-ml">En ML: de 784 píxeles se pasa a 200 rasgos aprendidos. Esa capa final es la neurona del <a href="13-neurona.html">módulo 13</a>.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

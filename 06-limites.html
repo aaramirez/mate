@@ -97,6 +97,72 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Un 0 / 0 que sí tiene respuesta</b><p>Calcula lím<sub><var>x</var>→3</sub> (<var>x</var>² − 9) / (<var>x</var> − 3).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Si reemplazas <var>x</var> = 3 obtienes (9 − 9) / (3 − 3) = 0 / 0. Eso no es una respuesta: hay que reescribir la expresión.</li>
+        <li>El numerador es una diferencia de cuadrados: <var>x</var>² − 9 = (<var>x</var> − 3)(<var>x</var> + 3).</li>
+        <li>Para <var>x</var> ≠ 3 se puede cancelar el factor (<var>x</var> − 3), y el límite solo mira valores cercanos a 3, nunca el 3 mismo:<div class="eq">(<var>x</var> − 3)(<var>x</var> + 3) / (<var>x</var> − 3) = <var>x</var> + 3</div></li>
+        <li>Ahora sí se reemplaza: 3 + 3 = 6. Comprueba con números: <var>x</var> = 2.99 da 5.99 y <var>x</var> = 3.01 da 6.01.</li>
+      </ol>
+      <p class="ej-res">Resultado: el límite es 6, aunque la función no está definida en 3.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Elegir k para que no haya salto</b><p>Sea <var>f</var>(<var>x</var>) = <var>x</var>² si <var>x</var> &lt; 2, y <var>f</var>(<var>x</var>) = <var>k</var>·<var>x</var> si <var>x</var> ≥ 2. ¿Qué valor de <var>k</var> hace que <var>f</var> sea continua en <var>x</var> = 2? ¿Qué pasa si <var>k</var> = 3?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Límite por la izquierda (<var>x</var> &lt; 2, se usa <var>x</var>²): 2² = 4.</li>
+        <li>Límite por la derecha (<var>x</var> ≥ 2, se usa <var>k</var>·<var>x</var>): <var>k</var>·2 = 2<var>k</var>. Además <var>f</var>(2) = 2<var>k</var>.</li>
+        <li>Continua significa que los dos lados coinciden entre sí y con el valor de la función:<div class="eq">4 = 2<var>k</var>  →  <var>k</var> = 2</div></li>
+        <li>Con <var>k</var> = 3, por la derecha se llega a 6 y por la izquierda a 4. Los lados no coinciden: el límite no existe y hay una <b>discontinuidad de salto</b> de altura 2.</li>
+      </ol>
+      <p class="ej-res">Resultado: k = 2. Con k = 3 la función salta de 4 a 6.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Ganar el juego ε-δ</b><p>Para lím<sub><var>x</var>→1</sub> (2<var>x</var> + 1) = 3, el retador pide ε = 0.1. ¿Qué δ le respondes? ¿Y para cualquier ε?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Queremos que la salida esté a menos de ε de 3: |(2<var>x</var> + 1) − 3| &lt; ε.</li>
+        <li>Simplifica: |2<var>x</var> − 2| = 2·|<var>x</var> − 1|. La condición queda 2·|<var>x</var> − 1| &lt; ε.</li>
+        <li>Divide entre 2:<div class="eq">|<var>x</var> − 1| &lt; ε / 2</div></li>
+        <li>Con ε = 0.1 basta δ = 0.05. Comprueba: <var>x</var> = 1.04 da 2·1.04 + 1 = 3.08, que está a 0.08 de 3, menos que 0.1.</li>
+      </ol>
+      <p class="ej-res">Resultado: δ = 0.05; en general δ = ε / 2 siempre gana.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Hacia el infinito</b><p>Calcula lím<sub><var>x</var>→∞</sub> (3<var>x</var>² + 5) / (<var>x</var>² + 1), y luego los límites de la sigmoide σ(<var>x</var>) = 1 / (1 + <var>e</var><sup>−<var>x</var></sup>) cuando <var>x</var> → ∞ y cuando <var>x</var> → −∞.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Divide arriba y abajo entre <var>x</var>², la potencia más alta:<div class="eq">(3 + 5/<var>x</var>²) / (1 + 1/<var>x</var>²)</div></li>
+        <li>Cuando <var>x</var> crece, 5/<var>x</var>² y 1/<var>x</var>² se acercan a 0. Queda 3 / 1 = 3.</li>
+        <li>Sigmoide con <var>x</var> → ∞: <var>e</var><sup>−<var>x</var></sup> → 0, así que σ → 1 / (1 + 0) = 1.</li>
+        <li>Sigmoide con <var>x</var> → −∞: <var>e</var><sup>−<var>x</var></sup> crece sin límite, el denominador se hace enorme y σ → 0.</li>
+      </ol>
+      <p class="ej-res">Resultado: 3; la sigmoide tiende a 1 y a 0, sin tocarlos nunca.</p>
+      <p class="ej-ml">En ML: por eso la sigmoide sirve para dar probabilidades. Su salida siempre queda entre 0 y 1 (<a href="03-funciones.html">módulo 03</a>).</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>El piso del error</b><p>Al entrenar un modelo, el error después de <var>n</var> épocas sigue la sucesión <var>e<sub>n</sub></var> = 2 + 8 / <var>n</var>. Calcula <var>e</var><sub>1</sub>, <var>e</var><sub>4</sub> y <var>e</var><sub>100</sub>. ¿A qué valor converge el error?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>e</var><sub>1</sub> = 2 + 8/1 = 10. <var>e</var><sub>4</sub> = 2 + 8/4 = 4. <var>e</var><sub>100</sub> = 2 + 8/100 = 2.08.</li>
+        <li>Cuando <var>n</var> → ∞, 8/<var>n</var> → 0:<div class="eq">lím<sub><var>n</var>→∞</sub> (2 + 8/<var>n</var>) = 2</div></li>
+        <li>El error baja cada vez menos: de 10 a 4 en tres épocas, y de 4 a 2.08 en noventa y seis más. Nunca baja de 2.</li>
+      </ol>
+      <p class="ej-res">Resultado: 10, 4 y 2.08; el error converge a 2.</p>
+      <p class="ej-ml">En ML: las curvas de pérdida se ven así. Cuando la curva se aplana cerca de su límite, entrenar más casi no ayuda, y ese es el momento de detenerse (<a href="11-regresion.html">módulo 11</a>).</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

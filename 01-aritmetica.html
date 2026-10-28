@@ -157,6 +157,81 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Orden de operaciones</b><p>Calcula 3 + 2 × (5 − 1)² ÷ 4.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Primero el paréntesis: 5 − 1 = 4.</li>
+        <li>Después la potencia: 4² = 16.</li>
+        <li>Multiplicación y división, de izquierda a derecha: 2 × 16 = 32 y 32 ÷ 4 = 8.</li>
+        <li>Al final, la suma: 3 + 8 = 11.</li>
+      </ol>
+      <p class="ej-res">Resultado: 11</p>
+      <p class="ej-ml">En ML: un error en el orden de operaciones dentro de una fórmula de pérdida cambia por completo lo que aprende el modelo.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Precio por metro cuadrado</b><p>El apartamento P cuesta 150 mil $ y mide 60 m². El apartamento Q cuesta 240 mil $ y mide 120 m². ¿Cuál es más caro por metro cuadrado? Si P duplicara a la vez su precio y su área, ¿cambiaría su razón?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Razón de P: <var>r</var> = 150 / 60 = 2.5 mil $ por m².</li>
+        <li>Razón de Q: <var>r</var> = 240 / 120 = 2 mil $ por m².</li>
+        <li>2.5 &gt; 2, así que P es más caro por metro cuadrado, aunque Q cueste más en total.</li>
+        <li>Si P duplica las dos magnitudes: 300 / 120 = 2.5. Es la misma razón, porque las dos se multiplicaron por el mismo número.</li>
+      </ol>
+      <p class="ej-res">Resultado: P (2.5 mil $/m²) es más caro que Q (2 mil $/m²); duplicar ambas no cambia la razón.</p>
+      <p class="ej-ml">En ML: el precio por m² es una variable nueva creada como razón, un truco muy común en la ingeniería de variables.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>¿Quién crece más rápido?</b><p>Sea <var>f</var>(<var>x</var>) = 2<var>x</var>² + 3 y <var>g</var>(<var>x</var>) = <var>x</var>² + <var>x</var>. Calcula la razón <var>f</var>(<var>x</var>) / <var>g</var>(<var>x</var>) en <var>x</var> = 10 y en <var>x</var> = 100. ¿Hacia qué valor tiende cuando <var>x</var> crece mucho?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>En <var>x</var> = 10: <var>f</var> = 2 · 100 + 3 = 203 y <var>g</var> = 100 + 10 = 110. Razón = 203 / 110 ≈ 1.845.</li>
+        <li>En <var>x</var> = 100: <var>f</var> = 2 · 10 000 + 3 = 20 003 y <var>g</var> = 10 000 + 100 = 10 100. Razón = 20 003 / 10 100 ≈ 1.980.</li>
+        <li>Cuando <var>x</var> es enorme, el 3 y el <var>x</var> pesan muy poco frente a <var>x</var>². Queda 2<var>x</var>² / <var>x</var>² = 2.</li>
+      </ol>
+      <p class="ej-res">Resultado: 1.845, después 1.980; tiende a 2. Crecen al mismo ritmo (las dos son cuadráticas).</p>
+      <p class="ej-ml">En ML: así se comparan los costos de algoritmos con la notación O(<var>n</var>): solo importa el término que más crece.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Normalizar edades</b><p>Las edades de cuatro clientes son 20, 35, 50 y 80. Normalízalas entre 0 y 1 con <var>x</var>′ = (<var>x</var> − mín) / (máx − mín).</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>mín = 20, máx = 80, así que máx − mín = 60.</li>
+        <li>20 → (20 − 20) / 60 = 0 / 60 = 0.</li>
+        <li>35 → (35 − 20) / 60 = 15 / 60 = 0.25.</li>
+        <li>50 → (50 − 20) / 60 = 30 / 60 = 0.5.</li>
+        <li>80 → (80 − 20) / 60 = 60 / 60 = 1.</li>
+      </ol>
+      <p class="ej-res">Resultado: [0, 0.25, 0.5, 1]</p>
+      <p class="ej-ml">En ML: después de normalizar, la edad y cualquier otra variable quedan en la misma escala y ninguna domina solo por tener números grandes.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Métricas de un filtro de spam</b><p>Un filtro revisó 100 correos: VP = 30, FN = 10, FP = 5 y VN = 55. Calcula la exactitud, la precisión, la sensibilidad y F1.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Exactitud = (VP + VN) / total = (30 + 55) / 100 = 85 / 100 = 0.85.</li>
+        <li>Precisión = VP / (VP + FP) = 30 / (30 + 5) = 30 / 35 = 6/7 ≈ 0.857.</li>
+        <li>Sensibilidad = VP / (VP + FN) = 30 / (30 + 10) = 30 / 40 = 3/4 = 0.75.</li>
+        <li>F1 = 2 · P · S / (P + S). Con fracciones: 2 · (6/7) · (3/4) = 36/28 y (6/7) + (3/4) = 24/28 + 21/28 = 45/28. Así que F1 = (36/28) / (45/28) = 36 / 45 = 0.8.</li>
+      </ol>
+      <p class="ej-res">Resultado: exactitud 85 %, precisión ≈ 85.7 %, sensibilidad 75 %, F1 = 0.8</p>
+      <p class="ej-ml">En ML: la sensibilidad baja dice que se escapa 1 de cada 4 correos de spam, aunque la exactitud parezca buena.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

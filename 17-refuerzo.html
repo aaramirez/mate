@@ -138,6 +138,80 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Corregir con la sorpresa</b><p>Tu estimación es 4 y el objetivo observado es 10. Aplica estimación ← estimación + α·(objetivo − estimación) con α = 0.1, α = 0.5 y α = 1.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La sorpresa es la misma en los tres casos: 10 − 4 = 6.</li>
+        <li>α = 0.1: 4 + 0.1·6 = 4 + 0.6 = <b>4.6</b>.</li>
+        <li>α = 0.5: 4 + 0.5·6 = 4 + 3 = <b>7</b>.</li>
+        <li>α = 1: 4 + 1·6 = <b>10</b>. Se olvida todo lo anterior y se copia el último dato.</li>
+      </ol>
+      <p class="ej-res">Resultado: 4.6, 7 y 10.</p>
+      <p class="ej-ml">En ML: un α chico aprende lento pero estable; uno grande reacciona a cada dato con ruido. Es el mismo dilema de η en el <a href="10-gradiente.html">módulo 10</a>.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Un paso de Q-learning</b><p>En el acantilado, el agente está en <var>s</var> con <var>Q</var>(<var>s</var>, →) = −2. Va a la derecha, paga <var>r</var> = −1 y llega a <var>s</var>′, cuyos <var>Q</var> son [−3, −4, −5, −6]. Con α = 0.5 y γ = 0.9, ¿cuál es el nuevo <var>Q</var>(<var>s</var>, →)?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Lo mejor que cree poder hacer desde <var>s</var>′: máx(−3, −4, −5, −6) = −3.</li>
+        <li>Objetivo: <var>r</var> + γ·máx <var>Q</var>(<var>s</var>′, ·) = −1 + 0.9·(−3) = −1 − 2.7 = −3.7.</li>
+        <li>Sorpresa (error TD): δ = −3.7 − (−2) = −1.7. Salió peor de lo que esperaba.</li>
+        <li>Nuevo valor: −2 + 0.5·(−1.7) = −2 − 0.85 = −2.85.</li>
+      </ol>
+      <p class="ej-res">Resultado: Q(s, →) baja de −2 a −2.85.</p>
+      <p class="ej-ml">En ML: con el botón «Un paso» del laboratorio verás exactamente esta cuenta.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Caer al acantilado</b><p>Desde la casilla <var>s</var>, junto al borde, el agente explora con ↓ (<var>Q</var>(<var>s</var>, ↓) = 0), cae y paga <var>r</var> = −20. Vuelve a la salida S, donde el mejor <var>Q</var> es −5. Con α = 0.5 y γ = 0.9, actualiza <var>Q</var>(<var>s</var>, ↓). ¿Y si vuelve a caer otra vez desde ahí?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Objetivo: −20 + 0.9·(−5) = −20 − 4.5 = −24.5.</li>
+        <li>Sorpresa: δ = −24.5 − 0 = −24.5. Nuevo <var>Q</var> = 0 + 0.5·(−24.5) = <b>−12.25</b>.</li>
+        <li>Segunda caída (el objetivo es el mismo, −24.5): δ = −24.5 − (−12.25) = −12.25. Nuevo <var>Q</var> = −12.25 + 0.5·(−12.25) = −12.25 − 6.125 = <b>−18.375</b>.</li>
+        <li>Cada vez se acerca la mitad de lo que falta: −12.25, −18.375, −21.44, … → −24.5.</li>
+      </ol>
+      <p class="ej-res">Resultado: −12.25 tras la primera caída y −18.375 tras la segunda.</p>
+      <p class="ej-ml">En ML: una sola mala experiencia ya hace que la acción ↓ quede muy por debajo de las demás, y la política codiciosa deja de elegirla.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Un paso de gradiente de política</b><p>Tres botones A, B y C tienen preferencias <var>h</var> = [0, 0, 0], así que π = softmax(<var>h</var>) = [1/3, 1/3, 1/3]. El agente pulsa B y obtiene <var>G</var> = 2. La línea base es <var>b</var> = 1 y α = 0.1. Para un softmax, la derivada de ln π(B) respecto a <var>h</var><sub><var>j</var></sub> vale 1 − π<sub><var>j</var></sub> si <var>j</var> = B y −π<sub><var>j</var></sub> si no. Calcula las nuevas probabilidades.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Ventaja: <var>G</var> − <var>b</var> = 2 − 1 = 1. Es positiva, así que B debe subir.</li>
+        <li><var>h</var><sub>B</sub> ← 0 + 0.1·1·(1 − 1/3) = 0.0667. <var>h</var><sub>A</sub> y <var>h</var><sub>C</sub> ← 0 + 0.1·1·(−1/3) = −0.0333.</li>
+        <li>Exponenciales: <var>e</var><sup>0.0667</sup> ≈ 1.0689; <var>e</var><sup>−0.0333</sup> ≈ 0.9672. Suma = 1.0689 + 2·0.9672 = 3.0034.</li>
+        <li>Probabilidades: π(B) = 1.0689 / 3.0034 ≈ 0.356; π(A) = π(C) = 0.9672 / 3.0034 ≈ 0.322.</li>
+      </ol>
+      <p class="ej-res">Resultado: π pasa de [33.3 %, 33.3 %, 33.3 %] a [32.2 %, 35.6 %, 32.2 %].</p>
+      <p class="ej-ml">En ML: si <var>G</var> hubiera sido 0 (ventaja −1), las mismas cuentas con signo contrario habrían bajado B. Esa es toda la idea de REINFORCE.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>El juez del RLHF</b><p>(a) El modelo de recompensa da <var>r</var><sub>A</sub> = 2.0 y <var>r</var><sub>B</sub> = 0.5. ¿Qué probabilidad le da a que una persona prefiera A? ¿Cuál es su pérdida si la persona eligió A, y cuál si eligió B? (b) Con β = 0.1, compara dos respuestas: una con <var>r</var> = 3 y KL = 5, y otra con <var>r</var> = 3.5 y KL = 20. ¿Cuál prefiere el objetivo <var>r</var> − β·KL?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>(a) Bradley-Terry: <div class="eq"><var>P</var>(A gana) = σ(<var>r</var><sub>A</sub> − <var>r</var><sub>B</sub>) = σ(1.5) = 1 / (1 + <var>e</var><sup>−1.5</sup>) = 1 / (1 + 0.2231) ≈ 0.818</div></li>
+        <li>Si la persona eligió A, la pérdida es −ln 0.818 ≈ 0.201. Si eligió B, la probabilidad que el juez le daba era 1 − 0.818 = 0.182 y la pérdida es −ln 0.182 ≈ 1.70.</li>
+        <li>(b) Respuesta 1: 3 − 0.1·5 = 3 − 0.5 = 2.5. Respuesta 2: 3.5 − 0.1·20 = 3.5 − 2 = 1.5.</li>
+      </ol>
+      <p class="ej-res">Resultado: (a) 81.8 %; pérdida 0.20 si acertó y 1.70 si falló. (b) Gana la respuesta 1 (2.5 &gt; 1.5), aunque su recompensa sea menor.</p>
+      <p class="ej-ml">En ML: (a) es la entropía cruzada de una neurona sigmoide (<a href="13-neurona.html">módulo 13</a>); (b) muestra cómo β·KL frena al LLM cuando intenta «engañar» al juez alejándose demasiado del modelo original.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

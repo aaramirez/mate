@@ -179,6 +179,80 @@
   </div>
 </section>
 
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>El retorno con descuento</b><p>Un agente da tres pasos que cuestan −1 cada uno y en el cuarto llega a la meta: <var>r</var>₀ = −1, <var>r</var>₁ = −1, <var>r</var>₂ = −1, <var>r</var>₃ = +10. Calcula <var>G</var> con γ = 0.9 y con γ = 0.5.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Fórmula: <div class="eq"><var>G</var> = <var>r</var>₀ + γ·<var>r</var>₁ + γ²·<var>r</var>₂ + γ³·<var>r</var>₃</div></li>
+        <li>γ = 0.9: potencias 1, 0.9, 0.81, 0.729. <var>G</var> = −1 − 0.9 − 0.81 + 0.729·10 = −2.71 + 7.29 = <b>4.58</b>.</li>
+        <li>γ = 0.5: potencias 1, 0.5, 0.25, 0.125. <var>G</var> = −1 − 0.5 − 0.25 + 0.125·10 = −1.75 + 1.25 = <b>−0.5</b>.</li>
+      </ol>
+      <p class="ej-res">Resultado: G = 4.58 con γ = 0.9 y G = −0.5 con γ = 0.5.</p>
+      <p class="ej-ml">En ML: con γ pequeño el agente es miope; la meta lejana casi no cuenta y el viaje parece no valer la pena.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>El valor de una política con azar</b><p>En el estado <var>s</var> la política es π(→ | <var>s</var>) = 0.7 y π(↑ | <var>s</var>) = 0.3. Se sabe que <var>Q</var>(<var>s</var>, →) = 5 y <var>Q</var>(<var>s</var>, ↑) = 2. ¿Cuánto vale <var>V</var><sup>π</sup>(<var>s</var>)? ¿Y si la política fuera codiciosa?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>El valor de un estado es el promedio de los <var>Q</var>, pesado por las probabilidades de la política: <div class="eq"><var>V</var><sup>π</sup>(<var>s</var>) = Σ<sub><var>a</var></sub> π(<var>a</var> | <var>s</var>) · <var>Q</var>(<var>s</var>, <var>a</var>)</div></li>
+        <li>0.7 · 5 + 0.3 · 2 = 3.5 + 0.6 = 4.1.</li>
+        <li>La política codiciosa siempre elige → (el <var>Q</var> más alto): <var>V</var>(<var>s</var>) = máx(5, 2) = 5.</li>
+      </ol>
+      <p class="ej-res">Resultado: V<sup>π</sup>(s) = 4.1; con la política codiciosa, 5.</p>
+      <p class="ej-ml">En ML: es un valor esperado (<a href="09-probabilidad.html">módulo 09</a>). Cambiar el promedio por el máximo es lo que convierte la evaluación en la ecuación de Bellman óptima.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Iteración de valores en un pasillo</b><p>Un pasillo tiene tres casillas: A — B — Meta. Las acciones son ← y →. Moverse de A a B cuesta −1, y entrar a la Meta da +10 y termina el juego (<var>V</var>(Meta) = 0). Ir de B hacia A cuesta −1, y en A la acción ← choca con la pared y cuesta −1. Con γ = 0.9 y empezando con <var>V</var> = 0, haz dos iteraciones de valores.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Bellman en un mundo sin azar: <div class="eq"><var>V</var>(<var>s</var>) = máx<sub><var>a</var></sub> [ <var>R</var>(<var>s</var>, <var>a</var>) + γ · <var>V</var>(<var>s</var>′) ]</div></li>
+        <li>Iteración 1 (todo vale 0 por dentro): <var>V</var>(A) = máx(−1 + 0.9·0 por ←, −1 + 0.9·0 por →) = −1. <var>V</var>(B) = máx(−1 + 0.9·0 por ←, 10 + 0.9·0 por →) = 10.</li>
+        <li>Iteración 2, con <var>V</var>(A) = −1 y <var>V</var>(B) = 10: <var>V</var>(A) = máx(−1 + 0.9·(−1) = −1.9, −1 + 0.9·10 = 8) = <b>8</b>.</li>
+        <li><var>V</var>(B) = máx(−1 + 0.9·(−1) = −1.9, 10 + 0 = 10) = <b>10</b>.</li>
+        <li>Una tercera iteración ya no cambia nada: los valores convergieron.</li>
+      </ol>
+      <p class="ej-res">Resultado: V(A) = 8, V(B) = 10, y la mejor acción en las dos casillas es →.</p>
+      <p class="ej-ml">En ML: el +10 de la meta «viaja hacia atrás» una casilla por iteración, igual que en el laboratorio de la cuadrícula.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Bellman cuando uno resbala</b><p>En el mismo pasillo, la acción → desde B ahora solo funciona el 80 % de las veces. El otro 20 % el agente resbala, se queda en B y paga −1. Con γ = 0.9, ¿cuánto vale <var>V</var>(B) si siempre intenta →?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Recompensa esperada al intentar →: 0.8 · 10 + 0.2 · (−1) = 8 − 0.2 = 7.8.</li>
+        <li>Valor esperado del estado siguiente: 0.8 · <var>V</var>(Meta) + 0.2 · <var>V</var>(B) = 0.8 · 0 + 0.2 · <var>V</var>(B).</li>
+        <li>Bellman: <div class="eq"><var>V</var>(B) = 7.8 + 0.9 · 0.2 · <var>V</var>(B) = 7.8 + 0.18 · <var>V</var>(B)</div></li>
+        <li>Despejar: <var>V</var>(B) − 0.18·<var>V</var>(B) = 7.8 → 0.82·<var>V</var>(B) = 7.8 → <var>V</var>(B) = 7.8 / 0.82 ≈ 9.51.</li>
+      </ol>
+      <p class="ej-res">Resultado: V(B) ≈ 9.51, un poco menos que el 10 sin resbalones.</p>
+      <p class="ej-ml">En ML: el término Σ <var>P</var>(<var>s</var>′ | <var>s</var>, <var>a</var>)·<var>V</var>(<var>s</var>′) es un promedio sobre lo que puede pasar; el azar del mundo siempre baja un poco el valor.</p>
+    </details>
+  </div>
+
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Tragamonedas y ε-greedy</b><p>Un agente jugó 4 veces la máquina 2 y su promedio es <var>Q</var>(2) = 2. En la quinta jugada recibe <var>r</var> = 7. (a) ¿Cuál es el nuevo <var>Q</var>(2)? (b) Hay 4 máquinas y ε = 0.1. Si la máquina 2 es la mejor, ¿con qué probabilidad la elige en la siguiente jugada?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>(a) Ahora <var>n</var> = 5. <div class="eq"><var>Q</var>(2) ← 2 + (1/5)·(7 − 2) = 2 + 0.2·5 = 3</div> Comprobación: los 4 primeros sumaban 4·2 = 8; con el 7 son 15, y 15 / 5 = 3.</li>
+        <li>(b) Con probabilidad 1 − ε = 0.9 explota y elige la mejor, la máquina 2.</li>
+        <li>Con probabilidad ε = 0.1 elige al azar entre las 4, y una de cada 4 veces vuelve a caer en la 2: 0.1 · 1/4 = 0.025.</li>
+        <li>Total: 0.9 + 0.025 = 0.925. Cada una de las otras 3 máquinas: 0.025.</li>
+      </ol>
+      <p class="ej-res">Resultado: (a) Q(2) = 3; (b) 92.5 % para la mejor y 2.5 % para cada una de las otras.</p>
+      <p class="ej-ml">En ML: la regla (a) es «estimación + paso · error», la misma forma del descenso del gradiente con η = 1/n.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>

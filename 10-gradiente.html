@@ -49,6 +49,76 @@
   </div>
   
 </section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución. Los ejercicios 1 a 3 usan la pérdida del «cuenco simple» del laboratorio: <var>L</var>(<var>w</var>) = 0.5·(<var>w</var> − 2)² + 0.5, cuya derivada es <var>L</var>′(<var>w</var>) = <var>w</var> − 2.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Un paso a mano</b><p>Empiezas en <var>w</var> = 6 con tasa de aprendizaje η = 0.5. Da un paso de descenso del gradiente. ¿Cuánto vale la pérdida antes y después?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La pendiente en el punto actual: <div class="eq"><var>L</var>′(6) = 6 − 2 = 4</div> Es positiva: la pérdida sube hacia la derecha, así que hay que moverse a la izquierda.</li>
+        <li>El paso: <div class="eq"><var>w</var> ← 6 − 0.5 · 4 = 6 − 2 = 4</div></li>
+        <li>Pérdida antes: 0.5·(6 − 2)² + 0.5 = 0.5·16 + 0.5 = 8.5.</li>
+        <li>Pérdida después: 0.5·(4 − 2)² + 0.5 = 0.5·4 + 0.5 = 2.5.</li>
+      </ol>
+      <p class="ej-res">Resultado: w pasa de 6 a 4 y la pérdida baja de 8.5 a 2.5.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Tres pasos y un patrón</b><p>Sigue desde <var>w</var> = 6 con η = 0.5 durante tres pasos. ¿Qué le pasa a la distancia entre <var>w</var> y el mínimo, que está en <var>w</var> = 2?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Paso 1: <var>w</var> = 6 − 0.5·(6 − 2) = 4.</li>
+        <li>Paso 2: <var>w</var> = 4 − 0.5·(4 − 2) = 4 − 1 = 3.</li>
+        <li>Paso 3: <var>w</var> = 3 − 0.5·(3 − 2) = 3 − 0.5 = 2.5.</li>
+        <li>Las distancias al mínimo son 4, 2, 1 y 0.5: se reducen a la mitad en cada paso. Restando 2 a los dos lados de la regla se ve por qué: <div class="eq">(<var>w</var> − 2) ← (1 − η) · (<var>w</var> − 2)</div> Con η = 0.5 el factor es 0.5.</li>
+      </ol>
+      <p class="ej-res">Resultado: w = 4, 3, 2.5; la distancia al mínimo se divide entre 2 en cada paso.</p>
+      <p class="ej-ml">En ML: por eso los primeros pasos bajan mucho la pérdida y los últimos casi nada: cerca del fondo la pendiente es pequeña y el paso también.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Una tasa demasiado grande</b><p>Ahora empieza en <var>w</var> = 3 con η = 2.5. Da dos pasos y calcula la pérdida en cada punto. ¿Converge?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Paso 1: <var>L</var>′(3) = 1, así que <var>w</var> = 3 − 2.5·1 = 0.5. Saltó al otro lado del mínimo.</li>
+        <li>Paso 2: <var>L</var>′(0.5) = 0.5 − 2 = −1.5, así que <var>w</var> = 0.5 − 2.5·(−1.5) = 0.5 + 3.75 = 4.25.</li>
+        <li>Pérdidas: <var>L</var>(3) = 0.5·1 + 0.5 = 1; <var>L</var>(0.5) = 0.5·2.25 + 0.5 = 1.625; <var>L</var>(4.25) = 0.5·5.0625 + 0.5 ≈ 3.03.</li>
+        <li>Con la fórmula del ejercicio 2, el factor es 1 − η = −1.5: la distancia cambia de signo (rebota) y crece 1.5 veces en cada paso.</li>
+      </ol>
+      <p class="ej-res">Resultado: w = 0.5 y luego 4.25; la pérdida sube 1 → 1.625 → 3.03. Diverge.</p>
+      <p class="ej-ml">En ML: si la pérdida de entrenamiento crece o salta a «NaN», lo primero que se revisa es la tasa de aprendizaje.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Dos pesos a la vez</b><p>La pérdida es <var>L</var>(<var>w</var>₁, <var>w</var>₂) = <var>w</var>₁² + 3<var>w</var>₂². Estás en (2, 1) y η = 0.1. Calcula el gradiente, da un paso y compara la pérdida.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Las derivadas parciales (<a href="07-derivadas.html">módulo 07</a>): ∂<var>L</var>/∂<var>w</var>₁ = 2<var>w</var>₁ = 4 y ∂<var>L</var>/∂<var>w</var>₂ = 6<var>w</var>₂ = 6. <div class="eq">∇<var>L</var>(2, 1) = (4, 6)</div></li>
+        <li>Cada peso da su propio paso, con la misma η: <div class="eq"><var>w</var>₁ ← 2 − 0.1·4 = 1.6 &nbsp;&nbsp; <var>w</var>₂ ← 1 − 0.1·6 = 0.4</div></li>
+        <li>Pérdida antes: 2² + 3·1² = 4 + 3 = 7.</li>
+        <li>Pérdida después: 1.6² + 3·0.4² = 2.56 + 0.48 = 3.04.</li>
+      </ol>
+      <p class="ej-res">Resultado: (w₁, w₂) = (1.6, 0.4) y la pérdida baja de 7 a 3.04.</p>
+      <p class="ej-ml">En ML: una red con millones de pesos hace exactamente esto, solo que el gradiente tiene millones de componentes.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Atrapado en un mínimo local</b><p>Con la pérdida de «dos valles», <var>L</var>(<var>w</var>) = 0.05<var>w</var>⁴ − 0.5<var>w</var>² + 0.3<var>w</var> + 2, su derivada es <var>L</var>′(<var>w</var>) = 0.2<var>w</var>³ − <var>w</var> + 0.3. Empiezas en <var>w</var> = 3 con η = 0.1. Da un paso. Después compara <var>L</var>(2) con <var>L</var>(−2.4). ¿A qué valle llegarás?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>L</var>′(3) = 0.2·27 − 3 + 0.3 = 5.4 − 3 + 0.3 = 2.7. Positiva: hay que ir a la izquierda.</li>
+        <li><var>w</var> ← 3 − 0.1·2.7 = 3 − 0.27 = 2.73.</li>
+        <li>Cerca de 2 la derivada casi se anula: <var>L</var>′(2) = 1.6 − 2 + 0.3 = −0.1. Ahí está el fondo del valle derecho, y los pasos se detienen.</li>
+        <li><var>L</var>(2) = 0.05·16 − 0.5·4 + 0.6 + 2 = 0.8 − 2 + 0.6 + 2 = 1.4.</li>
+        <li><var>L</var>(−2.4) = 0.05·33.18 − 0.5·5.76 − 0.72 + 2 ≈ 1.66 − 2.88 − 0.72 + 2 ≈ 0.06.</li>
+      </ol>
+      <p class="ej-res">Resultado: llega al valle de la derecha (pérdida ≈ 1.4), aunque el de la izquierda es mucho más profundo (≈ 0.06).</p>
+      <p class="ej-ml">En ML: el gradiente solo ve la pendiente local. Por eso importan el punto de partida y trucos como el momentum o el ruido de SGD.</p>
+    </details>
+  </div>
+</section>
+
 <label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
