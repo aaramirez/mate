@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="index">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+
+<header class="hero">
+  <span class="eyebrow">Repaso previo · Curso de Machine Learning</span>
+  <h1>Las matemáticas de una red neuronal, desde cero</h1>
+  <p class="lede">Una neurona artificial hace una sola cuenta. Cada pieza de esa cuenta viene de un tema que ya viste en el colegio. Toca cualquier pieza para ir a su módulo, o recorre la ruta en orden.</p>
+  <div class="eq-hero" aria-label="Ecuación de una neurona: y gorro igual a sigma de W por x más b">
+    <a class="tk" href="10-probabilidad.html"><span class="sym">ŷ</span><span class="lab">probabilidad</span></a>
+    <span class="op">=</span>
+    <a class="tk" href="03-funciones.html"><span class="sym">σ</span><span class="lab">función</span></a>
+    <span class="op">(</span>
+    <a class="tk" href="05-matrices.html"><span class="sym bf">W</span><span class="lab">matriz</span></a>
+    <a class="tk" href="04-vectores.html"><span class="sym bf">x</span><span class="lab">vector</span></a>
+    <span class="op">+</span>
+    <a class="tk" href="01-aritmetica.html"><span class="sym">b</span><span class="lab">suma</span></a>
+    <span class="op">)</span>
+    <p class="train">¿Y cómo aprende la red los valores de <b>W</b> y <var>b</var>? Con <a href="06-limites.html">límites</a>, <a href="07-derivadas.html">derivadas</a> y <a href="09-gradiente.html">descenso del gradiente</a>. Las <a href="08-integrales.html">integrales</a> convierten densidades en probabilidades. Todo se junta en <a href="11-neurona.html">la neurona</a>.</p>
+  </div>
+</header>
+
+<section>
+  <h2>Cómo usar este material</h2>
+  <div class="prose">
+    <p>Son 11 módulos cortos, pensados para recorrerse en orden. Cada uno tiene una explicación, al menos un <b>laboratorio interactivo</b> para mover las cosas con las manos, un recuadro de <b>«Dónde aparece en ML»</b>, preguntas para probarte y videos de apoyo, incluidos capítulos concretos de 3Blue1Brown.</p>
+    <p>Al terminar un módulo marca «Lo tengo claro». Tu avance queda guardado en este navegador y se ve en el índice.</p>
+  </div>
+</section>
+
+<div class="stage">
+  <h2>Bases</h2>
+  <div class="mods">
+    <a class="mod" data-id="aritmetica" href="01-aritmetica.html"><span class="n">01</span><b>Aritmética y razones</b><p>Operaciones, porcentajes, la razón entre dos magnitudes y entre dos funciones, normalización y métricas.</p></a>
+    <a class="mod" data-id="notacion" href="02-notacion.html"><span class="n">02</span><b>Notación sin miedo</b><p>Σ, ŷ, θ, η, ∂ y ∇: el diccionario para leer cualquier fórmula del curso.</p></a>
+    <a class="mod" data-id="funciones" href="03-funciones.html"><span class="n">03</span><b>Funciones</b><p>Recta, parábola, exponencial, logaritmo, sigmoide y ReLU en un explorador interactivo.</p></a>
+  </div>
+</div>
+<div class="stage">
+  <h2>Álgebra lineal</h2>
+  <div class="mods">
+    <a class="mod" data-id="vectores" href="04-vectores.html"><span class="n">04</span><b>Vectores</b><p>Flechas y fichas de datos, producto punto y similitud coseno.</p></a>
+    <a class="mod" data-id="matrices" href="05-matrices.html"><span class="n">05</span><b>Matrices</b><p>Multiplicación paso a paso y matrices que deforman el plano.</p></a>
+  </div>
+</div>
+<div class="stage">
+  <h2>Cálculo</h2>
+  <div class="mods">
+    <a class="mod" data-id="limites" href="06-limites.html"><span class="n">06</span><b>Límites y continuidad</b><p>A qué valor se acerca una función, la definición ε-δ y los tipos de discontinuidad.</p></a>
+    <a class="mod" data-id="derivadas" href="07-derivadas.html"><span class="n">07</span><b>Derivadas</b><p>La pendiente como límite, reglas básicas, regla de la cadena y derivadas parciales.</p></a>
+    <a class="mod" data-id="integrales" href="08-integrales.html"><span class="n">08</span><b>Integrales</b><p>Integrabilidad, sumas de Riemann, el límite que las convierte en integral y el teorema fundamental.</p></a>
+    <a class="mod" data-id="gradiente" href="09-gradiente.html"><span class="n">09</span><b>Descenso del gradiente</b><p>Cómo aprende un modelo: bajar la pérdida paso a paso.</p></a>
+  </div>
+</div>
+<div class="stage">
+  <h2>Probabilidad y redes neuronales</h2>
+  <div class="mods">
+    <a class="mod" data-id="probabilidad" href="10-probabilidad.html"><span class="n">10</span><b>Probabilidad</b><p>Variables aleatorias, función de densidad, función de distribución, la normal y Bayes.</p></a>
+    <a class="mod" data-id="neurona" href="11-neurona.html"><span class="n">11</span><b>La neurona y la red</b><p>Todo junto: una neurona, softmax, entropía cruzada y el ciclo de entrenamiento.</p></a>
+    <a class="mod" href="recursos.html"><span class="n">+</span><b>Canales y plan de estudio</b><p>Canales de YouTube recomendados, la ruta de videos de 3Blue1Brown y un plan de 4 semanas.</p></a>
+  </div>
+</div>
+
+
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+</body>
+</html>

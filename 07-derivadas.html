@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Derivadas · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="derivadas">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 07 DE 11</span><h1>Derivadas: cuánto cambia la salida</h1></header>
+<section>
+  
+  <div class="prose">
+    <p>La derivada responde una sola pregunta: <span class="hl">si muevo un poquito la entrada, ¿cuánto se mueve la salida?</span> Gráficamente es la pendiente de la recta que toca la curva en un punto (la tangente).</p>
+    <p>Se calcula con un <a href="06-limites.html">límite</a>: acercando dos puntos de la curva hasta que casi se tocan. Achica <var>h</var> y mira cómo la recta secante (punteada) se convierte en la tangente.</p>
+  </div>
+  <div class="eq"><var>f</var>′(<var>x</var>) = lím<sub><var>h</var>→0</sub> [<var>f</var>(<var>x</var> + <var>h</var>) − <var>f</var>(<var>x</var>)] / <var>h</var></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>De la secante a la tangente</h3></div>
+    <canvas id="dv-cv" role="img" aria-label="Curva con su recta secante y su recta tangente"></canvas>
+    <div class="ctls">
+      <label class="ctl">Punto <var>x</var><output id="dv-x-o"></output><input type="range" id="dv-x" min="-3" max="3" step="0.05" value="1.5"></label>
+      <label class="ctl">Distancia <var>h</var><output id="dv-h-o"></output><input type="range" id="dv-h" min="0.01" max="2" step="0.01" value="1.2"></label>
+    </div>
+    <div class="readout" id="dv-out"></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Función</th><th>Derivada</th><th>Comentario</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">c (constante)</td><td class="mono">0</td><td>Lo que no cambia no tiene pendiente</td></tr>
+      <tr><td class="mono">xⁿ</td><td class="mono">n·xⁿ⁻¹</td><td>x² → 2x, x³ → 3x²</td></tr>
+      <tr><td class="mono">eˣ</td><td class="mono">eˣ</td><td>La única función que es su propia derivada</td></tr>
+      <tr><td class="mono">ln x</td><td class="mono">1/x</td><td>Aparece al derivar la entropía cruzada</td></tr>
+      <tr><td class="mono">σ(x)</td><td class="mono">σ(x)·(1 − σ(x))</td><td>Por eso la sigmoide es cómoda en redes</td></tr>
+      <tr><td class="mono">ReLU(x)</td><td class="mono">1 si x &gt; 0, si no 0</td><td>La más barata de calcular</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <h3>Regla de la cadena: el corazón de backpropagation</h3>
+    <p>Cuando una función está dentro de otra, las derivadas se <b>multiplican</b> a lo largo de la cadena. Ejemplo: <var>y</var> = (3<var>x</var> + 1)² en <var>x</var> = 1.</p>
+  </div>
+  <div class="chain" aria-label="Cadena x, u, y con derivadas">
+    <div class="box"><var>x</var> = 1<small>entrada</small></div>
+    <div class="arr">→ <var>u</var> = 3<var>x</var>+1 →<b>du/dx = 3</b></div>
+    <div class="box"><var>u</var> = 4<small>intermedio</small></div>
+    <div class="arr">→ <var>y</var> = <var>u</var>² →<b>dy/du = 2u = 8</b></div>
+    <div class="box"><var>y</var> = 16<small>salida</small></div>
+  </div>
+  <div class="eq">dy/dx = dy/du · du/dx = 8 · 3 = 24<small>Mover x un poquito mueve y 24 veces más</small></div>
+  <div class="prose">
+    <h3>Derivadas parciales</h3>
+    <p>Si la función tiene varias perillas, la derivada parcial mueve una sola y deja las demás quietas. Para <var>f</var>(<var>w</var>, <var>b</var>) = <var>w</var>² + 3<var>b</var>: ∂<var>f</var>/∂<var>w</var> = 2<var>w</var> y ∂<var>f</var>/∂<var>b</var> = 3.</p>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Una red es una cadena de funciones: capa tras capa. <b>Backpropagation</b> es la regla de la cadena aplicada desde el error hacia atrás, para saber cuánto culpa tiene cada peso. PyTorch y TensorFlow lo hacen automáticamente (<code>loss.backward()</code>), pero entender la idea te permite depurar.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Cuál es la derivada de 3x² en x = 2?</summary><p>f′(x) = 6x → f′(2) = 12</p></details>
+    <details><summary>Si y = (2x)³, ¿cuánto vale dy/dx en x = 1? (usa la cadena)</summary><p>u = 2x = 2; dy/du = 3u² = 12; du/dx = 2 → 12 · 2 = 24</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=WUvTyaaNkzM" target="_blank" rel="noopener">The essence of calculus (cap. 1)</a><span>El panorama completo: derivadas e integrales como dos caras de la misma idea.</span></li><li><a href="https://www.youtube.com/watch?v=9vKqVkMQHKk" target="_blank" rel="noopener">The paradox of the derivative (cap. 2)</a><span>Qué significa una «tasa de cambio instantánea».</span></li><li><a href="https://www.youtube.com/watch?v=S0_qX4VJhMQ" target="_blank" rel="noopener">Derivative formulas through geometry (cap. 3)</a><span>De dónde salen las reglas como xⁿ → n·xⁿ⁻¹.</span></li><li><a href="https://www.youtube.com/watch?v=YG15m2VwSjA" target="_blank" rel="noopener">Visualizing the chain rule and product rule (cap. 4)</a><span>La regla de la cadena que usa backpropagation.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=derivadas" target="_blank" rel="noopener">julioprofe · derivadas</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=regla%20de%20la%20cadena" target="_blank" rel="noopener">julioprofe · regla de la cadena</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=chain%20rule" target="_blank" rel="noopener">StatQuest · chain rule <small>EN</small></a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const f=x=>.2*x*x*x-x+1,df=x=>.6*x*x-1;
+  bindOut('#dv-x');bindOut('#dv-h');
+  const draw=canvasWidget($('#dv-cv'),wide,(ctx,w,h)=>{
+    const x0=num('#dv-x'),hh=num('#dv-h');$('#dv-x-o').textContent=short(x0);$('#dv-h-o').textContent=short(hh);
+    const F=frame(ctx,w,h,{x0:-4,x1:4,y0:-5,y1:7});
+    curve(ctx,F,f,tok('--ink'),2.5);
+    const ms=(f(x0+hh)-f(x0))/hh,mt=df(x0);
+    curve(ctx,F,x=>f(x0)+ms*(x-x0),tok('--warm'),2,[7,6]);
+    curve(ctx,F,x=>f(x0)+mt*(x-x0),tok('--accent'),2.5);
+    F.clip();dot(ctx,F.X(x0),F.Y(f(x0)),tok('--accent'),6);dot(ctx,F.X(x0+hh),F.Y(f(x0+hh)),tok('--warm'),5);ctx.restore();
+    $('#dv-out').innerHTML=`<span>f(x) = 0.2x³ − x + 1</span><span style="color:var(--warm)">pendiente de la secante = [f(${short(x0)}+${short(hh)}) − f(${short(x0)})] / ${short(hh)} = ${fmt(ms,3)}</span><span class="big">derivada f′(${short(x0)}) = 0.6·(${short(x0)})² − 1 = ${fmt(mt,3)}</span><span>diferencia: ${fmt(Math.abs(ms-mt),3)} ${hh<=.05?'→ <span class="ok">casi idénticas</span>':'→ achica h'}</span>`;
+  });
+  $('#dv-x').addEventListener('input',draw);$('#dv-h').addEventListener('input',draw);
+})();
+})();
+</script>
+</body>
+</html>

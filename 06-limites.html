@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Límites y continuidad · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="limites">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 06 DE 11</span><h1>Límites y continuidad</h1><p class="lede">La idea que sostiene todo el cálculo: a qué valor se acerca una función, aunque no pueda tocarlo. Sin límites no hay derivadas ni integrales.</p></header>
+<section>
+  <h2>¿A qué valor se acerca?</h2>
+  <div class="prose">
+    <p>Toma <var>f</var>(<var>x</var>) = (<var>x</var>² − 1) / (<var>x</var> − 1). Si intentas calcular <var>f</var>(1) obtienes 0 / 0, que no significa nada. Pero puedes preguntar otra cosa: <span class="hl">cuando <var>x</var> se acerca mucho a 1, ¿a qué valor se acerca <var>f</var>(<var>x</var>)?</span></p>
+    <p>Prueba con <var>x</var> = 0.9, 0.99, 0.999: obtienes 1.9, 1.99, 1.999. Y desde el otro lado, con 1.1, 1.01, 1.001: obtienes 2.1, 2.01, 2.001. Los dos lados se acercan a 2. Eso se escribe así:</p>
+  </div>
+  <div class="eq">lím<sub><var>x</var>→1</sub> (<var>x</var>² − 1) / (<var>x</var> − 1) = 2<small>Se lee: «el límite cuando x tiende a 1 es 2»</small></div>
+  <div class="prose"><p>El límite no pregunta qué pasa <b>en</b> el punto, sino <b>cerca</b> del punto. Por eso existe aunque <var>f</var>(1) no esté definida. Se miran los dos lados: el <b>límite por la izquierda</b> (valores menores que el punto) y el <b>límite por la derecha</b> (valores mayores). Si coinciden, el límite existe.</p></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Acércate al punto desde los dos lados</h3></div>
+    <div class="btns" id="lim-btns" role="group" aria-label="Elegir caso"></div>
+    <canvas id="lim-cv" role="img" aria-label="Función cerca del punto, con dos valores a cada lado"></canvas>
+    <div class="ctls"><label class="ctl">Distancia al punto δ<output id="lim-d-o"></output><input type="range" id="lim-d" min="0" max="3" step="0.05" value="0.3"></label></div>
+    <div class="readout" id="lim-out"></div>
+    <p class="hint">Desliza el control hacia la derecha para acercarte: δ va de 1 a 0.001. Los puntos naranjas son <var>f</var>(<var>a</var> − δ) y <var>f</var>(<var>a</var> + δ). Un círculo vacío marca un valor que la función no toma.</p>
+  </div>
+</section>
+
+<section>
+  <h2>La definición precisa: ε y δ</h2>
+  <div class="prose">
+    <p>«Acercarse» suena vago. La definición formal lo vuelve un desafío entre dos personas. Una dice: «quiero que <var>f</var>(<var>x</var>) quede a menos de ε del límite <var>L</var>». La otra responde: «basta con tomar <var>x</var> a menos de δ del punto <var>a</var>». Si la segunda siempre puede responder, por pequeño que sea ε, el límite es <var>L</var>.</p>
+  </div>
+  <div class="eq">lím<sub><var>x</var>→<var>a</var></sub> <var>f</var>(<var>x</var>) = <var>L</var> &nbsp;⇔&nbsp; para todo ε &gt; 0 existe δ &gt; 0 tal que 0 &lt; |<var>x</var> − <var>a</var>| &lt; δ ⇒ |<var>f</var>(<var>x</var>) − <var>L</var>| &lt; ε</div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Pide un margen ε y mira qué δ hace falta</h3></div>
+    <canvas id="ed-cv" role="img" aria-label="Franja horizontal épsilon y franja vertical delta alrededor del punto"></canvas>
+    <div class="ctls"><label class="ctl">Margen pedido ε<output id="ed-e-o"></output><input type="range" id="ed-e" min="0.05" max="1.5" step="0.05" value="0.5"></label></div>
+    <div class="readout" id="ed-out"></div>
+    <p class="hint">Función: <var>f</var>(<var>x</var>) = 0.5<var>x</var>² + 1, con <var>a</var> = 2 y <var>L</var> = 3. La franja azul es el margen ε alrededor de <var>L</var>. La franja naranja es la distancia δ alrededor de <var>a</var>. Mientras la curva dentro de la franja naranja no se salga de la azul, el desafío está ganado.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Límites al infinito y límites de sucesiones</h2>
+  <div class="prose"><p>También se puede preguntar qué pasa cuando <var>x</var> crece sin parar, o cuando avanzamos en una lista infinita de números. Esta segunda idea es la que convierte las sumas en <a href="08-integrales.html">integrales</a>.</p></div>
+  <div class="cards">
+    <div class="fact"><h3>Cuando x crece</h3><span class="ex">lím (x→∞) 1/x = 0</span><p>La fracción se hace tan pequeña como quieras, aunque nunca llega exactamente a 0.</p></div>
+    <div class="fact"><h3>La sigmoide</h3><span class="ex">σ(x) → 1 si x → ∞; σ(x) → 0 si x → −∞</span><p>Por eso sus salidas sirven como probabilidades: nunca se salen de (0, 1).</p></div>
+    <div class="fact"><h3>Razón de funciones</h3><span class="ex">lím (x→∞) (2x+1)/(x+1) = 2</span><p>El comportamiento que viste en el <a href="01-aritmetica.html">módulo 01</a>, escrito como límite.</p></div>
+    <div class="fact"><h3>Una sucesión</h3><span class="ex">1, 1/2, 1/3, 1/4, … → 0</span><p>Una lista infinita de números puede acercarse a un valor. Las sumas de Riemann S₁, S₂, S₃… hacen lo mismo con el área.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Continuidad: dibujar sin levantar el lápiz</h2>
+  <div class="prose">
+    <p>Una función es <b>continua</b> en un punto <var>a</var> cuando no tiene saltos, huecos ni explosiones allí. En términos de límites, se piden tres cosas a la vez:</p>
+  </div>
+  <ol class="steps">
+    <li><span><var>f</var>(<var>a</var>) existe: la función tiene un valor en el punto.</span></li>
+    <li><span>El límite cuando <var>x</var> → <var>a</var> existe: los dos lados se acercan al mismo número.</span></li>
+    <li><span>Los dos coinciden: lím<sub><var>x</var>→<var>a</var></sub> <var>f</var>(<var>x</var>) = <var>f</var>(<var>a</var>).</span></li>
+  </ol>
+  <div class="cards">
+    <div class="fact"><h3>Discontinuidad removible</h3><span class="ex">un agujero</span><p>El límite existe pero no coincide con <var>f</var>(<var>a</var>), o <var>f</var>(<var>a</var>) no existe. Se arregla rellenando un solo punto.</p></div>
+    <div class="fact"><h3>De salto</h3><span class="ex">izquierda ≠ derecha</span><p>Los límites laterales existen pero son distintos. Ejemplo: la función escalón.</p></div>
+    <div class="fact"><h3>Infinita</h3><span class="ex">una asíntota vertical</span><p>La función crece sin límite al acercarse al punto. Ejemplo: 1/<var>x</var> en 0.</p></div>
+  </div>
+  <div class="prose"><p>Vuelve al primer laboratorio: los casos «Continua» y «ReLU» cumplen las tres condiciones; los demás fallan al menos una. La lectura de abajo te dice cuál.</p></div>
+</section>
+
+<section>
+  <h2>Repaso del módulo</h2>
+  <div class="ml"><b>Dónde aparece en ML</b><p>La <a href="07-derivadas.html">derivada</a> se define con un límite, y la <a href="08-integrales.html">integral</a> también. Para entrenar con descenso del gradiente la red debe ser continua: la función escalón del perceptrón original tiene un salto y su derivada vale 0 en casi todas partes, así que no da ninguna señal para aprender. Por eso se reemplazó por la sigmoide, que es continua y suave. ReLU es continua, aunque tiene una esquina en 0. Y el ε que ves en el código, como <code>log(p + 1e-9)</code> o <code>a / (b + 1e-8)</code>, existe para esquivar asíntotas.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Cuánto vale lím (x→3) (x² − 9) / (x − 3)?</summary><p>(x − 3)(x + 3) / (x − 3) = x + 3 → 6</p></details>
+    <details><summary>¿Es continua f(x) = |x| en x = 0?</summary><p>Sí: los dos límites laterales valen 0 y f(0) = 0. Tiene una esquina, pero no un salto.</p></details>
+    <details><summary>¿Cuánto vale lím (x→∞) (3x + 2) / (x − 1)?</summary><p>3 (el cociente de las pendientes)</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=kfF40MiS7zA" target="_blank" rel="noopener">Limits, L'Hôpital's rule, and epsilon delta definitions (cap. 7)</a><span>Límites, el juego ε-δ y cómo resolver un 0/0.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=l%C3%ADmites" target="_blank" rel="noopener">julioprofe · límites</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=continuidad" target="_blank" rel="noopener">julioprofe · continuidad</a>
+    <a class="vid" href="https://www.youtube.com/@math2me/search?query=l%C3%ADmites" target="_blank" rel="noopener">math2me · límites</a>
+    <a class="vid" href="https://www.youtube.com/results?search_query=khan+academy+espa%C3%B1ol+l%C3%ADmites+laterales" target="_blank" rel="noopener">Khan Academy Español · límites laterales</a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 06 Límites laterales ---------- */
+(function(){
+  const C=[
+    {name:'Agujero',a:1,tex:'f(x) = (x² − 1) / (x − 1)',f:x=>(x*x-1)/(x-1),pieces:[[-1,3]],fa:null,v:{x0:-1,x1:3,y0:-.5,y1:4.5},open:[[1,2]],closed:[],L:[2,2],
+     note:'Discontinuidad removible: el límite existe y vale 2, pero f(1) no está definida. Se arregla definiendo f(1) = 2.'},
+    {name:'Salto',a:0,tex:'f(x) = 0 si x < 0; 1 si x ≥ 0',f:x=>x<0?0:1,pieces:[[-2,-1e-9],[0,2]],fa:1,v:{x0:-2,x1:2,y0:-.5,y1:1.5,sy:.5},open:[[0,0]],closed:[[0,1]],L:[0,1],
+     note:'Discontinuidad de salto: por la izquierda se acerca a 0 y por la derecha a 1. Por mucho que te acerques, los dos lados no se ponen de acuerdo. Es la función escalón del perceptrón original.'},
+    {name:'Asíntota',a:0,tex:'f(x) = 1 / x',f:x=>1/x,pieces:[[-3,-.001],[.001,3]],fa:null,v:{x0:-3,x1:3,y0:-6,y1:6},open:[],closed:[],L:[-Infinity,Infinity],
+     note:'Discontinuidad infinita: por la izquierda baja hacia −∞ y por la derecha sube hacia +∞. Es lo que pasa al dividir entre un número cada vez más cercano a 0.'},
+    {name:'Oscilación',a:0,tex:'f(x) = sen(1 / x)',f:x=>Math.sin(1/x),pieces:[[-1,-.002],[.002,1]],N:5000,fa:null,v:{x0:-1,x1:1,y0:-1.5,y1:1.5,sx:.25,sy:.5},open:[],closed:[],L:[NaN,NaN],
+     note:'Cerca de 0 la función oscila cada vez más rápido entre −1 y 1 sin acercarse a ningún valor. Mira cómo saltan los números al cambiar δ: el límite no existe.'},
+    {name:'Continua',a:1,tex:'f(x) = 0.5x² + 1',f:x=>.5*x*x+1,pieces:[[-1,3]],fa:1.5,v:{x0:-1,x1:3,y0:0,y1:5.5},open:[],closed:[[1,1.5]],L:[1.5,1.5],
+     note:'Los dos límites laterales valen 1.5 y f(1) = 1.5. Cumple las tres condiciones: es continua.'},
+    {name:'ReLU',a:0,tex:'f(x) = máx(0, x)',f:x=>Math.max(0,x),pieces:[[-2,2]],fa:0,v:{x0:-2,x1:2,y0:-.5,y1:2,sy:.5},open:[],closed:[[0,0]],L:[0,0],
+     note:'Continua en 0: los dos límites y el valor valen 0. Tiene una esquina, y allí no tiene derivada (módulo 07), pero no tiene salto.'}
+  ];
+  let cur=0;const D=$('#lim-d'),btns=$('#lim-btns');
+  C.forEach((c,i)=>{const b=document.createElement('button');b.textContent=c.name;b.setAttribute('aria-pressed',i===0);b.onclick=()=>{cur=i;btns.querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-pressed',j===i));draw();};btns.appendChild(b);});
+  const sL=v=>isNaN(v)?'no existe':v===Infinity?'+∞':v===-Infinity?'−∞':short(v);
+  const draw=canvasWidget($('#lim-cv'),wide,(ctx,w,h)=>{
+    const c=C[cur],d=Math.pow(10,-(+D.value)),F=frame(ctx,w,h,c.v);
+    $('#lim-d-o').textContent=d>=.01?fmt(d,3):d.toExponential(1);
+    F.clip();ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(F.X(c.a),F.Y(F.y0));ctx.lineTo(F.X(c.a),F.Y(F.y1));ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    c.pieces.forEach(([p,q])=>seg(ctx,F,c.f,p,q,tok('--accent'),2.5,c.N||800));
+    c.open.forEach(([x,y])=>ring(ctx,F.X(x),F.Y(y),tok('--accent'),tok('--card')));
+    c.closed.forEach(([x,y])=>dot(ctx,F.X(x),F.Y(y),tok('--accent'),6.5));
+    const xl=c.a-d,xr=c.a+d,yl=c.f(xl),yr=c.f(xr);
+    F.clip();[[xl,yl],[xr,yr]].forEach(([x,y])=>{const yy=Math.max(F.y0,Math.min(F.y1,y));ctx.strokeStyle=tok('--warm');ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(F.X(x),F.Y(0));ctx.lineTo(F.X(x),F.Y(yy));ctx.stroke();ctx.setLineDash([]);dot(ctx,F.X(x),F.Y(yy),tok('--warm'),5);});ctx.restore();
+    const ex=c.L[0]===c.L[1]&&isFinite(c.L[0]),cont=ex&&c.fa!==null&&c.fa===c.L[0];
+    $('#lim-out').innerHTML=`<span>${c.tex} · punto a = ${c.a}</span>`+
+      `<span>f(a − δ) = f(${fmt(xl,4)}) = ${fmt(yl,4)} &nbsp;·&nbsp; f(a + δ) = f(${fmt(xr,4)}) = ${fmt(yr,4)}</span>`+
+      `<span>límite por la izquierda: ${sL(c.L[0])} · por la derecha: ${sL(c.L[1])} · f(a): ${c.fa===null?'no definida':short(c.fa)}</span>`+
+      `<span class="big">¿Existe el límite? ${ex?'Sí, vale '+short(c.L[0]):'No'} · ¿Es continua en a? ${cont?'<span class="ok">Sí</span>':'<span class="warn">No</span>'}</span>`+
+      `<span style="font-family:var(--f-body);font-size:.95rem">${c.note}</span>`;
+  });
+  D.addEventListener('input',draw);
+})();
+
+/* ---------- 06 Épsilon y delta ---------- */
+(function(){
+  const f=x=>.5*x*x+1,a=2,L=3;
+  const draw=canvasWidget($('#ed-cv'),wide,(ctx,w,h)=>{
+    const e=+$('#ed-e').value,d=Math.min(Math.sqrt(4+2*e)-2,2-Math.sqrt(4-2*e));
+    $('#ed-e-o').textContent=short(e);
+    const F=frame(ctx,w,h,{x0:0,x1:3.6,y0:0,y1:6.5,sx:.5});
+    F.clip();
+    ctx.globalAlpha=.75;ctx.fillStyle=tok('--accent-soft');ctx.fillRect(F.X(F.x0),F.Y(L+e),F.X(F.x1)-F.X(F.x0),F.Y(L-e)-F.Y(L+e));
+    ctx.fillStyle=tok('--warm-soft');ctx.fillRect(F.X(a-d),F.Y(F.y1),F.X(a+d)-F.X(a-d),F.Y(F.y0)-F.Y(F.y1));ctx.globalAlpha=1;
+    ctx.strokeStyle=tok('--accent');ctx.lineWidth=1;ctx.setLineDash([5,4]);[L-e,L+e].forEach(y=>{ctx.beginPath();ctx.moveTo(F.X(F.x0),F.Y(y));ctx.lineTo(F.X(F.x1),F.Y(y));ctx.stroke();});
+    ctx.strokeStyle=tok('--warm');[a-d,a+d].forEach(x=>{ctx.beginPath();ctx.moveTo(F.X(x),F.Y(F.y0));ctx.lineTo(F.X(x),F.Y(F.y1));ctx.stroke();});ctx.setLineDash([]);
+    ctx.restore();
+    curve(ctx,F,f,tok('--ink'),2);
+    seg(ctx,F,f,a-d,a+d,tok('--accent'),5,100);
+    dot(ctx,F.X(a),F.Y(L),tok('--ink'),5);
+    label(ctx,'L + ε',F.X(F.x0)+6,F.Y(L+e)-9,tok('--accent'));label(ctx,'L − ε',F.X(F.x0)+6,F.Y(L-e)+10,tok('--accent'));
+    $('#ed-out').innerHTML=`<span class="big">ε = ${fmt(e,2)} → basta δ = ${fmt(d,3)}</span><span>Si |x − 2| &lt; ${fmt(d,3)}, entonces |f(x) − 3| &lt; ${fmt(e,2)}. Achica ε: siempre aparece un δ, cada vez más pequeño. Por eso el límite es 3.</span>`;
+  });
+  $('#ed-e').addEventListener('input',draw);
+})();
+})();
+</script>
+</body>
+</html>

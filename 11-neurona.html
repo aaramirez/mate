@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La neurona y la red · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="neurona">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 11 DE 11</span><h1>La neurona y la red: todo junto</h1></header>
+<section>
+  
+  <div class="prose">
+    <p>Ahora tienes todas las piezas. Una neurona hace un <b>producto punto</b> entre sus pesos y la entrada, le <b>suma</b> un sesgo y pasa el resultado por una <b>función</b> de activación:</p>
+  </div>
+  <div class="eq"><var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> &nbsp;&nbsp;→&nbsp;&nbsp; ŷ = σ(<var>z</var>)</div>
+  <div class="lab neuron">
+    <div class="lab-title"><span class="tag">Reto</span><h3>Ajusta los pesos para separar los puntos</h3></div>
+    <p class="hint">La neurona dice «azul» cuando <var>z</var> &gt; 0 y «rojo» cuando <var>z</var> &lt; 0. La línea es la frontera de decisión: donde <var>z</var> = 0. Mueve <var>w</var>₁, <var>w</var>₂ y <var>b</var> hasta acertar los 12 puntos.</p>
+    <div class="split">
+      <canvas id="nn-cv" role="img" aria-label="Mapa de salida de la neurona con puntos de dos clases"></canvas>
+      <div style="display:grid;gap:12px;align-content:start;min-width:0">
+        <svg id="nn-svg" viewBox="0 0 420 200" role="img" aria-label="Diagrama de la neurona con sus pesos"></svg>
+        <div class="btns" id="nn-act" role="group" aria-label="Función de activación"><button data-a="sig" aria-pressed="true">Sigmoide</button><button data-a="tanh" aria-pressed="false">tanh</button><button data-a="relu" aria-pressed="false">ReLU</button></div>
+      </div>
+    </div>
+    <div class="ctls">
+      <label class="ctl">Peso <var>w</var>₁<output id="nn-w1-o"></output><input type="range" id="nn-w1" min="-3" max="3" step="0.1" value="0.5"></label>
+      <label class="ctl">Peso <var>w</var>₂<output id="nn-w2-o"></output><input type="range" id="nn-w2" min="-3" max="3" step="0.1" value="-1"></label>
+      <label class="ctl">Sesgo <var>b</var><output id="nn-b-o"></output><input type="range" id="nn-b" min="-3" max="3" step="0.1" value="0"></label>
+      <label class="ctl">Entrada <var>x</var>₁<output id="nn-x1-o"></output><input type="range" id="nn-x1" min="-2" max="2" step="0.1" value="1"></label>
+      <label class="ctl">Entrada <var>x</var>₂<output id="nn-x2-o"></output><input type="range" id="nn-x2" min="-2" max="2" step="0.1" value="0.5"></label>
+    </div>
+    <div class="readout" id="nn-out"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Clase azul (ŷ alto)</span><span><i style="background:var(--warm)"></i>Clase roja (ŷ bajo)</span><span><i style="background:var(--ink)"></i>Tu entrada (x₁, x₂)</span></div>
+  </div>
+  <div class="prose">
+    <h3>De una neurona a una red</h3>
+    <p>Varias neuronas en paralelo forman una <b>capa</b>: sus pesos se apilan en una <b>matriz</b> <b>W</b>. Varias capas en fila forman una <b>red</b>: una cadena de funciones. Una red pequeña para clasificar en 2 clases se escribe así:</p>
+  </div>
+  <div class="eq"><b>h</b> = ReLU(<b>W</b>₁<b>x</b> + <b>b</b>₁) &nbsp;→&nbsp; ŷ = softmax(<b>W</b>₂<b>h</b> + <b>b</b>₂)</div>
+  <div class="tbl"><svg id="net-svg" viewBox="0 0 520 230" style="width:100%;min-width:420px;height:auto;display:block" role="img" aria-label="Red de 3 entradas, 4 neuronas ocultas y 2 salidas"></svg></div>
+  <div class="prose">
+    <h3>Softmax: de puntajes a probabilidades</h3>
+    <p>La última capa produce puntajes sueltos (<i>logits</i>). Softmax los vuelve probabilidades que suman 1: aplica <var>e</var><sup><var>z</var></sup> a cada uno y divide entre el total.</p>
+  </div>
+  <div class="eq">softmax(<var>z</var>ᵢ) = <var>e</var><sup><var>z</var>ᵢ</sup> / Σⱼ <var>e</var><sup><var>z</var>ⱼ</sup></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>¿Qué ve el clasificador en la foto?</h3></div>
+    <div class="ctls">
+      <label class="ctl">Puntaje «gato»<output id="sm-z0-o"></output><input type="range" id="sm-z0" min="-3" max="5" step="0.1" value="2"></label>
+      <label class="ctl">Puntaje «perro»<output id="sm-z1-o"></output><input type="range" id="sm-z1" min="-3" max="5" step="0.1" value="1"></label>
+      <label class="ctl">Puntaje «pájaro»<output id="sm-z2-o"></output><input type="range" id="sm-z2" min="-3" max="5" step="0.1" value="0.1"></label>
+    </div>
+    <div class="sm" id="sm-bars"></div>
+    <div class="readout" id="sm-out"></div>
+  </div>
+  <div class="prose">
+    <h3>¿Qué tan mal le fue? La función de pérdida</h3>
+    <p>Para clasificar se usa la <b>entropía cruzada</b>: −ln(probabilidad que el modelo le dio a la respuesta correcta). Castiga poco a un modelo seguro y acertado, y muchísimo a uno seguro y equivocado.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Probabilidad dada a la clase correcta</th><th class="num">Pérdida −ln(p)</th><th>Lectura</th></tr></thead>
+    <tbody>
+      <tr><td>0.90</td><td class="num">0.105</td><td>Bien: casi no hay nada que corregir</td></tr>
+      <tr><td>0.50</td><td class="num">0.693</td><td>Indeciso</td></tr>
+      <tr><td>0.10</td><td class="num">2.303</td><td>Mal: hay que ajustar bastante</td></tr>
+      <tr><td>0.01</td><td class="num">4.605</td><td>Muy mal: seguro y equivocado</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose"><h3>El ciclo de entrenamiento</h3></div>
+  <ol class="steps">
+    <li><span><b>Propagación hacia adelante.</b> Los datos atraviesan la red: matrices, sumas y activaciones (módulos 03, 04 y 05).</span></li>
+    <li><span><b>Calcular la pérdida.</b> Comparar ŷ con la respuesta real usando MSE o entropía cruzada (módulos 02 y 10).</span></li>
+    <li><span><b>Backpropagation.</b> Aplicar la regla de la cadena desde la pérdida hacia atrás para obtener el gradiente de cada peso (módulo 07).</span></li>
+    <li><span><b>Actualizar.</b> Mover cada peso un paso: <var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var> (módulo 09).</span></li>
+    <li><span><b>Repetir</b> con más datos, miles de veces, hasta que la pérdida deje de bajar.</span></li>
+  </ol>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Este ciclo es el mismo para una regresión logística, una red de visión o un modelo de lenguaje. Cambian el tamaño de las matrices y la forma de la red, no la matemática.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Una capa recibe 4 entradas y tiene 3 neuronas. ¿Cuántos parámetros aprende?</summary><p>W de 3 × 4 = 12 pesos + 3 sesgos = 15 parámetros</p></details>
+    <details><summary>Si los tres puntajes de softmax son iguales, ¿qué probabilidad da a cada clase?</summary><p>1/3 ≈ 0.333 cada una (eᶻ es igual para todas)</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">But what is a neural network? (Deep learning, cap. 1)</a><span>Neuronas, pesos, sesgos y capas como matrices.</span></li><li><a href="https://www.youtube.com/watch?v=Ilg3gGewQ5U" target="_blank" rel="noopener">Backpropagation, intuitively (cap. 3)</a><span>Cómo el error viaja hacia atrás por la red.</span></li><li><a href="https://www.youtube.com/watch?v=tIeHLnjs5U8" target="_blank" rel="noopener">Backpropagation calculus (cap. 4)</a><span>La regla de la cadena aplicada a una red, con las derivadas escritas.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=red%20neuronal" target="_blank" rel="noopener">Ringa Tech · redes neuronales</a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=red%20neuronal" target="_blank" rel="noopener">Dot CSV · ¿qué es una red neuronal?</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=neural%20networks" target="_blank" rel="noopener">StatQuest · Neural Networks <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@AndrejKarpathy/search?query=micrograd" target="_blank" rel="noopener">Andrej Karpathy · backprop desde cero <small>EN · avanzado</small></a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const P1=[[1,1.5],[1.5,.5],[.5,1.8],[2,1.2],[1.2,-.2],[.2,1]],P0=[[-1,-1],[-1.5,.2],[-.5,-1.6],[-2,-.8],[.3,-1.2],[-.8,.6]];
+  const ACT={sig:{n:'σ',f:z=>1/(1+Math.exp(-z)),norm:v=>v},tanh:{n:'tanh',f:Math.tanh,norm:v=>(v+1)/2},relu:{n:'ReLU',f:z=>Math.max(0,z),norm:v=>Math.min(1,v/3)}};
+  let act='sig';const svg=$('#nn-svg');
+  ['w1','w2','b','x1','x2'].forEach(k=>bindOut('#nn-'+k));
+  svg.innerHTML=`<line id="e1" x1="78" y1="55" x2="200" y2="100"/><line id="e2" x1="78" y1="145" x2="200" y2="100"/><line x1="260" y1="100" x2="352" y2="100" stroke="currentColor" stroke-width="2" style="color:var(--muted)"/>
+  <circle cx="58" cy="55" r="22" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="58" cy="145" r="22" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/>
+  <circle cx="230" cy="100" r="34" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><circle id="outc" cx="380" cy="100" r="26" stroke="var(--ink)" stroke-width="1.5"/>
+  <text id="tx1" x="58" y="59" text-anchor="middle"></text><text id="tx2" x="58" y="149" text-anchor="middle"></text>
+  <text id="tw1" x="135" y="62" text-anchor="middle"></text><text id="tw2" x="135" y="146" text-anchor="middle"></text>
+  <text id="tz" x="230" y="96" text-anchor="middle"></text><text id="tb" x="230" y="114" text-anchor="middle" class="lbl"></text>
+  <text id="ty" x="380" y="104" text-anchor="middle"></text>
+  <text x="58" y="190" text-anchor="middle" class="lbl">ENTRADAS</text><text x="230" y="160" text-anchor="middle" class="lbl">z = w·x + b</text><text id="tact" x="306" y="90" text-anchor="middle" class="lbl"></text><text x="380" y="150" text-anchor="middle" class="lbl">SALIDA ŷ</text>`;
+  const draw=canvasWidget($('#nn-cv'),1,(ctx,w,h)=>{
+    const w1=num('#nn-w1'),w2=num('#nn-w2'),b=num('#nn-b'),x1=num('#nn-x1'),x2=num('#nn-x2'),A=ACT[act];
+    const F=frame(ctx,w,h,{x0:-2.5,x1:2.5,equal:true,sx:1,sy:1});
+    const cA=hexRgb(tok('--accent')),cW=hexRgb(tok('--warm')),cC=hexRgb(tok('--card'));
+    const step=6;F.clip();
+    for(let px=F.p.l;px<F.p.l+F.pw;px+=step)for(let py=F.p.t;py<F.p.t+F.ph;py+=step){
+      const v=A.norm(A.f(w1*F.IX(px+step/2)+w2*F.IY(py+step/2)+b));
+      const z=w1*F.IX(px+step/2)+w2*F.IY(py+step/2)+b;
+      const col=z>=0?lerp(cC,cA,act==='relu'?Math.min(1,z/3)*.55:Math.abs(v-.5)*1.1):lerp(cC,cW,act==='relu'?.18:Math.abs(v-.5)*1.1);
+      ctx.fillStyle=`rgb(${col})`;ctx.fillRect(px,py,step,step);
+    }
+    ctx.restore();
+    F.clip();ctx.strokeStyle=tok('--ink');ctx.lineWidth=2.5;ctx.beginPath();
+    if(Math.abs(w2)>1e-6){ctx.moveTo(F.X(-3),F.Y(-(w1*-3+b)/w2));ctx.lineTo(F.X(3),F.Y(-(w1*3+b)/w2));}else if(Math.abs(w1)>1e-6){ctx.moveTo(F.X(-b/w1),F.Y(-5));ctx.lineTo(F.X(-b/w1),F.Y(5));}
+    ctx.stroke();
+    let ok=0;
+    [[P1,1,tok('--accent')],[P0,0,tok('--warm')]].forEach(([pts,cls,col])=>pts.forEach(([a,c])=>{const z=w1*a+w2*c+b;const hit=(z>0)===(cls===1);if(hit)ok++;
+      ctx.beginPath();ctx.arc(F.X(a),F.Y(c),7,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=tok('--card');ctx.stroke();
+      if(!hit){ctx.beginPath();ctx.arc(F.X(a),F.Y(c),11,0,Math.PI*2);ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);}}));
+    ctx.beginPath();ctx.arc(F.X(x1),F.Y(x2),6,0,Math.PI*2);ctx.fillStyle=tok('--ink');ctx.fill();
+    ctx.beginPath();ctx.moveTo(F.X(x1)-11,F.Y(x2));ctx.lineTo(F.X(x1)+11,F.Y(x2));ctx.moveTo(F.X(x1),F.Y(x2)-11);ctx.lineTo(F.X(x1),F.Y(x2)+11);ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.stroke();
+    ctx.restore();
+    const z=w1*x1+w2*x2+b,y=A.f(z);
+    [['#e1',w1],['#e2',w2]].forEach(([id,v])=>{const e=svg.querySelector(id);e.setAttribute('stroke',v>=0?'var(--accent)':'var(--warm)');e.setAttribute('stroke-width',1+Math.abs(v)*2.2);});
+    svg.querySelector('#tx1').textContent=short(x1);svg.querySelector('#tx2').textContent=short(x2);
+    svg.querySelector('#tw1').textContent='w₁='+short(w1);svg.querySelector('#tw2').textContent='w₂='+short(w2);
+    svg.querySelector('#tz').textContent='z='+fmt(z);svg.querySelector('#tb').textContent='b = '+short(b);
+    svg.querySelector('#ty').textContent=fmt(y);svg.querySelector('#tact').textContent=A.n.toUpperCase();
+    const oc=svg.querySelector('#outc');oc.setAttribute('fill',z>0?'var(--accent-soft)':'var(--warm-soft)');
+    $('#nn-out').innerHTML=`<span>z = ${short(w1)}·${short(x1)} + ${short(w2)}·${short(x2)} ${b>=0?'+':'−'} ${short(Math.abs(b))} = ${fmt(z,3)}</span><span class="big">ŷ = ${A.n}(${fmt(z,3)}) = ${fmt(y,3)} → clase ${z>0?'azul':'roja'}</span>`+
+      `<span class="${ok===12?'ok':''}">Aciertos: ${ok} de 12 ${ok===12?'· ¡Separaste las dos clases! Eso es lo que el descenso del gradiente hace solo.':''}</span>`;
+  });
+  ['w1','w2','b','x1','x2'].forEach(k=>$('#nn-'+k).addEventListener('input',draw));
+  $('#nn-act').addEventListener('click',e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;act=a;$('#nn-act').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.a===a));draw();});
+})();
+
+
+(function(){
+  const L=[3,4,2],xs=[70,260,450],H=230,names=['entrada x','capa oculta h','salida ŷ'];
+  const ys=n=>Array.from({length:n},(_,i)=>(H-30)/(n+1)*(i+1)+5);
+  let s='';
+  for(let l=0;l<2;l++)ys(L[l]).forEach(y1=>ys(L[l+1]).forEach(y2=>{s+=`<line x1="${xs[l]}" y1="${y1}" x2="${xs[l+1]}" y2="${y2}" stroke="var(--line)" stroke-width="1.5"/>`;}));
+  L.forEach((n,l)=>ys(n).forEach(y=>{s+=`<circle cx="${xs[l]}" cy="${y}" r="16" fill="${l===1?'var(--accent-soft)':'var(--paper)'}" stroke="${l===1?'var(--accent)':'var(--ink)'}" stroke-width="1.5"/>`;}));
+  names.forEach((t,l)=>{s+=`<text x="${xs[l]}" y="${H-6}" text-anchor="middle" style="font:600 12px var(--f-display);fill:var(--muted);letter-spacing:.04em">${t.toUpperCase()}</text>`;});
+  s+=`<text x="165" y="18" text-anchor="middle" style="font:italic 600 14px var(--f-body);fill:var(--accent)">W₁ (4 × 3)</text><text x="355" y="18" text-anchor="middle" style="font:italic 600 14px var(--f-body);fill:var(--accent)">W₂ (2 × 4)</text>`;
+  $('#net-svg').innerHTML=s;
+})();
+
+
+(function(){
+  const names=['gato','perro','pájaro'],bars=$('#sm-bars');
+  bars.innerHTML=names.map((n,i)=>`<div class="sm-row"><span>${n}</span><span class="track"><i id="sm-b${i}"></i></span><output id="sm-p${i}"></output></div>`).join('');
+  function up(){
+    const z=[0,1,2].map(i=>num('#sm-z'+i));z.forEach((v,i)=>$('#sm-z'+i+'-o').textContent=short(v));
+    const e=z.map(Math.exp),S=e.reduce((a,b)=>a+b,0),p=e.map(v=>v/S);
+    p.forEach((v,i)=>{$('#sm-b'+i).style.width=(v*100)+'%';$('#sm-p'+i).textContent=fmt(v*100,1)+'%';});
+    const best=p.indexOf(Math.max(...p));
+    $('#sm-out').innerHTML=`<span>eᶻ = [${e.map(v=>fmt(v)).join(', ')}] · suma = ${fmt(S)}</span><span class="big">Predicción: ${names[best]} (${fmt(p[best]*100,1)}%) · las probabilidades suman ${fmt(p.reduce((a,b)=>a+b,0)*100,0)}%</span>`;
+  }
+  [0,1,2].forEach(i=>$('#sm-z'+i).addEventListener('input',up));up();
+})();
+})();
+</script>
+</body>
+</html>

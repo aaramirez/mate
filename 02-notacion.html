@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notación sin miedo · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="notacion">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 02 DE 11</span><h1>Notación sin miedo</h1></header>
+<section>
+  
+  <div class="prose"><p>La mayoría de las fórmulas de ML asustan por los símbolos, no por las cuentas. Esta tabla es tu diccionario: casi todo lo que verás en el curso se escribe con estas piezas.</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Símbolo</th><th>Se lee</th><th>Significa</th><th>Ejemplo en ML</th></tr></thead>
+    <tbody>
+      <tr><td class="sym">Σ</td><td>sumatoria</td><td>Suma todos los términos</td><td>Error total = Σ errores</td></tr>
+      <tr><td class="sym">∏</td><td>productoria</td><td>Multiplica todos los términos</td><td>Probabilidad de todos los datos</td></tr>
+      <tr><td class="sym"><var>x</var>ᵢ</td><td>x sub i</td><td>El elemento número <var>i</var> de una lista</td><td><var>x</var>₃ = tercera variable</td></tr>
+      <tr><td class="sym"><b>x</b></td><td>vector x (negrita)</td><td>Una lista de números</td><td>Los datos de un ejemplo</td></tr>
+      <tr><td class="sym"><b>W</b></td><td>matriz W (mayúscula)</td><td>Una tabla de números</td><td>Los pesos de una capa</td></tr>
+      <tr><td class="sym">ŷ</td><td>y gorro</td><td>Una estimación o predicción</td><td>Lo que predice el modelo</td></tr>
+      <tr><td class="sym">θ</td><td>theta</td><td>Los parámetros del modelo</td><td>Todos los pesos y sesgos</td></tr>
+      <tr><td class="sym">η</td><td>eta</td><td>Tasa de aprendizaje</td><td>Tamaño del paso, ej. 0.01</td></tr>
+      <tr><td class="sym">‖<b>x</b>‖</td><td>norma de x</td><td>Largo de un vector</td><td>Regularización L2</td></tr>
+      <tr><td class="sym">∂<var>L</var>/∂<var>w</var></td><td>derivada parcial</td><td>Cuánto cambia <var>L</var> si muevo solo <var>w</var></td><td>Backpropagation</td></tr>
+      <tr><td class="sym">∇<var>L</var></td><td>gradiente de L</td><td>Todas las derivadas parciales juntas</td><td>Descenso del gradiente</td></tr>
+      <tr><td class="sym">arg min</td><td>argumento mínimo</td><td>El valor de entrada que da el mínimo</td><td>Los mejores pesos</td></tr>
+      <tr><td class="sym"><var>e</var>, ln</td><td>e, logaritmo natural</td><td><var>e</var> ≈ 2.718; ln deshace <var>e</var><sup>x</sup></td><td>Softmax, entropía cruzada</td></tr>
+      <tr><td class="sym">∈, ≈</td><td>pertenece, aproximadamente</td><td><var>x</var> ∈ ℝ: <var>x</var> es un número real</td><td><b>x</b> ∈ ℝ³: vector de 3 números</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <h3>La sumatoria desarmada</h3>
+    <p>La Σ es solo un ciclo <code>for</code> escrito en matemáticas. Con <b>x</b> = [2, 5, 1]:</p>
+  </div>
+  <div class="eq">Σ<sub><var>i</var>=1</sub><sup>3</sup> <var>x</var><sub><var>i</var></sub> = <var>x</var>₁ + <var>x</var>₂ + <var>x</var>₃ = 2 + 5 + 1 = 8<small>total = sum(x)</small></div>
+  <div class="prose"><p>Con ella se escribe el <b>error cuadrático medio</b> (MSE), la medida de error más común en regresión. Si los valores reales son <span class="mono">y = [3, 5]</span> y el modelo predijo <span class="mono">ŷ = [2.5, 6]</span>:</p></div>
+  <div class="eq">MSE = <span style="font-size:.9em">1/<var>n</var></span> Σ (<var>y</var>ᵢ − ŷᵢ)² = ½ [(0.5)² + (−1)²] = ½ (0.25 + 1) = 0.625</div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>En cada paper, cada documentación de PyTorch o scikit-learn y cada diapositiva del curso. Si un símbolo te frena, vuelve a esta tabla.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Cuánto vale Σ<sub>i=1</sub><sup>4</sup> i² ?</summary><p>1 + 4 + 9 + 16 = 30</p></details>
+    <details><summary>Si y = [1, 4] y ŷ = [2, 2], ¿cuál es el MSE?</summary><p>½ [(−1)² + 2²] = ½ (1 + 4) = 2.5</p></details>
+  </div>
+  
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/results?search_query=notaci%C3%B3n+sumatoria+sigma+explicaci%C3%B3n" target="_blank" rel="noopener">Notación sigma · búsqueda</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=sumatoria" target="_blank" rel="noopener">julioprofe · sumatorias</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=mean%20squared%20error" target="_blank" rel="noopener">StatQuest · error cuadrático <small>EN</small></a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+</body>
+</html>

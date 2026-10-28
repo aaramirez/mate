@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Probabilidad · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="probabilidad">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 10 DE 11</span><h1>Probabilidad: densidad y distribución</h1><p class="lede">Variables aleatorias, la función de masa, la función de densidad, la función de distribución acumulada, la normal y el teorema de Bayes.</p></header>
+<section>
+  <h2>Probabilidad: una razón entre 0 y 1</h2>
+  <div class="prose">
+    <p>Un modelo nunca está seguro. Cuando una red dice «es un gato», en realidad dice «es un gato con probabilidad 0.92». La probabilidad es una <a href="01-aritmetica.html">razón</a> entre 0 (imposible) y 1 (seguro): casos favorables entre casos posibles.</p>
+    <p>La estadística resume datos con pocos números. Con los datos <span class="mono">[2, 4, 4, 4, 5, 5, 7, 9]</span>:</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Media</h3><span class="ex">x̄ = 40 / 8 = 5</span><p>El centro de los datos: suma entre cantidad.</p></div>
+    <div class="fact"><h3>Varianza</h3><span class="ex">(9+1+1+1+0+0+4+16) / 8 = 4</span><p>Promedio de las distancias al cuadrado a la media.</p></div>
+    <div class="fact"><h3>Desviación estándar</h3><span class="ex">σ = √4 = 2</span><p>Qué tan dispersos están, en las mismas unidades que los datos.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Variables aleatorias: discretas y continuas</h2>
+  <div class="prose">
+    <p>Una <b>variable aleatoria</b> <var>X</var> es un número que sale de un experimento: lo que marca un dado, la estatura de una persona, los segundos hasta el próximo clic. Hay dos tipos, y cada uno se describe con una función distinta:</p>
+    <p><b>Discreta</b>: toma valores separados que se pueden contar (1, 2, 3…). Cada valor tiene su propia probabilidad, y la función que las reúne es la <b>función de masa</b>: <var>p</var>(<var>k</var>) = P(<var>X</var> = <var>k</var>). Las probabilidades de todos los valores suman 1.</p>
+    <p><b>Continua</b>: puede tomar cualquier valor de un intervalo (1.7231… metros). Aquí la probabilidad de un valor <i>exacto</i> es 0, y hace falta una idea nueva: la densidad.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Función de masa: la suma de varios dados</h3></div>
+    <div class="btns" id="pm-btns" role="group" aria-label="Número de dados"><button data-k="1" aria-pressed="false">1 dado</button><button data-k="2" aria-pressed="true">2 dados</button><button data-k="3" aria-pressed="false">3 dados</button><button data-k="5" aria-pressed="false">5 dados</button></div>
+    <canvas id="pm-cv" role="img" aria-label="Barras con la probabilidad de cada suma"></canvas>
+    <div class="ctls"><label class="ctl">Valor <var>k</var> de la suma<output id="pm-k-o"></output><input type="range" id="pm-k" min="2" max="12" step="1" value="7"></label></div>
+    <div class="readout" id="pm-out"></div>
+    <p class="hint">Con un dado todas las caras valen lo mismo. Al sumar más dados aparece una campana: es el teorema central del límite, y explica por qué la distribución normal está en todas partes.</p>
+  </div>
+</section>
+
+<section>
+  <h2>La función de densidad (PDF)</h2>
+  <div class="prose">
+    <p>Imagina que mides la estatura de miles de personas y haces un histograma. Si en vez de contar personas pones en cada barra la <b>proporción de datos dividida entre el ancho de la barra</b>, el área de cada barra es la fracción de datos que cae en ella, y el área total es 1.</p>
+    <p>Ahora usa más datos y barras más angostas. Los bordes de las barras se suavizan hasta formar una curva: esa curva es la <b>función de densidad</b> <var>f</var>(<var>x</var>). Mueve los controles y mírala aparecer.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Del histograma a la densidad</h3></div>
+    <div class="btns" id="hs-btns" role="group" aria-label="Elegir distribución"></div>
+    <canvas id="hs-cv" role="img" aria-label="Histograma de muestras con la curva de densidad encima"></canvas>
+    <div class="ctls">
+      <label class="ctl">Cantidad de datos<output id="hs-n-o"></output><input type="range" id="hs-n" min="1" max="5" step="0.1" value="2.5"></label>
+      <label class="ctl">Número de barras<output id="hs-b-o"></output><input type="range" id="hs-b" min="4" max="80" step="1" value="12"></label>
+    </div>
+    <div class="btns"><button id="hs-new">Sacar nuevas muestras</button></div>
+    <div class="readout" id="hs-out"></div>
+  </div>
+  <div class="prose"><p>Formalmente, la densidad es el <a href="06-limites.html">límite</a> de una <a href="01-aritmetica.html">razón</a>: la probabilidad de caer en un tramo pequeño dividida entre el ancho del tramo, cuando ese ancho se va a cero.</p></div>
+  <div class="eq"><var>f</var>(<var>x</var>) = lím<sub>Δ<var>x</var>→0</sub> P(<var>x</var> &lt; <var>X</var> &lt; <var>x</var> + Δ<var>x</var>) / Δ<var>x</var><small>«probabilidad por unidad de x»</small></div>
+  <div class="cards">
+    <div class="fact"><h3>La altura no es probabilidad</h3><span class="ex">f(x) puede valer más de 1</span><p>Mide qué tan concentrada está la probabilidad alrededor de <var>x</var>. Mira la uniforme en [0, 0.5]: vale 2.</p></div>
+    <div class="fact"><h3>El área sí lo es</h3><span class="ex">P(a &lt; X &lt; b) = ∫ₐᵇ f(x) dx</span><p>Para obtener una probabilidad hay que <a href="08-integrales.html">integrar</a>: sumar el área bajo la curva.</p></div>
+    <div class="fact"><h3>El área total es 1</h3><span class="ex">∫ f(x) dx = 1</span><p>Algún valor tiene que salir. Por eso 2 × 0.5 = 1 en la uniforme.</p></div>
+    <div class="fact"><h3>Un punto exacto vale 0</h3><span class="ex">P(X = 1.70000…) = 0</span><p>Una tira de ancho 0 tiene área 0. Que sea 0 no significa que sea imposible.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>La función de distribución acumulada (CDF)</h2>
+  <div class="prose">
+    <p>La <b>función de distribución</b> <var>F</var>(<var>x</var>) responde: ¿qué probabilidad hay de obtener un valor <b>menor o igual</b> que <var>x</var>? Es el área acumulada bajo la densidad, desde la izquierda hasta <var>x</var>.</p>
+  </div>
+  <div class="eq"><var>F</var>(<var>x</var>) = P(<var>X</var> ≤ <var>x</var>) = ∫<sub>−∞</sub><sup><var>x</var></sup> <var>f</var>(<var>t</var>) <var>dt</var> &nbsp;&nbsp;y, al revés,&nbsp;&nbsp; <var>f</var>(<var>x</var>) = <var>F</var>′(<var>x</var>)</div>
+  <div class="prose"><p>Las dos funciones describen lo mismo desde dos ángulos, conectadas por el <a href="08-integrales.html">teorema fundamental</a>: la distribución es la integral de la densidad, y la densidad es la derivada (la pendiente) de la distribución. Donde la densidad es alta, la distribución sube rápido.</p></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Densidad y distribución, lado a lado</h3></div>
+    <div class="btns" id="cd-btns" role="group" aria-label="Elegir distribución"></div>
+    <div class="twin">
+      <figure class="fig"><figcaption class="cap">Densidad f(x): el área sombreada es F(x)</figcaption><canvas id="cd-cv1" role="img" aria-label="Densidad con el área acumulada sombreada"></canvas></figure>
+      <figure class="fig"><figcaption class="cap">Distribución F(x): la altura del punto es esa misma área</figcaption><canvas id="cd-cv2" role="img" aria-label="Función de distribución acumulada con el punto actual"></canvas></figure>
+    </div>
+    <div class="ctls"><label class="ctl">Mueve <var>x</var><output id="cd-x-o"></output><input type="range" id="cd-x"></label></div>
+    <div class="readout" id="cd-out"></div>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Siempre sube</h3><span class="ex">de 0 a 1</span><p>Al avanzar solo se acumula más área, nunca menos.</p></div>
+    <div class="fact"><h3>Probabilidad de un tramo</h3><span class="ex">P(a &lt; X ≤ b) = F(b) − F(a)</span><p>Resta de dos áreas acumuladas. Así lo calculan las librerías.</p></div>
+    <div class="fact"><h3>Una nota de vocabulario</h3><span class="ex">«distribución»</span><p>En el día a día se dice «la distribución normal» para hablar del modelo completo. En rigor, «función de distribución» es <var>F</var>(<var>x</var>), la acumulada.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>La distribución normal</h2>
+  <div class="prose"><p>La campana de Gauss es la densidad más famosa. Se define con dos números: la media μ (dónde está el centro) y la desviación σ (qué tan ancha es). Elige un tramo y mira su probabilidad.</p></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>La probabilidad es un área</h3></div>
+    <canvas id="nd-cv" role="img" aria-label="Curva normal con el área entre a y b sombreada"></canvas>
+    <div class="ctls">
+      <label class="ctl">Media μ<output id="nd-mu-o"></output><input type="range" id="nd-mu" min="-3" max="3" step="0.1" value="0"></label>
+      <label class="ctl">Desviación σ<output id="nd-sd-o"></output><input type="range" id="nd-sd" min="0.4" max="3" step="0.1" value="1"></label>
+      <label class="ctl">Desde <var>a</var><output id="nd-a-o"></output><input type="range" id="nd-a" min="-8" max="8" step="0.1" value="-1"></label>
+      <label class="ctl">Hasta <var>b</var><output id="nd-b-o"></output><input type="range" id="nd-b" min="-8" max="8" step="0.1" value="1"></label>
+    </div>
+    <div class="btns"><button id="nd-1s">μ ± σ</button><button id="nd-2s">μ ± 2σ</button><button id="nd-3s">μ ± 3σ</button></div>
+    <div class="readout" id="nd-out"></div>
+    <p class="hint">El área se calcula de dos formas: con una suma de Riemann de 400 tiras y con <var>F</var>(<var>b</var>) − <var>F</var>(<var>a</var>). Con μ ± σ siempre da cerca de 68%, con μ ± 2σ cerca de 95% y con μ ± 3σ cerca de 99.7%. Normalizar con <b>z = (x − μ) / σ</b> lleva cualquier campana a μ = 0 y σ = 1.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Teorema de Bayes: actualizar con evidencia</h2>
+  <div class="prose">
+    <p>El 20% de los correos son spam. La palabra «gratis» aparece en el 60% del spam y en el 5% del correo normal. Si un correo dice «gratis», ¿qué probabilidad hay de que sea spam?</p>
+  </div>
+  <div class="eq">P(spam | gratis) = P(gratis | spam) · P(spam) / P(gratis) = (0.6 · 0.2) / (0.6 · 0.2 + 0.05 · 0.8) = 0.12 / 0.16 = 0.75</div>
+</section>
+
+<section>
+  <h2>Repaso del módulo</h2>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Un clasificador entrega una distribución discreta (las salidas de softmax). Los modelos generativos, como los de difusión, aprenden densidades de imágenes o sonidos. Los pesos de una red se inicializan con muestras de una normal o una uniforme (<code>torch.randn</code>). La verosimilitud y la entropía cruzada se calculan con densidades y funciones de masa. Los datos se estandarizan con media y desviación (<code>StandardScaler</code>). Y Naive Bayes clasifica con el teorema de Bayes.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Probabilidad de sacar 5 o más con un dado?</summary><p>2 casos favorables (5 y 6) / 6 posibles = 1/3 ≈ 0.333</p></details>
+    <details><summary>¿Puede una función de densidad valer 3 en algún punto?</summary><p>Sí. La uniforme en [0, 1/3] vale 3 en todo el tramo; su área es 3 × 1/3 = 1.</p></details>
+    <details><summary>Si F(2) = 0.8 y F(1) = 0.5, ¿cuánto vale P(1 &lt; X ≤ 2)?</summary><p>F(2) − F(1) = 0.8 − 0.5 = 0.3</p></details>
+    <details><summary>Con μ = 170 cm y σ = 10 cm, ¿cuál es el valor z de 185 cm?</summary><p>z = (185 − 170) / 10 = 1.5</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=ZA4JkHKZM50" target="_blank" rel="noopener">Why "probability of 0" does not mean "impossible"</a><span>La función de densidad: por qué un valor exacto tiene probabilidad 0 y el área sí es probabilidad.</span></li><li><a href="https://www.youtube.com/watch?v=8idr1WZ1A7Q" target="_blank" rel="noopener">Binomial distributions | Probabilities of probabilities</a><span>Una distribución discreta en acción, paso a paso.</span></li><li><a href="https://www.youtube.com/watch?v=zeJD6dqJ5lo" target="_blank" rel="noopener">But what is the Central Limit Theorem?</a><span>Por qué al sumar dados aparece una campana.</span></li><li><a href="https://www.youtube.com/watch?v=cy8r7WSuT1I" target="_blank" rel="noopener">Why π is in the normal distribution</a><span>De dónde sale la fórmula de la densidad normal.</span></li><li><a href="https://www.youtube.com/watch?v=HZGCoVF3YvM" target="_blank" rel="noopener">Bayes theorem, the geometry of changing beliefs</a><span>Bayes con áreas, sin memorizar fórmulas.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=normal%20distribution" target="_blank" rel="noopener">StatQuest · distribución normal <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=probability%20vs%20likelihood" target="_blank" rel="noopener">StatQuest · probabilidad vs. verosimilitud <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=funci%C3%B3n%20de%20densidad" target="_blank" rel="noopener">julioprofe · función de densidad</a>
+    <a class="vid" href="https://www.youtube.com/results?search_query=khan+academy+espa%C3%B1ol+funci%C3%B3n+de+densidad+de+probabilidad" target="_blank" rel="noopener">Khan Academy Español · densidad de probabilidad</a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+/* ---------- 10 Distribuciones compartidas ---------- */
+const erf=x=>{const s=Math.sign(x);x=Math.abs(x);const t=1/(1+.3275911*x);return s*(1-((((1.061405429*t-1.453152027)*t+1.421413741)*t-.284496736)*t+.254829592)*t*Math.exp(-x*x));};
+const DIST=[
+  {name:'Normal (μ = 0, σ = 1)',pdf:x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI),cdf:x=>.5*(1+erf(x/Math.SQRT2)),draw:()=>{let u=0;while(!u)u=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*Math.random());},lo:-4,hi:4,v:{x0:-4.2,x1:4.2,y0:0,y1:.6,sy:.1},x:[-4,4,.05,1]},
+  {name:'Exponencial (λ = 1)',pdf:x=>x<0?0:Math.exp(-x),cdf:x=>x<0?0:1-Math.exp(-x),draw:()=>-Math.log(1-Math.random()),lo:0,hi:6,v:{x0:-.5,x1:6.2,y0:0,y1:1.25,sy:.25},x:[-.5,6,.05,1]},
+  {name:'Uniforme en [0, 0.5]',pdf:x=>x>=0&&x<=.5?2:0,cdf:x=>x<0?0:x>.5?1:x/.5,draw:()=>Math.random()*.5,lo:0,hi:.5,v:{x0:-.25,x1:.75,y0:0,y1:2.6,sx:.25,sy:.5},x:[-.25,.75,.01,.2],jump:[0,.5]}
+];
+function drawPdf(ctx,F,d,color){
+  if(d.jump){seg(ctx,F,d.pdf,F.x0,d.jump[0]-1e-9,color,2.5);seg(ctx,F,d.pdf,d.jump[0],d.jump[1],color,2.5);seg(ctx,F,d.pdf,d.jump[1]+1e-9,F.x1,color,2.5);}
+  else if(d.name.startsWith('Expo')){seg(ctx,F,d.pdf,F.x0,-1e-9,color,2.5);seg(ctx,F,d.pdf,0,F.x1,color,2.5);}
+  else curve(ctx,F,d.pdf,color,2.5);
+}
+
+/* ---------- 10 Función de masa: suma de dados ---------- */
+(function(){
+  let k=2;const K=$('#pm-k');
+  function pmf(n){let p=[1];for(let i=0;i<n;i++){const q=new Array(p.length+6).fill(0);p.forEach((v,s)=>{for(let f=1;f<=6;f++)q[s+f]+=v/6;});p=q;}return p;}
+  const draw=canvasWidget($('#pm-cv'),wide,(ctx,w,h)=>{
+    const p=pmf(k),sel=+K.value,mx=Math.max(...p);
+    const F=frame(ctx,w,h,{x0:k-.8,x1:6*k+.8,y0:0,y1:mx*1.2,sx:k>3?5:1});
+    const bw=Math.min(.8,.8);
+    for(let s=k;s<=6*k;s++){const x0=F.X(s-bw/2),x1=F.X(s+bw/2);ctx.fillStyle=s===sel?tok('--warm'):s<sel?tok('--accent'):tok('--accent-soft');ctx.fillRect(x0,F.Y(p[s]),x1-x0,F.Y(0)-F.Y(p[s]));}
+    let cum=0;for(let s=k;s<=sel;s++)cum+=p[s];
+    const ways=Math.round(p[sel]*Math.pow(6,k));
+    $('#pm-k-o').textContent=sel;
+    $('#pm-out').innerHTML=`<span class="big">P(X = ${sel}) = ${ways} / ${Math.pow(6,k)} = ${fmt(p[sel],4)}</span><span>P(X ≤ ${sel}) = ${fmt(cum,4)}: la suma de las barras hasta ${sel} (en azul fuerte). Esa suma acumulada es la función de distribución en versión discreta.</span><span>Suma de todas las barras = ${fmt(p.reduce((a,b)=>a+b,0),4)}</span>`;
+  });
+  function setK(n){k=n;K.min=n;K.max=6*n;K.value=Math.round(3.5*n);$('#pm-btns').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.k===n));draw();}
+  $('#pm-btns').addEventListener('click',e=>{const n=e.target.dataset&&+e.target.dataset.k;if(n)setK(n);});
+  K.addEventListener('input',draw);setK(2);
+})();
+
+/* ---------- 10 Del histograma a la densidad ---------- */
+(function(){
+  let cur=0;const pool={},btns=$('#hs-btns'),Nn=$('#hs-n'),Bn=$('#hs-b');
+  const get=i=>pool[i]||(pool[i]=Array.from({length:100000},DIST[i].draw));
+  DIST.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.name;b.setAttribute('aria-pressed',i===0);b.onclick=()=>{cur=i;btns.querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-pressed',j===i));draw();};btns.appendChild(b);});
+  const draw=canvasWidget($('#hs-cv'),wide,(ctx,w,h)=>{
+    const d=DIST[cur],n=Math.round(Math.pow(10,+Nn.value)),nb=+Bn.value,s=get(cur),bw=(d.hi-d.lo)/nb,cnt=new Array(nb).fill(0);
+    for(let i=0;i<n;i++){const j=Math.floor((s[i]-d.lo)/bw);if(j>=0&&j<nb)cnt[j]++;}
+    $('#hs-n-o').textContent=n.toLocaleString('es');$('#hs-b-o').textContent=nb;
+    const F=frame(ctx,w,h,d.v);F.clip();
+    cnt.forEach((c,j)=>{const hgt=c/(n*bw),x0=F.X(d.lo+j*bw),x1=F.X(d.lo+(j+1)*bw);ctx.globalAlpha=.45;ctx.fillStyle=tok('--accent');ctx.fillRect(x0,F.Y(hgt),x1-x0,F.Y(0)-F.Y(hgt));ctx.globalAlpha=1;ctx.strokeStyle=tok('--card');ctx.lineWidth=1;ctx.strokeRect(x0,F.Y(hgt),x1-x0,F.Y(0)-F.Y(hgt));});
+    ctx.restore();drawPdf(ctx,F,d,tok('--warm'));
+    const j=cnt.indexOf(Math.max(...cnt)),c=cnt[j];
+    $('#hs-out').innerHTML=`<span>Ancho de cada barra = ${fmt(bw,3)}. La barra más alta tiene ${c} de ${n.toLocaleString('es')} datos.</span><span class="big">altura = (${c} / ${n}) / ${fmt(bw,3)} = ${fmt(c/(n*bw),3)}</span><span>La curva naranja es la densidad real. Con pocos datos el histograma es ruidoso; con muchos datos y barras angostas, se pega a la curva.</span>`;
+  });
+  [Nn,Bn].forEach(el=>el.addEventListener('input',draw));
+  $('#hs-new').onclick=()=>{delete pool[cur];draw();};
+})();
+
+/* ---------- 10 Densidad y distribución ---------- */
+(function(){
+  let cur=0;const X=$('#cd-x'),btns=$('#cd-btns');
+  DIST.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.name;b.setAttribute('aria-pressed',i===0);b.onclick=()=>set(i);btns.appendChild(b);});
+  const c1=canvasWidget($('#cd-cv1'),.8,(ctx,w,h)=>{
+    const d=DIST[cur],x=+X.value,F=frame(ctx,w,h,d.v);
+    F.clip();ctx.fillStyle=tok('--accent');ctx.globalAlpha=.35;ctx.beginPath();ctx.moveTo(F.X(F.x0),F.Y(0));
+    for(let i=0;i<=300;i++){const t=F.x0+(x-F.x0)*i/300;ctx.lineTo(F.X(t),F.Y(d.pdf(t)));}
+    ctx.lineTo(F.X(x),F.Y(0));ctx.closePath();ctx.fill();ctx.globalAlpha=1;
+    ctx.strokeStyle=tok('--warm');ctx.setLineDash([4,4]);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(F.X(x),F.Y(F.y0));ctx.lineTo(F.X(x),F.Y(F.y1));ctx.stroke();ctx.setLineDash([]);ctx.restore();
+    drawPdf(ctx,F,d,tok('--accent'));
+  });
+  const c2=canvasWidget($('#cd-cv2'),.8,(ctx,w,h)=>{
+    const d=DIST[cur],x=+X.value,F=frame(ctx,w,h,{x0:d.v.x0,x1:d.v.x1,y0:-.05,y1:1.15,sx:d.v.sx,sy:.25});
+    curve(ctx,F,d.cdf,tok('--accent'),2.5);
+    const y=d.cdf(x);F.clip();ctx.strokeStyle=tok('--warm');ctx.setLineDash([4,4]);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(F.X(x),F.Y(0));ctx.lineTo(F.X(x),F.Y(y));ctx.lineTo(F.X(F.x0),F.Y(y));ctx.stroke();ctx.setLineDash([]);
+    dot(ctx,F.X(x),F.Y(y),tok('--warm'),6);ctx.restore();
+  });
+  function out(){
+    const d=DIST[cur],x=+X.value,F=d.cdf(x),f=d.pdf(x);
+    $('#cd-x-o').textContent=short(x);
+    $('#cd-out').innerHTML=`<span class="big">F(${short(x)}) = P(X ≤ ${short(x)}) = área sombreada = ${fmt(F,4)} (${fmt(F*100,1)}%)</span><span>f(${short(x)}) = ${fmt(f,4)}: es la altura de la densidad y, a la vez, la pendiente de F en ese punto.</span><span>P(X &gt; ${short(x)}) = 1 − F(${short(x)}) = ${fmt(1-F,4)}</span>`;
+    c1();c2();
+  }
+  function set(i){cur=i;const r=DIST[i].x;X.min=r[0];X.max=r[1];X.step=r[2];X.value=r[3];btns.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));out();}
+  X.addEventListener('input',out);set(0);
+})();
+
+/* ---------- 10 Normal: probabilidad como área ---------- */
+(function(){
+  const ids=['mu','sd','a','b'];
+  const draw=canvasWidget($('#nd-cv'),wide,(ctx,w,h)=>{
+    const mu=num('#nd-mu'),sd=num('#nd-sd');let a=num('#nd-a'),b=num('#nd-b');
+    ids.forEach(k=>$('#nd-'+k+'-o').textContent=short(num('#nd-'+k)));
+    if(a>b)[a,b]=[b,a];
+    const pdf=x=>Math.exp(-.5*((x-mu)/sd)**2)/(sd*Math.sqrt(2*Math.PI));
+    const F=frame(ctx,w,h,{x0:-8,x1:8,y0:0,y1:1.1,sy:.2});
+    F.clip();ctx.fillStyle=tok('--accent-soft');ctx.beginPath();ctx.moveTo(F.X(a),F.Y(0));
+    for(let i=0;i<=200;i++){const x=a+(b-a)*i/200;ctx.lineTo(F.X(x),F.Y(pdf(x)));}
+    ctx.lineTo(F.X(b),F.Y(0));ctx.closePath();ctx.fill();
+    ctx.strokeStyle=tok('--warm');ctx.setLineDash([4,4]);ctx.lineWidth=1.2;[a,b].forEach(x=>{ctx.beginPath();ctx.moveTo(F.X(x),F.Y(0));ctx.lineTo(F.X(x),F.Y(F.y1));ctx.stroke();});ctx.setLineDash([]);ctx.restore();
+    curve(ctx,F,pdf,tok('--accent'),3);
+    const n=400,d=(b-a)/n;let P=0;for(let i=0;i<n;i++)P+=pdf(a+(i+.5)*d)*d;
+    const Fn=x=>.5*(1+erf((x-mu)/(sd*Math.SQRT2))),Pe=Fn(b)-Fn(a);
+    const cx=Math.max(F.x0+1,Math.min(F.x1-1,(a+b)/2));
+    if(b-a>.3)label(ctx,fmt(P*100,1)+'%',F.X(cx),F.Y(Math.min(pdf(cx)*.4,1))-2,tok('--accent'),'center');
+    $('#nd-out').innerHTML=`<span class="big">P(${short(a)} &lt; X &lt; ${short(b)}) ≈ ${fmt(P*100,2)}%</span><span>Suma de Riemann (400 tiras): ${fmt(P,5)} · F(b) − F(a): ${fmt(Pe,5)}</span><span>En unidades z: de ${fmt((a-mu)/sd,2)} a ${fmt((b-mu)/sd,2)} desviaciones respecto de la media</span>`;
+  });
+  ids.forEach(k=>$('#nd-'+k).addEventListener('input',draw));
+  [1,2,3].forEach(k=>$('#nd-'+k+'s').onclick=()=>{const mu=num('#nd-mu'),sd=num('#nd-sd');$('#nd-a').value=(mu-k*sd).toFixed(1);$('#nd-b').value=(mu+k*sd).toFixed(1);draw();});
+})();
+})();
+</script>
+</body>
+</html>

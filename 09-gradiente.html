@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Descenso del gradiente · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="gradiente">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 09 DE 11</span><h1>Descenso del gradiente: bajar la montaña a ciegas</h1></header>
+<section>
+  
+  <div class="prose">
+    <p>Imagina que estás en una montaña con niebla y quieres llegar al valle. No ves nada, pero sientes la inclinación bajo tus pies. Das un paso cuesta abajo, vuelves a sentir y repites. Eso es entrenar un modelo.</p>
+    <p>La montaña es la <b>función de pérdida</b> <var>L</var>: mide qué tan mal predice el modelo. La inclinación es la derivada. El <b>gradiente</b> ∇<var>L</var> junta todas las derivadas parciales y apunta cuesta arriba, así que caminamos en sentido contrario:</p>
+  </div>
+  <div class="eq"><var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var><small>η = tasa de aprendizaje (tamaño del paso)</small></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Entrena un peso</h3></div>
+    <div class="btns" role="group" aria-label="Elegir función de pérdida"><button id="gd-l1" aria-pressed="true">Cuenco simple</button><button id="gd-l2" aria-pressed="false">Con dos valles</button></div>
+    <canvas id="gd-cv" role="img" aria-label="Función de pérdida con la trayectoria del descenso del gradiente"></canvas>
+    <div class="ctls">
+      <label class="ctl">Tasa de aprendizaje η<output id="gd-eta-o"></output><input type="range" id="gd-eta" min="0.05" max="2.2" step="0.05" value="0.3"></label>
+      <label class="ctl">Peso inicial <var>w</var>₀<output id="gd-w0-o"></output><input type="range" id="gd-w0" min="-2.5" max="6.5" step="0.1" value="-2"></label>
+    </div>
+    <div class="btns"><button class="primary" id="gd-step">Dar un paso</button><button id="gd-run">Entrenar 30 pasos</button><button id="gd-reset">Reiniciar</button></div>
+    <div class="readout" id="gd-out"></div>
+    <p class="hint">Experimenta: en el cuenco, η = 0.1 llega lento, η = 1.0 llega en un solo paso, η = 1.9 rebota y η = 2.1 se escapa. En los dos valles, empieza en <var>w</var>₀ = 3 y quedarás atrapado en el valle menos profundo (un mínimo local).</p>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Todo modelo entrenable (regresión lineal, logística, redes neuronales, transformers) aprende así. Una red grande tiene millones de pesos <var>w</var>, pero la regla es la misma para cada uno. Variantes como SGD, Momentum y Adam son formas más inteligentes de elegir el paso.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Si w = 4, la derivada de la pérdida es 2 y η = 0.1, ¿cuál es el nuevo w?</summary><p>4 − 0.1 · 2 = 3.8</p></details>
+    <details><summary>¿Qué pasa si la tasa de aprendizaje es demasiado grande?</summary><p>Los pasos se pasan del mínimo, rebotan de un lado al otro y la pérdida puede crecer sin control (divergencia).</p></details>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=IHZwWFHWa-w" target="_blank" rel="noopener">Gradient descent, how neural networks learn (Deep learning, cap. 2)</a><span>El descenso del gradiente en una red real de reconocimiento de dígitos.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=gradient%20descent" target="_blank" rel="noopener">StatQuest · Gradient Descent, paso a paso <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=descenso%20del%20gradiente" target="_blank" rel="noopener">Dot CSV · descenso del gradiente</a>
+  </div>
+  
+</section>
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const L={
+    l1:{f:w=>.5*(w-2)*(w-2)+.5,g:w=>w-2,v:{x0:-3,x1:7,y0:-1,y1:14},w0:[-2.5,6.5,-2],tex:'L(w) = 0.5·(w − 2)² + 0.5'},
+    l2:{f:w=>.05*w**4-.5*w*w+.3*w+2,g:w=>.2*w**3-w+.3,v:{x0:-4.2,x1:4.2,y0:-.5,y1:7},w0:[-4,4,3],tex:'L(w) = 0.05w⁴ − 0.5w² + 0.3w + 2'}
+  };
+  let cur='l1',path=[],timer=null,div=false;
+  const eta=$('#gd-eta'),w0=$('#gd-w0');
+  function reset(){stop();path=[+w0.value];div=false;draw();}
+  function step(){if(div)return;const o=L[cur],w=path[path.length-1],nw=w-(+eta.value)*o.g(w);path.push(nw);if(!isFinite(nw)||Math.abs(nw)>60){div=true;stop();}draw();}
+  function stop(){if(timer){clearInterval(timer);timer=null;}}
+  function run(){stop();let n=0;timer=setInterval(()=>{step();n++;const w=path[path.length-1];if(n>=30||div||Math.abs(L[cur].g(w))<1e-4)stop();},window.matchMedia('(prefers-reduced-motion: reduce)').matches?40:220);}
+  const draw=canvasWidget($('#gd-cv'),wide,(ctx,w,h)=>{
+    const o=L[cur];$('#gd-eta-o').textContent=short(+eta.value);$('#gd-w0-o').textContent=short(+w0.value);
+    const F=frame(ctx,w,h,o.v);curve(ctx,F,o.f,tok('--ink'),2.5);
+    F.clip();ctx.strokeStyle=tok('--warm');ctx.lineWidth=1.5;ctx.setLineDash([4,4]);ctx.beginPath();
+    path.forEach((p,i)=>{const px=F.X(p),py=F.Y(o.f(p));i?ctx.lineTo(px,py):ctx.moveTo(px,py);});ctx.stroke();ctx.setLineDash([]);
+    path.forEach((p,i)=>{if(i<path.length-1)dot(ctx,F.X(p),F.Y(o.f(p)),tok('--warm'),3.5);});
+    const last=path[path.length-1];if(isFinite(last))dot(ctx,F.X(last),F.Y(o.f(last)),tok('--accent'),8);ctx.restore();
+    const g=o.g(last);
+    $('#gd-out').innerHTML=`<span>${o.tex}</span><span class="big">paso ${path.length-1} · w = ${isFinite(last)?fmt(last,3):'∞'} · L(w) = ${isFinite(last)?fmt(o.f(last),3):'∞'}</span><span>pendiente ∂L/∂w = ${isFinite(g)?fmt(g,3):'∞'} → próximo w = ${isFinite(last)?fmt(last-(+eta.value)*g,3):'—'}</span>`+
+      (div?'<span class="warn">¡Divergió! La tasa de aprendizaje es demasiado grande: cada paso salta más lejos del mínimo.</span>':Math.abs(g)<1e-3&&path.length>1?'<span class="ok">Llegó a un mínimo: la pendiente es casi 0.</span>':'');
+  });
+  function setLoss(k){cur=k;$('#gd-l1').setAttribute('aria-pressed',k==='l1');$('#gd-l2').setAttribute('aria-pressed',k==='l2');const o=L[k];w0.min=o.w0[0];w0.max=o.w0[1];w0.value=o.w0[2];eta.value=k==='l1'?.3:.1;reset();}
+  $('#gd-l1').onclick=()=>setLoss('l1');$('#gd-l2').onclick=()=>setLoss('l2');
+  $('#gd-step').onclick=step;$('#gd-run').onclick=run;$('#gd-reset').onclick=reset;
+  w0.addEventListener('input',reset);eta.addEventListener('input',()=>{reset();});
+  reset();
+})();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aritmética y razones · Mate para ML</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Repaso visual e interactivo de matemáticas para Machine Learning, IA y redes neuronales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap" data-page="aritmetica">
+<header class="topbar"><a class="brand" href="index.html">Mate para <b>ML</b></a><span class="eyebrow">Repaso de matemáticas para el curso de Machine Learning</span></header>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
+<main>
+<header class="page-head"><span class="num">MÓDULO 01 DE 11</span><h1>Aritmética, razones y proporciones</h1><p class="lede">Las cuentas de base, la razón entre dos magnitudes, la razón entre dos funciones y cómo las razones miden a un modelo.</p></header>
+<section>
+  <h2>Las cuentas de base</h2>
+  <div class="prose">
+    <p>Un modelo de Machine Learning es, en el fondo, una calculadora enorme que hace millones de sumas y multiplicaciones. Antes de hablar de redes conviene tener fresca la aritmética con la que trabaja.</p>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Orden de operaciones</h3><span class="ex">2 + 3 × 4² = 2 + 3 × 16 = 50</span><p>Paréntesis, potencias, multiplicación y división, y al final suma y resta.</p></div>
+    <div class="fact"><h3>Potencias y raíces</h3><span class="ex">2³ = 8 · √16 = 4 · x⁻¹ = 1/x</span><p>La distancia entre dos puntos es la raíz de una suma de cuadrados.</p></div>
+    <div class="fact"><h3>Notación científica</h3><span class="ex">0.001 = 1 × 10⁻³ = 1e-3</span><p>Así verás la tasa de aprendizaje en el código: <code>lr = 1e-3</code>.</p></div>
+    <div class="fact"><h3>Signos</h3><span class="ex">(−3) × (−2) = 6 · (−3) × 2 = −6</span><p>Los pesos de una red pueden ser negativos: en vez de sumar influencia, la restan.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Una razón, tres formas de escribirla</h2>
+  <div class="prose">
+    <p>Una razón compara dos cantidades: «3 de cada 4». La fracción <span class="mono">3/4</span>, el decimal <span class="mono">0.75</span> y el porcentaje <span class="mono">75%</span> son <span class="hl">la misma idea escrita de tres maneras</span>. Las probabilidades y casi todas las métricas de un modelo son razones.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Fracción, decimal y porcentaje</h3></div>
+    <div class="fbar" id="frac-bar" aria-hidden="true"></div>
+    <div class="trio"><div><em>Fracción</em><span id="frac-f">3/4</span></div><div><em>Decimal</em><span id="frac-d">0.75</span></div><div><em>Porcentaje</em><span id="frac-p">75%</span></div></div>
+    <div class="ctls">
+      <label class="ctl">Partes tomadas (numerador)<output id="frac-n-o">3</output><input type="range" id="frac-n" min="0" max="4" step="1" value="3"></label>
+      <label class="ctl">Partes totales (denominador)<output id="frac-dn-o">4</output><input type="range" id="frac-dn" min="1" max="16" step="1" value="4"></label>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>La razón entre dos magnitudes</h2>
+  <div class="prose">
+    <p>Una razón <var>r</var> = <var>A</var> / <var>B</var> dice <b>cuántas unidades de <var>A</var> hay por cada unidad de <var>B</var></b>. Ejemplo: el precio de un apartamento (<var>A</var>, en miles de dólares) entre su área (<var>B</var>, en m²) da el precio por metro cuadrado.</p>
+    <p>Mueve las dos magnitudes o usa los botones. Observa tres comportamientos: qué pasa si solo cambia <var>A</var>, si solo cambia <var>B</var>, y si cambian las dos en la misma proporción.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Precio por metro cuadrado</h3></div>
+    <div class="ctls">
+      <label class="ctl"><span><var>A</var> · precio (miles de $)</span><output id="rm-a-o"></output><input type="range" id="rm-a" min="10" max="300" step="1" value="120"></label>
+      <label class="ctl"><span><var>B</var> · área (m²)</span><output id="rm-b-o"></output><input type="range" id="rm-b" min="2.5" max="200" step="0.5" value="80"></label>
+    </div>
+    <div class="btns"><button id="rm-2a">Duplicar A</button><button id="rm-2b">Duplicar B</button><button id="rm-2ab">Duplicar ambas</button><button id="rm-hb">B a la mitad</button><button id="rm-reset">Reiniciar</button></div>
+    <div class="twin">
+      <figure class="fig"><figcaption class="cap">Cada apartamento es un punto (B, A). La razón es la pendiente de la recta que sale del origen</figcaption><canvas id="rm-cv1" role="img" aria-label="Plano con el apartamento como punto y la recta de su razón"></canvas></figure>
+      <figure class="fig"><figcaption class="cap">Con A fija: cómo cambia la razón A / B al mover B</figcaption><canvas id="rm-cv2" role="img" aria-label="Curva de la razón A entre B en función de B"></canvas></figure>
+    </div>
+    <div class="readout" id="rm-out"></div>
+  </div>
+  <div class="cards">
+    <div class="fact"><h3>Proporción directa</h3><span class="ex">A × 2 → r × 2</span><p>Con <var>B</var> fija, la razón crece al mismo ritmo que <var>A</var>: es una recta.</p></div>
+    <div class="fact"><h3>Proporción inversa</h3><span class="ex">B × 2 → r ÷ 2</span><p>Con <var>A</var> fija, si <var>B</var> crece la razón baja. Es una curva (hipérbola), no una recta.</p></div>
+    <div class="fact"><h3>Magnitudes proporcionales</h3><span class="ex">A × k y B × k → r igual</span><p>Si las dos cambian en la misma proporción, la razón no se mueve: todos esos puntos están sobre la misma recta.</p></div>
+    <div class="fact"><h3>Cuidado con el denominador</h3><span class="ex">B → 0 ⇒ r → ∞</span><p>Cuando <var>B</var> se acerca a 0 la razón se dispara. Por eso en el código se escribe <code>a / (b + 1e-8)</code>.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>La razón entre dos funciones</h2>
+  <div class="prose">
+    <p>Ahora <var>A</var> y <var>B</var> ya no son números fijos: son dos funciones <var>f</var>(<var>x</var>) y <var>g</var>(<var>x</var>) que cambian con <var>x</var>. Su razón <var>f</var>(<var>x</var>) / <var>g</var>(<var>x</var>) también es una función, y responde una pregunta muy útil: <span class="hl">¿cuál de las dos crece más rápido?</span></p>
+    <p>Si la razón se dispara, gana <var>f</var>. Si se acerca a 0, gana <var>g</var>. Si se estabiliza en un número, crecen al mismo ritmo. Elige un par y mueve <var>x</var>.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>¿Quién crece más rápido?</h3></div>
+    <div class="btns" id="rf-btns" role="group" aria-label="Elegir par de funciones"></div>
+    <div class="twin">
+      <figure class="fig"><figcaption class="cap"><span class="fa">f(x)</span> y <span class="fw">g(x)</span> por separado</figcaption><canvas id="rf-cv1" role="img" aria-label="Las dos funciones f y g"></canvas></figure>
+      <figure class="fig"><figcaption class="cap">La razón f(x) / g(x)</figcaption><canvas id="rf-cv2" role="img" aria-label="La razón entre f y g"></canvas></figure>
+    </div>
+    <div class="ctls"><label class="ctl"><span id="rf-x-l">x</span><output id="rf-x-o"></output><input type="range" id="rf-x"></label></div>
+    <div class="readout" id="rf-out"></div>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Comparar quién crece más rápido es lo que hace la notación O(<var>n</var>) al medir algoritmos: O(<var>n</var>²) frente a O(<var>n</var>). Los momios <var>p</var> / (1 − <var>p</var>) y su logaritmo, el <i>logit</i>, son la base de la regresión logística. Y softmax compara exponenciales: <var>e</var><sup><var>a</var></sup> / <var>e</var><sup><var>b</var></sup> = <var>e</var><sup><var>a</var> − <var>b</var></sup>.</p></div>
+</section>
+
+<section>
+  <h2>Proporciones para poner todo en la misma escala</h2>
+  <div class="prose">
+    <p>Si una variable va de 50 a 200 (metros cuadrados) y otra de 1 a 4 (habitaciones), el modelo creerá que la primera importa más solo porque sus números son más grandes. Por eso se <b>normalizan</b>: cada valor se convierte en la proporción del camino recorrido entre el mínimo y el máximo.</p>
+  </div>
+  <div class="eq"><var>x</var>′ = (<var>x</var> − mín) / (máx − mín)<small>Resultado siempre entre 0 y 1</small></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Casa</th><th class="num">m²</th><th class="num">m² normalizado</th><th class="num">Habitaciones</th><th class="num">Hab. normalizado</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td class="num">50</td><td class="num">0.000</td><td class="num">1</td><td class="num">0.000</td></tr>
+      <tr><td>B</td><td class="num">80</td><td class="num">0.200</td><td class="num">2</td><td class="num">0.333</td></tr>
+      <tr><td>C</td><td class="num">120</td><td class="num">0.467</td><td class="num">3</td><td class="num">0.667</td></tr>
+      <tr><td>D</td><td class="num">200</td><td class="num">1.000</td><td class="num">4</td><td class="num">1.000</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Las métricas de un modelo son razones</h2>
+  <div class="prose">
+    <p>Imagina un filtro de spam que revisó 1000 correos. La <b>matriz de confusión</b> cuenta aciertos y errores. Cambia los números y mira cómo se mueven las métricas.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Matriz de confusión</h3></div>
+    <div class="split">
+      <div class="cm">
+        <span></span><span class="h">Predijo: spam</span><span class="h">Predijo: no spam</span>
+        <span class="rh">Era spam</span>
+        <label class="t">Verdadero positivo<input type="number" id="cm-vp" min="0" value="40"></label>
+        <label class="f">Falso negativo<input type="number" id="cm-fn" min="0" value="5"></label>
+        <span class="rh">No era spam</span>
+        <label class="f">Falso positivo<input type="number" id="cm-fp" min="0" value="10"></label>
+        <label class="t">Verdadero negativo<input type="number" id="cm-vn" min="0" value="945"></label>
+      </div>
+      <div class="meters">
+        <div class="meter"><span>Exactitud</span><span class="track"><i id="cm-acc-b"></i></span><output id="cm-acc"></output></div>
+        <div class="meter"><span>Precisión</span><span class="track"><i id="cm-pre-b"></i></span><output id="cm-pre"></output></div>
+        <div class="meter"><span>Sensibilidad</span><span class="track"><i id="cm-rec-b"></i></span><output id="cm-rec"></output></div>
+        <div class="meter"><span>F1</span><span class="track"><i id="cm-f1-b"></i></span><output id="cm-f1"></output></div>
+      </div>
+    </div>
+    <div class="readout" id="cm-note"></div>
+    <p class="hint">Exactitud = aciertos / total. Precisión = VP / (VP + FP): de lo que marqué como spam, ¿cuánto lo era? Sensibilidad = VP / (VP + FN): del spam real, ¿cuánto atrapé?</p>
+  </div>
+</section>
+
+<section>
+  <h2>Repaso del módulo</h2>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Normalizar datos antes de entrenar, crear variables nuevas como razones (precio por m², clics por visita), leer métricas (exactitud, precisión, sensibilidad), interpretar probabilidades y momios, y comparar el costo de algoritmos.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Un modelo acierta 45 de 60 casos. ¿Cuál es su exactitud?</summary><p>45 / 60 = 0.75 = 75%</p></details>
+    <details><summary>Si A se triplica y B se duplica, ¿qué le pasa a la razón A / B?</summary><p>Se multiplica por 3 / 2 = 1.5</p></details>
+    <details><summary>¿Hacia qué valor tiende (3x + 5) / (x + 2) cuando x crece mucho?</summary><p>Hacia 3: las dos crecen en línea recta y la razón queda en el cociente de sus pendientes, 3 / 1.</p></details>
+    <details><summary>Normaliza el valor 140 si el mínimo es 100 y el máximo 200.</summary><p>(140 − 100) / (200 − 100) = 40 / 100 = 0.4</p></details>
+  </div>
+  <div class="vids"><span>Para verlo</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=fracciones" target="_blank" rel="noopener">julioprofe · fracciones</a>
+    <a class="vid" href="https://www.youtube.com/@math2me/search?query=razones%20y%20proporciones" target="_blank" rel="noopener">math2me · razones y proporciones</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=proporcionalidad%20inversa" target="_blank" rel="noopener">julioprofe · proporcionalidad inversa</a>
+    <a class="vid" href="https://www.youtube.com/results?search_query=khan+academy+espa%C3%B1ol+porcentajes" target="_blank" rel="noopener">Khan Academy Español · porcentajes</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=sensitivity%20and%20specificity" target="_blank" rel="noopener">StatQuest · sensibilidad y especificidad <small>EN</small></a>
+  </div>
+</section>
+
+<label class="got"><input type="checkbox" id="got"> Lo tengo claro</label>
+<nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
+</main>
+</div>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+</div>
+<script src="assets/lab.js"></script>
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const n=$('#frac-n'),d=$('#frac-dn'),bar=$('#frac-bar');
+  function up(){
+    const D=+d.value;n.max=D;if(+n.value>D)n.value=D;const N=+n.value;
+    $('#frac-n-o').textContent=N;$('#frac-dn-o').textContent=D;
+    bar.innerHTML='';for(let i=0;i<D;i++){const s=document.createElement('span');if(i<N)s.className='on';bar.appendChild(s);}
+    $('#frac-f').textContent=N+'/'+D;$('#frac-d').textContent=short(Math.round(N/D*1000)/1000);
+    $('#frac-p').textContent=short(Math.round(N/D*1000)/10)+'%';
+  }
+  n.addEventListener('input',up);d.addEventListener('input',up);up();
+})();
+
+
+(function(){
+  const ids=['vp','fn','fp','vn'];
+  function up(){
+    const [vp,fn,fp,vn]=ids.map(k=>Math.max(0,parseFloat($('#cm-'+k).value)||0));
+    const tot=vp+fn+fp+vn;
+    const acc=tot?(vp+vn)/tot:0,pre=(vp+fp)?vp/(vp+fp):0,rec=(vp+fn)?vp/(vp+fn):0,f1=(pre+rec)?2*pre*rec/(pre+rec):0;
+    [['acc',acc],['pre',pre],['rec',rec],['f1',f1]].forEach(([k,v])=>{$('#cm-'+k).textContent=fmt(v*100,1)+'%';$('#cm-'+k+'-b').style.width=(v*100)+'%';});
+    const lazy=tot?(fp+vn)/tot:0;
+    $('#cm-note').innerHTML='Total revisados: '+tot+'. Spam real: '+(vp+fn)+'.<br>Un modelo «perezoso» que siempre dice «no es spam» tendría exactitud de <span class="warn">'+fmt(lazy*100,1)+'%</span> sin atrapar ni un solo spam. Por eso la exactitud sola engaña cuando una clase es rara.';
+  }
+  ids.forEach(k=>$('#cm-'+k).addEventListener('input',up));up();
+})();
+
+/* ---------- 01 Razón entre dos magnitudes ---------- */
+(function(){
+  const A=$('#rm-a'),B=$('#rm-b');
+  let msg='Mueve los controles: con B fija, la razón sigue a A; con A fija, se mueve al revés que B.',prev=null;
+  const R=()=>(+A.value)/(+B.value);
+  const c1=canvasWidget($('#rm-cv1'),.8,(ctx,w,h)=>{
+    const a=+A.value,b=+B.value,r=a/b;
+    const F=frame(ctx,w,h,{x0:0,x1:210,y0:0,y1:320,sx:50,sy:50});
+    F.clip();
+    [.5,1,2,4].forEach(k=>{ctx.strokeStyle=tok('--line');ctx.lineWidth=1;ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(F.X(0),F.Y(0));ctx.lineTo(F.X(400),F.Y(400*k));ctx.stroke();});
+    ctx.setLineDash([]);ctx.font='11px '+tok('--f-mono');ctx.fillStyle=tok('--muted');ctx.textAlign='right';ctx.textBaseline='bottom';
+    [[.5,200],[1,200],[2,150],[4,75]].forEach(([k,x])=>ctx.fillText('r = '+k,F.X(x)-4,F.Y(Math.min(x*k,310))-3));
+    ctx.strokeStyle=tok('--accent');ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(F.X(0),F.Y(0));ctx.lineTo(F.X(400),F.Y(400*r));ctx.stroke();
+    if(prev&&(prev[0]!==a||prev[1]!==b))ring(ctx,F.X(prev[1]),F.Y(prev[0]),tok('--muted'),tok('--card'));
+    dot(ctx,F.X(b),F.Y(a),tok('--accent'),7);ctx.restore();
+    label(ctx,'(B, A) = ('+short(b)+', '+short(a)+')',Math.min(F.X(b)+10,w-150),Math.max(F.Y(a)-14,16),tok('--accent'));
+  });
+  const c2=canvasWidget($('#rm-cv2'),.8,(ctx,w,h)=>{
+    const a=+A.value,b=+B.value;
+    const F=frame(ctx,w,h,{x0:0,x1:210,y0:0,y1:10,sx:50,sy:2});
+    seg(ctx,F,x=>a/x,1,210,tok('--warm'),2.5,800);
+    F.clip();dot(ctx,F.X(b),F.Y(a/b),tok('--warm'),7);ctx.restore();
+    label(ctx,'r = '+fmt(a/b,3),Math.min(F.X(b)+10,w-90),Math.max(F.Y(Math.min(a/b,9.6))-12,16),tok('--warm'));
+  });
+  function out(){
+    const a=+A.value,b=+B.value,r=a/b;
+    $('#rm-a-o').textContent=short(a);$('#rm-b-o').textContent=short(b);
+    $('#rm-out').innerHTML=`<span class="big">r = A / B = ${short(a)} / ${short(b)} = ${fmt(r,3)} miles de $ por m² (${Math.round(r*1000).toLocaleString('es')} $/m²)</span><span>${msg}</span>`;
+    c1();c2();
+  }
+  function act(kind){
+    const a0=+A.value,b0=+B.value,r0=a0/b0;
+    if(kind==='reset'){A.value=120;B.value=80;prev=null;msg='Valores iniciales.';out();return;}
+    const t={'2a':[a0*2,b0],'2b':[a0,b0*2],'2ab':[a0*2,b0*2],'hb':[a0,b0/2]}[kind];
+    if(t[0]>+A.max||t[1]>+B.max||t[1]<+B.min){msg='<span class="warn">Ese cambio se sale del rango de los controles. Prueba con valores más pequeños o pulsa Reiniciar.</span>';out();return;}
+    prev=[a0,b0];A.value=t[0];B.value=t[1];
+    const r1=R();
+    msg=`La razón pasó de ${fmt(r0,3)} a ${fmt(r1,3)}: se multiplicó por ${fmt(r1/r0,2)}. `+{
+      '2a':'Proporción directa: con B fija, duplicar A duplica la razón. El punto subió y la recta se empinó.',
+      '2b':'Proporción inversa: con A fija, duplicar B divide la razón entre 2. La recta se acostó.',
+      '2ab':'A y B cambiaron en la misma proporción y la razón no se movió: el punto se deslizó sobre la misma recta.',
+      'hb':'B a la mitad duplica la razón. Si B siguiera bajando hacia 0, la razón crecería sin límite.'}[kind];
+    out();
+  }
+  [['#rm-2a','2a'],['#rm-2b','2b'],['#rm-2ab','2ab'],['#rm-hb','hb'],['#rm-reset','reset']].forEach(([id,k])=>$(id).onclick=()=>act(k));
+  [A,B].forEach(el=>el.addEventListener('input',()=>{prev=null;msg='Mueve los controles: con B fija, la razón sigue a A; con A fija, se mueve al revés que B.';out();}));
+  out();
+})();
+
+/* ---------- 01 Razón entre dos funciones ---------- */
+(function(){
+  const PR=[
+    {name:'x² / x',ft:'x²',gt:'x',f:x=>x*x,g:x=>x,d:[-4,4,.1,2],v1:{x0:-4,x1:4,y0:-4,y1:16},v2:{x0:-4,x1:4,y0:-4,y1:4},hole:[0,0],
+     msg:'La razón es simplemente x: f crece más rápido y la ventaja aumenta al mismo ritmo que x. En x = 0 queda 0 / 0 y no está definida, aunque la curva se acerca a 0. Es un agujero, y lo estudiamos en el módulo de límites.'},
+    {name:'(2x + 1) / (x + 1)',ft:'2x + 1',gt:'x + 1',f:x=>2*x+1,g:x=>x+1,d:[0,20,.1,3],v1:{x0:0,x1:20,y0:0,y1:42},v2:{x0:0,x1:20,y0:0,y1:2.5,sy:.5},
+     msg:'Las dos son rectas. Al principio la razón cambia, pero a medida que x crece se estabiliza en 2, el cociente de sus pendientes. Crecen al mismo ritmo: ninguna le gana a la otra.'},
+    {name:'eˣ / x²',ft:'eˣ',gt:'x²',f:Math.exp,g:x=>x*x,d:[.5,10,.1,1.5],v1:{x0:0,x1:10,y0:0,y1:120,sy:20},v2:{x0:0,x1:10,y0:0,y1:60,sy:10},
+     msg:'Cerca de x = 2 la razón es mínima y parece que x² va empatando. Luego la exponencial acelera y la razón crece sin límite: lo exponencial siempre termina ganándole a cualquier potencia de x.'},
+    {name:'ln(x) / x',ft:'ln x',gt:'x',f:Math.log,g:x=>x,d:[.5,30,.1,2.7],v1:{x0:0,x1:30,y0:-2,y1:30,sy:5},v2:{x0:0,x1:30,y0:-1.5,y1:.6,sy:.5},
+     msg:'El logaritmo crece, pero mucho más despacio que x: la razón sube hasta 1/e ≈ 0.37 en x = e y después baja hacia 0. Gana g.'},
+    {name:'sen(x) / x',ft:'sen x',gt:'x',f:Math.sin,g:x=>x,d:[-15,15,.1,3],v1:{x0:-15,x1:15,y0:-4,y1:4},v2:{x0:-15,x1:15,y0:-.4,y1:1.2,sy:.2},hole:[0,1],
+     msg:'Lejos de 0, x crece y el seno solo oscila, así que la razón se apaga hacia 0. En x = 0 las dos valen 0, pero la razón se acerca a 1: un 0 / 0 puede tener un valor bien definido. Esa es la idea de límite.'},
+    {name:'p / (1 − p)',ft:'p',gt:'1 − p',v:'p',f:x=>x,g:x=>1-x,d:[.01,.99,.01,.75],v1:{x0:0,x1:1,y0:0,y1:1.2,sx:.2,sy:.2},v2:{x0:0,x1:1,y0:0,y1:20,sx:.2,sy:4},
+     msg:'Son los momios (odds): con p = 0.75 la razón es 3, «3 a 1». Cuando p se acerca a 1 el denominador se acerca a 0 y los momios se disparan. Su logaritmo, ln(p / (1 − p)), es el logit, la función inversa de la sigmoide.'}
+  ];
+  let cur=0;const X=$('#rf-x'),btns=$('#rf-btns');
+  PR.forEach((p,i)=>{const b=document.createElement('button');b.textContent=p.name;b.setAttribute('aria-pressed',i===0);b.onclick=()=>set(i);btns.appendChild(b);});
+  const c1=canvasWidget($('#rf-cv1'),.8,(ctx,w,h)=>{
+    const p=PR[cur],x=+X.value,F=frame(ctx,w,h,p.v1);
+    curve(ctx,F,p.g,tok('--warm'),2.5);curve(ctx,F,p.f,tok('--accent'),2.5);
+    F.clip();ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(F.X(x),F.Y(F.y0));ctx.lineTo(F.X(x),F.Y(F.y1));ctx.stroke();ctx.setLineDash([]);
+    dot(ctx,F.X(x),F.Y(p.f(x)),tok('--accent'),6);dot(ctx,F.X(x),F.Y(p.g(x)),tok('--warm'),6);ctx.restore();
+  });
+  const c2=canvasWidget($('#rf-cv2'),.8,(ctx,w,h)=>{
+    const p=PR[cur],x=+X.value,F=frame(ctx,w,h,p.v2),q=t=>p.f(t)/p.g(t);
+    curve(ctx,F,q,tok('--ink'),2.5);
+    if(p.hole)ring(ctx,F.X(p.hole[0]),F.Y(p.hole[1]),tok('--ink'),tok('--card'));
+    const y=q(x);if(isFinite(y)){F.clip();dot(ctx,F.X(x),F.Y(y),tok('--ink'),6);ctx.restore();}
+  });
+  function out(){
+    const p=PR[cur],x=+X.value,v=p.v||'x',fx=p.f(x),gx=p.g(x);
+    $('#rf-x-o').textContent=short(x);$('#rf-x-l').textContent='Mueve '+v;
+    const r=Math.abs(gx)<1e-12?(Math.abs(fx)<1e-12?'0 / 0: no está definida en este punto':'división entre 0'):fmt(fx/gx,4);
+    $('#rf-out').innerHTML=`<span>f(${v}) = ${p.ft} = ${fmt(fx,3)} · g(${v}) = ${p.gt} = ${fmt(gx,3)}</span><span class="big">f / g = ${r}</span><span style="font-family:var(--f-body);font-size:.95rem">${p.msg}</span>`;
+    c1();c2();
+  }
+  function set(i){cur=i;const d=PR[i].d;X.min=d[0];X.max=d[1];X.step=d[2];X.value=d[3];btns.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));out();}
+  X.addEventListener('input',out);set(0);
+})();
+})();
+</script>
+</body>
+</html>
