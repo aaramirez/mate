@@ -94,6 +94,24 @@ function sync(){
   }
   const cb=$('#got');
   if(cb){cb.checked=isDone(page);cb.addEventListener('change',()=>{store.set('mate-ml-'+page,cb.checked?'1':'0');sync();});}
+  // Comandos: una pestaña por sistema operativo (se recuerda) y «Copiar» en cada línea
+  const soDetectado=(()=>{const p=((navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||navigator.userAgent||'').toLowerCase();return /win/.test(p)?'win':/mac|iphone|ipad/.test(p)?'mac':/linux|android|cros|x11/.test(p)?'linux':'win';})();
+  let so=store.get('mate-so')||soDetectado;
+  const cajas=[...document.querySelectorAll('.cmds')];
+  const elegir=caja=>{const tabs=[...caja.querySelectorAll('[role="tab"]')];if(!tabs.length)return;const t=tabs.find(b=>b.dataset.so.split(' ').includes(so))||tabs[0];
+    tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1;document.getElementById(b.getAttribute('aria-controls')).hidden=!on;});};
+  cajas.forEach((caja,k)=>{const tabs=[...caja.querySelectorAll('[role="tab"]')],panels=[...caja.querySelectorAll('[role="tabpanel"]')];
+    tabs.forEach((b,i)=>{b.id='so-'+k+'-'+i;panels[i].id='so-'+k+'-'+i+'-p';b.setAttribute('aria-controls',panels[i].id);panels[i].setAttribute('aria-labelledby',b.id);
+      b.addEventListener('click',()=>{const lista=b.dataset.so.split(' ');if(!lista.includes(so))so=lista[0];store.set('mate-so',so);cajas.forEach(elegir);});
+      b.addEventListener('keydown',ev=>{const d=ev.key==='ArrowRight'?1:ev.key==='ArrowLeft'?-1:0;if(!d)return;ev.preventDefault();const n=tabs[(i+d+tabs.length)%tabs.length];n.click();n.focus();});});
+    elegir(caja);});
+  const aviso=document.createElement('span');aviso.setAttribute('aria-live','polite');aviso.style.cssText='position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';document.body.appendChild(aviso);
+  document.querySelectorAll('.copiar').forEach(b=>{const c=b.parentElement.querySelector('code');if(c)b.setAttribute('aria-label','Copiar: '+c.textContent.slice(0,80));});
+  const copiaVieja=t=>new Promise((ok,mal)=>{const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;opacity:0';document.body.appendChild(a);a.select();let r=false;try{r=document.execCommand('copy');}catch(e){}a.remove();r?ok():mal();});
+  const copiarTexto=t=>(navigator.clipboard&&window.isSecureContext)?navigator.clipboard.writeText(t).catch(()=>copiaVieja(t)):copiaVieja(t);
+  document.addEventListener('click',ev=>{const b=ev.target.closest('.copiar');if(!b)return;const c=b.parentElement.querySelector('code');if(!c)return;
+    copiarTexto(c.textContent).then(()=>{b.textContent='Copiado';b.classList.add('ok');aviso.textContent='Copiado';setTimeout(()=>{b.textContent='Copiar';b.classList.remove('ok');aviso.textContent='';},1500);},
+      ()=>{b.textContent='Selecciónalo y copia';const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r);});});
   sync();
 })();
 

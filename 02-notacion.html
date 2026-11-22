@@ -62,17 +62,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>La Σ y la ∏ son ciclos</h3></div>
     <p class="para">Escribe en Python las mismas sumas y productos de la tabla y confirma los resultados.</p>
     <ol>
-      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
-      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>x = [2, 5, 1]
-sum(x)                                    # 8 = x₁ + x₂ + x₃
-sum(i**2 for i in range(1, 5))            # 30: la pregunta de «Pruébate»
-y = [3, 5]
-y_gorro = [2.5, 6]
-sum((a - b)**2 for a, b in zip(y, y_gorro)) / len(y)   # 0.625: el MSE
-import math
-math.prod([0.5, 0.4, 0.5])                # 0.1 = ∏ pᵢ
-sum(math.log(p) for p in [0.5, 0.4, 0.5]) # -2.302... = Σ ln pᵢ
-math.log(0.1)                             # el mismo número</code></pre></li>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>x = [2, 5, 1]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sum(x)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 8 = x₁ + x₂ + x₃</div><div class="cmd-l"><code>sum(i**2 for i in range(1, 5))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 30: la pregunta de «Pruébate»</div><div class="cmd-l"><code>y = [3, 5]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>y_gorro = [2.5, 6]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sum((a - b)**2 for a, b in zip(y, y_gorro)) / len(y)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.625: el MSE</div><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>math.prod([0.5, 0.4, 0.5])</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.1 = ∏ pᵢ</div><div class="cmd-l"><code>sum(math.log(p) for p in [0.5, 0.4, 0.5])</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># -2.302... = Σ ln pᵢ</div><div class="cmd-l"><code>math.log(0.1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># el mismo número</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> <code>range(1, 5)</code> recorre 1, 2, 3 y 4: el límite de arriba de Σ se incluye y el de <code>range</code> no. Y el logaritmo del producto coincide con la suma de los logaritmos, como en el ejercicio 4.</p>
   </div>

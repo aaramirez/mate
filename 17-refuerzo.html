@@ -127,7 +127,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>REINFORCE con tres botones</h3></div>
     <p class="para">Programa el laboratorio de gradiente de política y mira cómo la probabilidad se concentra en el mejor botón.</p>
     <ol>
-      <li>Guarda este código en un archivo llamado <code>reinforce.py</code>:<pre><code>import math, random
+      <li>Guarda este código en un archivo llamado <code>reinforce.py</code>:<div class="code-copia"><pre><code>import math, random
 
 promedio = {"A": 1.0, "B": 2.0, "C": 1.5}   # el agente no conoce estos números
 botones = list(promedio)
@@ -144,8 +144,8 @@ for intento in range(1, 501):
     for j in range(3):                                   # θ ← θ + α·(G − b)·∇ ln π
         h[j] += alfa * (G - base) * ((1 if j == i else 0) - pi[j])
     if intento in (1, 10, 50, 100, 500):
-        print(intento, {b: round(p, 2) for b, p in zip(botones, pi)})</code></pre></li>
-      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo: <code>py reinforce.py</code> en Windows o <code>python3 reinforce.py</code> en macOS y Linux.</li>
+        print(intento, {b: round(p, 2) for b, p in zip(botones, pi)})</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py reinforce.py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3 reinforce.py</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
       <li>Ejecútalo varias veces. Después cambia <code>alfa</code> a 1.0.</li>
     </ol>
     <p class="obs"><b>Qué observar:</b> las probabilidades empiezan en 1/3 y a los 500 intentos B pasa del 95 %. La línea <code>(1 if j == i else 0) - pi[j]</code> es la derivada de ln π del ejercicio 4. Con α = 1.0 aprende más rápido, pero a veces se apura y se queda con C.</p>

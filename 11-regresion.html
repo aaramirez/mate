@@ -106,7 +106,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>El entrenamiento, paso a paso</h3></div>
     <p class="para">Programa el bucle de cinco pasos del módulo y compáralo con la respuesta exacta.</p>
     <ol>
-      <li>Guarda este código en un archivo llamado <code>regresion.py</code>:<pre><code>from statistics import linear_regression   # Python 3.10 o más reciente
+      <li>Guarda este código en un archivo llamado <code>regresion.py</code>:<div class="code-copia"><pre><code>from statistics import linear_regression   # Python 3.10 o más reciente
 
 x = [1, 2, 3]
 y = [2, 4, 5]
@@ -120,8 +120,8 @@ for paso in range(1, 1001):
     if paso in (1, 10, 100, 1000):
         print(f"paso {paso:4}  MSE = {mse:.4f}  m = {m:.4f}  b = {b:.4f}")
 
-print(linear_regression(x, y))             # la respuesta exacta</code></pre></li>
-      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo: <code>py regresion.py</code> en Windows o <code>python3 regresion.py</code> en macOS y Linux.</li>
+print(linear_regression(x, y))             # la respuesta exacta</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py regresion.py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3 regresion.py</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
       <li>Cambia <code>eta</code> a 0.3 y vuelve a ejecutar.</li>
     </ol>
     <p class="obs"><b>Qué observar:</b> el primer paso lleva <var>m</var> y <var>b</var> a 1.667 y 0.733, como en el ejercicio 4, y en 1000 pasos llegan a 1.5 y 0.667, lo mismo que la fórmula exacta. El MSE se estanca en 0.0556 = 1/18: el fondo del cuenco no es 0. Con η = 0.3 el MSE pasa de 15 a millones en 10 pasos y Python termina con un <code>OverflowError</code>: divergió.</p>

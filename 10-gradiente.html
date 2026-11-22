@@ -52,15 +52,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Entrena un peso en la terminal</h3></div>
     <p class="para">Escribe el bucle del descenso del gradiente y prueba las tasas de aprendizaje del laboratorio.</p>
     <ol>
-      <li>Guarda este código en un archivo llamado <code>gradiente.py</code>:<pre><code>eta = 0.3     # tasa de aprendizaje: prueba 0.1, 1.0, 1.9 y 2.1
+      <li>Guarda este código en un archivo llamado <code>gradiente.py</code>:<div class="code-copia"><pre><code>eta = 0.3     # tasa de aprendizaje: prueba 0.1, 1.0, 1.9 y 2.1
 w = -2.0      # peso inicial
 
 for paso in range(1, 11):
     pendiente = w - 2                  # derivada de L(w) = 0.5·(w − 2)² + 0.5
     w = w - eta * pendiente
     L = 0.5 * (w - 2) ** 2 + 0.5
-    print(f"paso {paso:2}  w = {w:9.4f}  L = {L:9.4f}")</code></pre></li>
-      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo: <code>py gradiente.py</code> en Windows o <code>python3 gradiente.py</code> en macOS y Linux. Si no tienes Python, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+    print(f"paso {paso:2}  w = {w:9.4f}  L = {L:9.4f}")</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py gradiente.py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3 gradiente.py</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no tienes Python, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
       <li>Cambia el valor de <code>eta</code>, guarda y vuelve a ejecutar.</li>
     </ol>
     <p class="obs"><b>Qué observar:</b> con η = 0.3, <var>w</var> se acerca a 2 y la pérdida a 0.5. Con η = 1.0 llega en un paso. Con η = 1.9, <var>w</var> salta de un lado al otro del mínimo (5.6, −1.24…) y con η = 2.1 la pérdida crece sin parar hasta 54: divergió, como en el ejercicio 3.</p>

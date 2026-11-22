@@ -94,13 +94,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>El retorno y la serie geométrica</h3></div>
     <p class="para">Calcula retornos con descuento y comprueba que la suma infinita se queda en 1 / (1 − γ).</p>
     <ol>
-      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
-      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>r = [-1, -1, -1, 10]
-sum(0.9**t * rt for t, rt in enumerate(r))    # 4.58: el ejercicio 1
-sum(0.5**t * rt for t, rt in enumerate(r))    # -0.5: agente miope
-sum(0.9**t for t in range(1000))              # 10.000000000000002
-1 / (1 - 0.9)                                 # el mismo 10
-sum(0.99**t for t in range(10000))            # casi 100</code></pre></li>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>r = [-1, -1, -1, 10]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sum(0.9**t * rt for t, rt in enumerate(r))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 4.58: el ejercicio 1</div><div class="cmd-l"><code>sum(0.5**t * rt for t, rt in enumerate(r))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># -0.5: agente miope</div><div class="cmd-l"><code>sum(0.9**t for t in range(1000))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 10.000000000000002</div><div class="cmd-l"><code>1 / (1 - 0.9)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># el mismo 10</div><div class="cmd-l"><code>sum(0.99**t for t in range(10000))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># casi 100</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> con mil términos la suma ya no se mueve de 10: la serie geométrica tiene un límite finito. Con γ = 0.99 el límite sube a 100: cuanto más cerca de 1 está γ, más lejos mira el agente.</p>
   </div>
@@ -169,7 +164,7 @@ sum(0.99**t for t in range(10000))            # casi 100</code></pre></li>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Cuatro tragamonedas en la terminal</h3></div>
     <p class="para">Programa el agente ε-greedy del laboratorio y compara cuánto gana según ε.</p>
     <ol>
-      <li>Guarda este código en un archivo llamado <code>bandido.py</code>:<pre><code>import random
+      <li>Guarda este código en un archivo llamado <code>bandido.py</code>:<div class="code-copia"><pre><code>import random
 
 verdad = [1.0, 1.5, 3.0, 2.0]    # lo que paga cada máquina en promedio (el agente no lo sabe)
 epsilon = 0.1                    # prueba 0, 0.1 y 0.5
@@ -189,8 +184,8 @@ for jugada in range(1000):
 
 print("Q aprendido:", [round(q, 2) for q in Q])
 print("veces jugada:", n)
-print("premio promedio:", round(total / 1000, 2))</code></pre></li>
-      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo: <code>py bandido.py</code> en Windows o <code>python3 bandido.py</code> en macOS y Linux.</li>
+print("premio promedio:", round(total / 1000, 2))</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py bandido.py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3 bandido.py</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
       <li>Cambia <code>epsilon</code> a 0 y a 0.5, y ejecuta cada versión varias veces.</li>
     </ol>
     <p class="obs"><b>Qué observar:</b> con ε = 0 el agente se queda pegado a una de las primeras máquinas que prueba y gana entre 1 y 1.5 por jugada. Con ε = 0.1 descubre la máquina 3 y gana cerca de 2.8. Con ε = 0.5 la encuentra, pero desperdicia tantas jugadas explorando que gana menos, unos 2.4.</p>

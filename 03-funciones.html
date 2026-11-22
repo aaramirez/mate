@@ -65,12 +65,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>El logaritmo te salva del cero</h3></div>
     <p class="para">Multiplica muchas probabilidades pequeñas y comprueba la «regla de oro del log».</p>
     <ol>
-      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
-      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import math
-math.e                                    # 2.718281828459045
-math.log(math.e)                          # 1.0: ln deshace eˣ
-math.prod([0.001] * 200)                  # 0.0: ¡se perdió todo!
-sum(math.log(0.001) for _ in range(200))  # -1381.55...</code></pre></li>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>math.e</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 2.718281828459045</div><div class="cmd-l"><code>math.log(math.e)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 1.0: ln deshace eˣ</div><div class="cmd-l"><code>math.prod([0.001] * 200)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.0: ¡se perdió todo!</div><div class="cmd-l"><code>sum(math.log(0.001) for _ in range(200))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># -1381.55...</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> el producto real es 10<sup>−600</sup>, más chico que el menor número que la computadora puede guardar, así que lo redondea a 0. La suma de logaritmos, −1381.55, sí cabe y conserva toda la información.</p>
   </div>
@@ -121,16 +117,8 @@ sum(math.log(0.001) for _ in range(200))  # -1381.55...</code></pre></li>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Ida y vuelta: sigmoide, logit y ReLU</h3></div>
     <p class="para">Comprueba que el logit deshace la sigmoide y que ReLU no se puede deshacer.</p>
     <ol>
-      <li>Entra a Python: <code>py</code> en Windows o <code>python3</code> en macOS y Linux.</li>
-      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import math
-sig = lambda z: 1 / (1 + math.exp(-z))
-logit = lambda p: math.log(p / (1 - p))
-sig(0)              # 0.5
-logit(0.8)          # 1.386...: el z del ejercicio 4
-sig(logit(0.8))     # 0.8: ida y vuelta
-logit(1)            # ZeroDivisionError
-relu = lambda z: max(0, z)
-[relu(z) for z in [-3, -1, 0, 1, 3]]   # [0, 0, 0, 1, 3]</code></pre></li>
+      <li>Entra a Python con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sig = lambda z: 1 / (1 + math.exp(-z))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>logit = lambda p: math.log(p / (1 - p))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sig(0)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.5</div><div class="cmd-l"><code>logit(0.8)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 1.386...: el z del ejercicio 4</div><div class="cmd-l"><code>sig(logit(0.8))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.8: ida y vuelta</div><div class="cmd-l"><code>logit(1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ZeroDivisionError</div><div class="cmd-l"><code>relu = lambda z: max(0, z)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>[relu(z) for z in [-3, -1, 0, 1, 3]]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># [0, 0, 0, 1, 3]</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> <code>sig(logit(p))</code> devuelve el mismo <var>p</var>, porque la sigmoide es biyectiva de ℝ en (0, 1). El logit de 1 falla: 1 no está en (0, 1). Y ReLU manda −3, −1 y 0 al mismo 0: viendo ese 0 no hay forma de saber de dónde vino.</p>
   </div>

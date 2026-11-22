@@ -283,3 +283,23 @@ figure{margin:0}
 .investiga li+li{margin-top:10px}
 .investiga li::marker{font:600 .85rem var(--f-mono);color:var(--accent)}
 .investiga .pista{display:block;margin-top:2px;font:500 .8rem/1.45 var(--f-display);color:var(--muted)}
+
+/* ---- Comandos: pestañas por sistema y copiar por línea ---- */
+.cmds{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);min-width:0}
+.cmd-tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);background:var(--card);padding:4px 6px 0}
+.cmd-tabs [role="tab"]{font:600 .8rem var(--f-display);padding:8px 12px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);cursor:pointer;border-radius:6px 6px 0 0}
+.cmd-tabs [role="tab"]:hover{color:var(--ink)}
+.cmd-tabs [role="tab"][aria-selected="true"]{color:var(--ink);border-bottom-color:var(--good)}
+.cmd-panel{display:grid;gap:6px;padding:10px 12px;min-width:0}
+.cmd-panel[hidden]{display:none}
+.cmd-nota{font-size:.82rem;color:var(--muted);margin:0}
+.cmd-l{display:flex;align-items:center;gap:8px;min-width:0}
+.cmd-l code{flex:1;min-width:0;overflow-x:auto;white-space:pre;font-size:.85rem;padding:7px 9px;background:var(--card);border:1px solid var(--line);border-radius:6px}
+.cmd-c{font:.8rem var(--f-mono);color:var(--muted);padding:2px 2px 0;overflow-wrap:anywhere}
+.copiar{flex:none;font:600 .74rem var(--f-display);padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);cursor:pointer}
+.copiar:hover,.copiar:focus-visible{border-color:var(--good)}
+.copiar.ok{background:var(--good);border-color:var(--good);color:var(--card)}
+.code-copia{position:relative;min-width:0}
+.code-copia pre{max-width:100%;overflow-x:auto;padding-right:84px}
+.code-copia .copiar-todo{position:absolute;top:8px;right:8px}
+.practica .cmds,.practica .code-copia{margin:8px 0 2px}
