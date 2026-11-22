@@ -1,0 +1,286 @@
+---
+id: "13"
+slug: "neurona"
+etapa: 5
+corto: "La neurona y la red"
+titulo: "La neurona y la red: todo junto"
+titulo_pagina: "La neurona y la red"
+tarjeta: "La neurona y la red"
+resumen: "Todo junto: una neurona, softmax, entropía cruzada y el ciclo de entrenamiento."
+formato: "html"
+---
+<section>
+  
+  <div class="prose">
+    <p>Ahora tienes todas las piezas. Una neurona hace un <b>producto punto</b> entre sus pesos y la entrada, le <b>suma</b> un sesgo y pasa el resultado por una <b>función</b> de activación:</p>
+  </div>
+  <div class="eq"><var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> &nbsp;&nbsp;→&nbsp;&nbsp; ŷ = σ(<var>z</var>)</div>
+  <div class="lab neuron">
+    <div class="lab-title"><span class="tag">Reto</span><h3>Ajusta los pesos para separar los puntos</h3></div>
+    <p class="hint">La neurona dice «azul» cuando <var>z</var> &gt; 0 y «rojo» cuando <var>z</var> &lt; 0. La línea es la frontera de decisión: donde <var>z</var> = 0. Mueve <var>w</var>₁, <var>w</var>₂ y <var>b</var> hasta acertar los 12 puntos.</p>
+    <div class="split">
+      <canvas id="nn-cv" role="img" aria-label="Mapa de salida de la neurona con puntos de dos clases"></canvas>
+      <div style="display:grid;gap:12px;align-content:start;min-width:0">
+        <svg id="nn-svg" viewBox="0 0 420 200" role="img" aria-label="Diagrama de la neurona con sus pesos"></svg>
+        <div class="btns" id="nn-act" role="group" aria-label="Función de activación"><button data-a="sig" aria-pressed="true">Sigmoide</button><button data-a="tanh" aria-pressed="false">tanh</button><button data-a="relu" aria-pressed="false">ReLU</button></div>
+      </div>
+    </div>
+    <div class="ctls">
+      <label class="ctl">Peso <var>w</var>₁<output id="nn-w1-o"></output><input type="range" id="nn-w1" min="-3" max="3" step="0.1" value="0.5"></label>
+      <label class="ctl">Peso <var>w</var>₂<output id="nn-w2-o"></output><input type="range" id="nn-w2" min="-3" max="3" step="0.1" value="-1"></label>
+      <label class="ctl">Sesgo <var>b</var><output id="nn-b-o"></output><input type="range" id="nn-b" min="-3" max="3" step="0.1" value="0"></label>
+      <label class="ctl">Entrada <var>x</var>₁<output id="nn-x1-o"></output><input type="range" id="nn-x1" min="-2" max="2" step="0.1" value="1"></label>
+      <label class="ctl">Entrada <var>x</var>₂<output id="nn-x2-o"></output><input type="range" id="nn-x2" min="-2" max="2" step="0.1" value="0.5"></label>
+    </div>
+    <div class="readout" id="nn-out"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Clase azul (ŷ alto)</span><span><i style="background:var(--warm)"></i>Clase roja (ŷ bajo)</span><span><i style="background:var(--ink)"></i>Tu entrada (x₁, x₂)</span></div>
+  </div>
+  <div class="prose">
+    <h3>De una neurona a una red</h3>
+    <p>Varias neuronas en paralelo forman una <b>capa</b>: sus pesos se apilan en una <b>matriz</b> <b>W</b>. Varias capas en fila forman una <b>red</b>: una cadena de funciones. Una red pequeña para clasificar en 2 clases se escribe así:</p>
+  </div>
+  <div class="eq"><b>h</b> = ReLU(<b>W</b>₁<b>x</b> + <b>b</b>₁) &nbsp;→&nbsp; ŷ = softmax(<b>W</b>₂<b>h</b> + <b>b</b>₂)</div>
+  <div class="tbl"><svg id="net-svg" viewBox="0 0 520 230" style="width:100%;min-width:420px;height:auto;display:block" role="img" aria-label="Red de 3 entradas, 4 neuronas ocultas y 2 salidas"></svg></div>
+  <div class="prose">
+    <h3>Softmax: de puntajes a probabilidades</h3>
+    <p>La última capa produce puntajes sueltos (<i>logits</i>). Softmax los vuelve probabilidades que suman 1: aplica <var>e</var><sup><var>z</var></sup> a cada uno y divide entre el total.</p>
+  </div>
+  <div class="eq">softmax(<var>z</var>ᵢ) = <var>e</var><sup><var>z</var>ᵢ</sup> / Σⱼ <var>e</var><sup><var>z</var>ⱼ</sup></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>¿Qué ve el clasificador en la foto?</h3></div>
+    <div class="ctls">
+      <label class="ctl">Puntaje «gato»<output id="sm-z0-o"></output><input type="range" id="sm-z0" min="-3" max="5" step="0.1" value="2"></label>
+      <label class="ctl">Puntaje «perro»<output id="sm-z1-o"></output><input type="range" id="sm-z1" min="-3" max="5" step="0.1" value="1"></label>
+      <label class="ctl">Puntaje «pájaro»<output id="sm-z2-o"></output><input type="range" id="sm-z2" min="-3" max="5" step="0.1" value="0.1"></label>
+    </div>
+    <div class="sm" id="sm-bars"></div>
+    <div class="readout" id="sm-out"></div>
+  </div>
+  <div class="prose">
+    <h3>¿Qué tan mal le fue? La función de pérdida</h3>
+    <p>Para clasificar se usa la <b>entropía cruzada</b>: −ln(probabilidad que el modelo le dio a la respuesta correcta). Castiga poco a un modelo seguro y acertado, y muchísimo a uno seguro y equivocado.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Probabilidad dada a la clase correcta</th><th class="num">Pérdida −ln(p)</th><th>Lectura</th></tr></thead>
+    <tbody>
+      <tr><td>0.90</td><td class="num">0.105</td><td>Bien: casi no hay nada que corregir</td></tr>
+      <tr><td>0.50</td><td class="num">0.693</td><td>Indeciso</td></tr>
+      <tr><td>0.10</td><td class="num">2.303</td><td>Mal: hay que ajustar bastante</td></tr>
+      <tr><td>0.01</td><td class="num">4.605</td><td>Muy mal: seguro y equivocado</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose"><h3>El ciclo de entrenamiento</h3></div>
+  <ol class="steps">
+    <li><span><b>Propagación hacia adelante.</b> Los datos atraviesan la red: matrices, sumas y activaciones (módulos 03, 04 y 05).</span></li>
+    <li><span><b>Calcular la pérdida.</b> Comparar ŷ con la respuesta real usando MSE o entropía cruzada (módulos 02 y 09).</span></li>
+    <li><span><b>Backpropagation.</b> Aplicar la regla de la cadena desde la pérdida hacia atrás para obtener el gradiente de cada peso (módulo 07).</span></li>
+    <li><span><b>Actualizar.</b> Mover cada peso un paso: <var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var> (módulo 10).</span></li>
+    <li><span><b>Repetir</b> con más datos, miles de veces, hasta que la pérdida deje de bajar.</span></li>
+  </ol>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Entrena una red en TensorFlow Playground</h3></div>
+    <p class="para">Arma y entrena una red neuronal pequeña sin escribir código.</p>
+    <ol>
+      <li>Abre <a href="https://playground.tensorflow.org/" target="_blank" rel="noopener">TensorFlow Playground</a>.</li>
+      <li>En «Data», elige los datos en círculo (el primero). Quita todas las capas ocultas con el botón − de «Hidden layers».</li>
+      <li>Pulsa ▶ y mira la pérdida («Test loss») durante unos segundos.</li>
+      <li>Pausa, agrega una capa oculta con 4 neuronas y cambia «Activation» a ReLU. Pulsa ▶ otra vez.</li>
+      <li>Prueba con «Learning rate» en 3 y luego en 0.0001.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> sin capas ocultas la red es una sola neurona y solo puede trazar una frontera recta: nunca separa el círculo. Con una capa de neuronas ReLU la frontera se dobla y la pérdida baja. Con una tasa de aprendizaje enorme la pérdida salta; con una diminuta casi no se mueve, como en el módulo 10.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Softmax y entropía cruzada a mano</h3></div>
+    <p class="para">Calcula las probabilidades y la pérdida del ejercicio 3 con Python.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>z = [2, 1, 0]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># puntajes: gato, perro, pájaro</div><div class="cmd-l"><code>ex = [math.exp(v) for v in z]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>p = [v / sum(ex) for v in ex]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>[round(v, 3) for v in p]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># [0.665, 0.245, 0.09]</div><div class="cmd-l"><code>sum(p)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 1.0</div><div class="cmd-l"><code>-math.log(p[1])</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 1.41: la respuesta era «perro»</div><div class="cmd-l"><code>-math.log(p[0])</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.41: si hubiera sido «gato»</div></div></div></li>
+      <li>Cambia los puntajes a <code>z = [5, 1, 0]</code> y repite las líneas.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> softmax siempre da números positivos que suman 1. Con <code>[5, 1, 0]</code> el modelo queda casi seguro de «gato»: si la respuesta era «perro», la pérdida sube a más de 4. Equivocarse con confianza sale caro.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Tu propio clasificador con Teachable Machine</h3></div>
+    <p class="para">Entrena en el navegador una red que reconoce imágenes y mira sus probabilidades en vivo.</p>
+    <ol>
+      <li>Abre <a href="https://teachablemachine.withgoogle.com/train/image" target="_blank" rel="noopener">Teachable Machine</a> y elige el modelo de imagen estándar. No pide cuenta.</li>
+      <li>En «Class 1» graba unas 30 fotos con la cámara mostrando tu mano abierta. En «Class 2», tu puño. Si no tienes cámara, sube imágenes.</li>
+      <li>Pulsa «Train Model» y espera.</li>
+      <li>En la vista previa, cambia entre mano y puño frente a la cámara.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> las barras de la vista previa son la salida de un softmax: siempre suman 100 %. Cuando muestras algo a medio camino, las dos barras se reparten la probabilidad. Las fotos se procesan en tu navegador.</p>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Este ciclo es el mismo para una regresión logística, una red de visión o un modelo de lenguaje. Cambian el tamaño de las matrices y la forma de la red, no la matemática.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Una capa recibe 4 entradas y tiene 3 neuronas. ¿Cuántos parámetros aprende?</summary><p>W de 3 × 4 = 12 pesos + 3 sesgos = 15 parámetros</p></details>
+    <details><summary>Si los tres puntajes de softmax son iguales, ¿qué probabilidad da a cada clase?</summary><p>1/3 ≈ 0.333 cada una (eᶻ es igual para todas)</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Quiénes propusieron la primera neurona artificial, en 1943, y cómo era?<span class="pista">Pista: busca «neurona de McCulloch y Pitts».</span></li>
+      <li>¿Por qué una red sin funciones de activación, con las capas que sea, equivale a una sola capa lineal?<span class="pista">Pista: busca «composición de funciones lineales redes sin activación».</span></li>
+      <li>¿Qué dice el teorema de aproximación universal sobre lo que puede aprender una red con una sola capa oculta?<span class="pista">Pista: busca «teorema de aproximación universal Cybenko».</span></li>
+      <li>¿Por qué los pesos de una red se inician al azar y no todos en 0?<span class="pista">Pista: busca «inicialización de pesos simetría Xavier He».</span></li>
+      <li>¿Qué son una época, un lote (batch) y una iteración en el ciclo de entrenamiento?<span class="pista">Pista: busca «época lote iteración diferencia».</span></li>
+      <li>¿Quiénes popularizaron backpropagation con un artículo de 1986?<span class="pista">Pista: busca «Rumelhart Hinton Williams 1986».</span></li>
+    </ol>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">But what is a neural network? (Deep learning, cap. 1)</a><span>Neuronas, pesos, sesgos y capas como matrices.</span></li><li><a href="https://www.youtube.com/watch?v=Ilg3gGewQ5U" target="_blank" rel="noopener">Backpropagation, intuitively (cap. 3)</a><span>Cómo el error viaja hacia atrás por la red.</span></li><li><a href="https://www.youtube.com/watch?v=tIeHLnjs5U8" target="_blank" rel="noopener">Backpropagation calculus (cap. 4)</a><span>La regla de la cadena aplicada a una red, con las derivadas escritas.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@RingaTech/search?query=red%20neuronal" target="_blank" rel="noopener">Ringa Tech · redes neuronales</a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=red%20neuronal" target="_blank" rel="noopener">Dot CSV · ¿qué es una red neuronal?</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=neural%20networks" target="_blank" rel="noopener">StatQuest · Neural Networks <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@AndrejKarpathy/search?query=micrograd" target="_blank" rel="noopener">Andrej Karpathy · backprop desde cero <small>EN · avanzado</small></a>
+  </div>
+  
+</section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Una neurona hacia adelante</b><p>Una neurona tiene <var>w</var>₁ = 0.5, <var>w</var>₂ = −1 y <var>b</var> = 0.5. La entrada es <var>x</var> = (2, 1). Calcula <var>z</var> y la salida con sigmoide, tanh y ReLU. ¿Qué clase predice? Usa <var>e</var><sup>−0.5</sup> ≈ 0.607.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Producto punto más sesgo: <div class="eq"><var>z</var> = 0.5·2 + (−1)·1 + 0.5 = 1 − 1 + 0.5 = 0.5</div></li>
+        <li>Sigmoide: 1 / (1 + 0.607) ≈ 0.62.</li>
+        <li>tanh(0.5) ≈ 0.46. ReLU(0.5) = máx(0, 0.5) = 0.5.</li>
+        <li>Como <var>z</var> &gt; 0, el punto queda del lado «azul» de la frontera <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> = 0.</li>
+      </ol>
+      <p class="ej-res">Resultado: z = 0.5 · σ ≈ 0.62 · tanh ≈ 0.46 · ReLU = 0.5 · clase azul.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Contar parámetros</b><p>Una red recibe 3 entradas, tiene una capa oculta de 4 neuronas y una salida de 2 clases. ¿Cuántos parámetros aprende?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Capa oculta: <b>W</b>₁ es de 4 × 3 = 12 pesos, más 4 sesgos = 16.</li>
+        <li>Capa de salida: <b>W</b>₂ es de 2 × 4 = 8 pesos, más 2 sesgos = 10.</li>
+        <li>Total: 16 + 10 = 26.</li>
+      </ol>
+      <p class="ej-res">Resultado: 26 parámetros.</p>
+      <p class="ej-ml">En ML: un LLM hace la misma cuenta con matrices de miles por miles, y por eso llega a miles de millones de parámetros.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Softmax y entropía cruzada</b><p>El clasificador de la foto da los puntajes «gato» = 2, «perro» = 1, «pájaro» = 0. La respuesta correcta es «perro». Calcula las probabilidades y la pérdida. Usa <var>e</var>² ≈ 7.389 y <var>e</var> ≈ 2.718.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Exponenciales: <var>e</var>² ≈ 7.389, <var>e</var>¹ ≈ 2.718, <var>e</var>⁰ = 1. Total ≈ 11.107.</li>
+        <li>Dividir entre el total: <div class="eq">gato ≈ 0.665 · perro ≈ 0.245 · pájaro ≈ 0.090</div> Suman 1.</li>
+        <li>Pérdida: −ln(0.245) ≈ 1.41.</li>
+      </ol>
+      <p class="ej-res">Resultado: probabilidades 0.665 / 0.245 / 0.090 y pérdida ≈ 1.41.</p>
+      <p class="ej-ml">En ML: si la respuesta fuera «gato», la pérdida sería −ln(0.665) ≈ 0.41. La pérdida es grande porque el modelo apostó por la clase equivocada.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Una red pequeña con matrices</b><p>Calcula <b>h</b> = ReLU(<b>W</b>₁<b>x</b> + <b>b</b>₁) y ŷ = softmax(<b>W</b>₂<b>h</b>) con <b>x</b> = [1, 2], <b>W</b>₁ = [[1, 0], [−1, 1]], <b>b</b>₁ = [0, −2] y <b>W</b>₂ = [[2, 1], [0, 1]]. ¿Qué pérdida tiene si la clase correcta es la primera?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Cada fila de <b>W</b>₁ hace un producto punto con <b>x</b> (<a href="05-matrices.html">módulo 05</a>): <div class="eq"><b>W</b>₁<b>x</b> = [1·1 + 0·2, −1·1 + 1·2] = [1, 1]</div></li>
+        <li>Sumar el sesgo: [1 + 0, 1 − 2] = [1, −1]. ReLU apaga lo negativo: <b>h</b> = [1, 0].</li>
+        <li>Salida: <b>W</b>₂<b>h</b> = [2·1 + 1·0, 0·1 + 1·0] = [2, 0].</li>
+        <li>Softmax: <var>e</var>² ≈ 7.389 y <var>e</var>⁰ = 1, total 8.389. <div class="eq">ŷ ≈ [0.881, 0.119]</div></li>
+        <li>Pérdida con la clase 1 correcta: −ln(0.881) ≈ 0.13.</li>
+      </ol>
+      <p class="ej-res">Resultado: h = [1, 0] · ŷ ≈ [0.88, 0.12] · pérdida ≈ 0.13.</p>
+      <p class="ej-ml">En ML: la segunda neurona oculta quedó apagada (ReLU dio 0). Sus pesos de salida no influyen en esta predicción y no reciben gradiente en este ejemplo.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Un paso de backpropagation</b><p>Usa la neurona del ejercicio 1 (con sigmoide y ŷ ≈ 0.6225), pero ahora la respuesta real es <var>y</var> = 0, es decir, rojo. Con entropía cruzada, la regla de la cadena da ∂<var>L</var>/∂<var>z</var> = ŷ − <var>y</var>. Calcula el gradiente de cada parámetro, da un paso con η = 0.5 y comprueba que la pérdida baja.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La cadena completa (<a href="07-derivadas.html">módulo 07</a>): ∂<var>L</var>/∂ŷ = 1/(1 − ŷ) ≈ 2.649 y σ′(<var>z</var>) = ŷ(1 − ŷ) ≈ 0.235. Su producto es ≈ 0.6225 = ŷ − <var>y</var>.</li>
+        <li>Como <var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var>, se tiene ∂<var>z</var>/∂<var>w</var>₁ = <var>x</var>₁ = 2, ∂<var>z</var>/∂<var>w</var>₂ = <var>x</var>₂ = 1 y ∂<var>z</var>/∂<var>b</var> = 1. <div class="eq">∂<var>L</var>/∂<var>w</var>₁ ≈ 1.245 · ∂<var>L</var>/∂<var>w</var>₂ ≈ 0.6225 · ∂<var>L</var>/∂<var>b</var> ≈ 0.6225</div></li>
+        <li>Paso con η = 0.5: <var>w</var>₁ ≈ 0.5 − 0.6225 = −0.12; <var>w</var>₂ ≈ −1 − 0.31 = −1.31; <var>b</var> ≈ 0.5 − 0.31 = 0.19.</li>
+        <li>Nuevo puntaje: <var>z</var> ≈ −0.12·2 − 1.31·1 + 0.19 ≈ −1.37, así que ŷ = σ(−1.37) ≈ 0.20.</li>
+        <li>Pérdida antes: −ln(1 − 0.6225) ≈ 0.97. Después: −ln(1 − 0.20) ≈ 0.23.</li>
+      </ol>
+      <p class="ej-res">Resultado: gradiente ≈ (1.245, 0.6225, 0.6225); la pérdida baja de 0.97 a 0.23 y ahora el punto se clasifica rojo.</p>
+      <p class="ej-ml">En ML: este es el ciclo completo (adelante, pérdida, atrás, actualizar) que una red repite millones de veces.</p>
+    </details>
+  </div>
+</section>
+
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const P1=[[1,1.5],[1.5,.5],[.5,1.8],[2,1.2],[1.2,-.2],[.2,1]],P0=[[-1,-1],[-1.5,.2],[-.5,-1.6],[-2,-.8],[.3,-1.2],[-.8,.6]];
+  const ACT={sig:{n:'σ',f:z=>1/(1+Math.exp(-z)),norm:v=>v},tanh:{n:'tanh',f:Math.tanh,norm:v=>(v+1)/2},relu:{n:'ReLU',f:z=>Math.max(0,z),norm:v=>Math.min(1,v/3)}};
+  let act='sig';const svg=$('#nn-svg');
+  ['w1','w2','b','x1','x2'].forEach(k=>bindOut('#nn-'+k));
+  svg.innerHTML=`<line id="e1" x1="78" y1="55" x2="200" y2="100"/><line id="e2" x1="78" y1="145" x2="200" y2="100"/><line x1="260" y1="100" x2="352" y2="100" stroke="currentColor" stroke-width="2" style="color:var(--muted)"/>
+  <circle cx="58" cy="55" r="22" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><circle cx="58" cy="145" r="22" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/>
+  <circle cx="230" cy="100" r="34" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><circle id="outc" cx="380" cy="100" r="26" stroke="var(--ink)" stroke-width="1.5"/>
+  <text id="tx1" x="58" y="59" text-anchor="middle"></text><text id="tx2" x="58" y="149" text-anchor="middle"></text>
+  <text id="tw1" x="135" y="62" text-anchor="middle"></text><text id="tw2" x="135" y="146" text-anchor="middle"></text>
+  <text id="tz" x="230" y="96" text-anchor="middle"></text><text id="tb" x="230" y="114" text-anchor="middle" class="lbl"></text>
+  <text id="ty" x="380" y="104" text-anchor="middle"></text>
+  <text x="58" y="190" text-anchor="middle" class="lbl">ENTRADAS</text><text x="230" y="160" text-anchor="middle" class="lbl">z = w·x + b</text><text id="tact" x="306" y="90" text-anchor="middle" class="lbl"></text><text x="380" y="150" text-anchor="middle" class="lbl">SALIDA ŷ</text>`;
+  const draw=canvasWidget($('#nn-cv'),1,(ctx,w,h)=>{
+    const w1=num('#nn-w1'),w2=num('#nn-w2'),b=num('#nn-b'),x1=num('#nn-x1'),x2=num('#nn-x2'),A=ACT[act];
+    const F=frame(ctx,w,h,{x0:-2.5,x1:2.5,equal:true,sx:1,sy:1});
+    const cA=hexRgb(tok('--accent')),cW=hexRgb(tok('--warm')),cC=hexRgb(tok('--card'));
+    const step=6;F.clip();
+    for(let px=F.p.l;px<F.p.l+F.pw;px+=step)for(let py=F.p.t;py<F.p.t+F.ph;py+=step){
+      const v=A.norm(A.f(w1*F.IX(px+step/2)+w2*F.IY(py+step/2)+b));
+      const z=w1*F.IX(px+step/2)+w2*F.IY(py+step/2)+b;
+      const col=z>=0?lerp(cC,cA,act==='relu'?Math.min(1,z/3)*.55:Math.abs(v-.5)*1.1):lerp(cC,cW,act==='relu'?.18:Math.abs(v-.5)*1.1);
+      ctx.fillStyle=`rgb(${col})`;ctx.fillRect(px,py,step,step);
+    }
+    ctx.restore();
+    F.clip();ctx.strokeStyle=tok('--ink');ctx.lineWidth=2.5;ctx.beginPath();
+    if(Math.abs(w2)>1e-6){ctx.moveTo(F.X(-3),F.Y(-(w1*-3+b)/w2));ctx.lineTo(F.X(3),F.Y(-(w1*3+b)/w2));}else if(Math.abs(w1)>1e-6){ctx.moveTo(F.X(-b/w1),F.Y(-5));ctx.lineTo(F.X(-b/w1),F.Y(5));}
+    ctx.stroke();
+    let ok=0;
+    [[P1,1,tok('--accent')],[P0,0,tok('--warm')]].forEach(([pts,cls,col])=>pts.forEach(([a,c])=>{const z=w1*a+w2*c+b;const hit=(z>0)===(cls===1);if(hit)ok++;
+      ctx.beginPath();ctx.arc(F.X(a),F.Y(c),7,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=tok('--card');ctx.stroke();
+      if(!hit){ctx.beginPath();ctx.arc(F.X(a),F.Y(c),11,0,Math.PI*2);ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);}}));
+    ctx.beginPath();ctx.arc(F.X(x1),F.Y(x2),6,0,Math.PI*2);ctx.fillStyle=tok('--ink');ctx.fill();
+    ctx.beginPath();ctx.moveTo(F.X(x1)-11,F.Y(x2));ctx.lineTo(F.X(x1)+11,F.Y(x2));ctx.moveTo(F.X(x1),F.Y(x2)-11);ctx.lineTo(F.X(x1),F.Y(x2)+11);ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.stroke();
+    ctx.restore();
+    const z=w1*x1+w2*x2+b,y=A.f(z);
+    [['#e1',w1],['#e2',w2]].forEach(([id,v])=>{const e=svg.querySelector(id);e.setAttribute('stroke',v>=0?'var(--accent)':'var(--warm)');e.setAttribute('stroke-width',1+Math.abs(v)*2.2);});
+    svg.querySelector('#tx1').textContent=short(x1);svg.querySelector('#tx2').textContent=short(x2);
+    svg.querySelector('#tw1').textContent='w₁='+short(w1);svg.querySelector('#tw2').textContent='w₂='+short(w2);
+    svg.querySelector('#tz').textContent='z='+fmt(z);svg.querySelector('#tb').textContent='b = '+short(b);
+    svg.querySelector('#ty').textContent=fmt(y);svg.querySelector('#tact').textContent=A.n.toUpperCase();
+    const oc=svg.querySelector('#outc');oc.setAttribute('fill',z>0?'var(--accent-soft)':'var(--warm-soft)');
+    $('#nn-out').innerHTML=`<span>z = ${short(w1)}·${short(x1)} + ${short(w2)}·${short(x2)} ${b>=0?'+':'−'} ${short(Math.abs(b))} = ${fmt(z,3)}</span><span class="big">ŷ = ${A.n}(${fmt(z,3)}) = ${fmt(y,3)} → clase ${z>0?'azul':'roja'}</span>`+
+      `<span class="${ok===12?'ok':''}">Aciertos: ${ok} de 12 ${ok===12?'· ¡Separaste las dos clases! Eso es lo que el descenso del gradiente hace solo.':''}</span>`;
+  });
+  ['w1','w2','b','x1','x2'].forEach(k=>$('#nn-'+k).addEventListener('input',draw));
+  $('#nn-act').addEventListener('click',e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;act=a;$('#nn-act').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.a===a));draw();});
+})();
+
+
+(function(){
+  const L=[3,4,2],xs=[70,260,450],H=230,names=['entrada x','capa oculta h','salida ŷ'];
+  const ys=n=>Array.from({length:n},(_,i)=>(H-30)/(n+1)*(i+1)+5);
+  let s='';
+  for(let l=0;l<2;l++)ys(L[l]).forEach(y1=>ys(L[l+1]).forEach(y2=>{s+=`<line x1="${xs[l]}" y1="${y1}" x2="${xs[l+1]}" y2="${y2}" stroke="var(--line)" stroke-width="1.5"/>`;}));
+  L.forEach((n,l)=>ys(n).forEach(y=>{s+=`<circle cx="${xs[l]}" cy="${y}" r="16" fill="${l===1?'var(--accent-soft)':'var(--paper)'}" stroke="${l===1?'var(--accent)':'var(--ink)'}" stroke-width="1.5"/>`;}));
+  names.forEach((t,l)=>{s+=`<text x="${xs[l]}" y="${H-6}" text-anchor="middle" style="font:600 12px var(--f-display);fill:var(--muted);letter-spacing:.04em">${t.toUpperCase()}</text>`;});
+  s+=`<text x="165" y="18" text-anchor="middle" style="font:italic 600 14px var(--f-body);fill:var(--accent)">W₁ (4 × 3)</text><text x="355" y="18" text-anchor="middle" style="font:italic 600 14px var(--f-body);fill:var(--accent)">W₂ (2 × 4)</text>`;
+  $('#net-svg').innerHTML=s;
+})();
+
+
+(function(){
+  const names=['gato','perro','pájaro'],bars=$('#sm-bars');
+  bars.innerHTML=names.map((n,i)=>`<div class="sm-row"><span>${n}</span><span class="track"><i id="sm-b${i}"></i></span><output id="sm-p${i}"></output></div>`).join('');
+  function up(){
+    const z=[0,1,2].map(i=>num('#sm-z'+i));z.forEach((v,i)=>$('#sm-z'+i+'-o').textContent=short(v));
+    const e=z.map(Math.exp),S=e.reduce((a,b)=>a+b,0),p=e.map(v=>v/S);
+    p.forEach((v,i)=>{$('#sm-b'+i).style.width=(v*100)+'%';$('#sm-p'+i).textContent=fmt(v*100,1)+'%';});
+    const best=p.indexOf(Math.max(...p));
+    $('#sm-out').innerHTML=`<span>eᶻ = [${e.map(v=>fmt(v)).join(', ')}] · suma = ${fmt(S)}</span><span class="big">Predicción: ${names[best]} (${fmt(p[best]*100,1)}%) · las probabilidades suman ${fmt(p.reduce((a,b)=>a+b,0)*100,0)}%</span>`;
+  }
+  [0,1,2].forEach(i=>$('#sm-z'+i).addEventListener('input',up));up();
+})();
+})();
+</script>

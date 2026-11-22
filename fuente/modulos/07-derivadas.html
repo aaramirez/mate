@@ -1,0 +1,194 @@
+---
+id: "07"
+slug: "derivadas"
+etapa: 3
+corto: "Derivadas"
+titulo: "Derivadas: cuánto cambia la salida"
+titulo_pagina: "Derivadas"
+tarjeta: "Derivadas"
+resumen: "La pendiente como límite, reglas básicas, regla de la cadena y derivadas parciales."
+formato: "html"
+---
+<section>
+  
+  <div class="prose">
+    <p>La derivada responde una sola pregunta: <span class="hl">si muevo un poquito la entrada, ¿cuánto se mueve la salida?</span> Gráficamente es la pendiente de la recta que toca la curva en un punto (la tangente).</p>
+    <p>Se calcula con un <a href="06-limites.html">límite</a>: acercando dos puntos de la curva hasta que casi se tocan. Achica <var>h</var> y mira cómo la recta secante (punteada) se convierte en la tangente.</p>
+  </div>
+  <div class="eq"><var>f</var>′(<var>x</var>) = lím<sub><var>h</var>→0</sub> [<var>f</var>(<var>x</var> + <var>h</var>) − <var>f</var>(<var>x</var>)] / <var>h</var></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>De la secante a la tangente</h3></div>
+    <canvas id="dv-cv" role="img" aria-label="Curva con su recta secante y su recta tangente"></canvas>
+    <div class="ctls">
+      <label class="ctl">Punto <var>x</var><output id="dv-x-o"></output><input type="range" id="dv-x" min="-3" max="3" step="0.05" value="1.5"></label>
+      <label class="ctl">Distancia <var>h</var><output id="dv-h-o"></output><input type="range" id="dv-h" min="0.01" max="2" step="0.01" value="1.2"></label>
+    </div>
+    <div class="readout" id="dv-out"></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Función</th><th>Derivada</th><th>Comentario</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">c (constante)</td><td class="mono">0</td><td>Lo que no cambia no tiene pendiente</td></tr>
+      <tr><td class="mono">xⁿ</td><td class="mono">n·xⁿ⁻¹</td><td>x² → 2x, x³ → 3x²</td></tr>
+      <tr><td class="mono">eˣ</td><td class="mono">eˣ</td><td>La única función que es su propia derivada</td></tr>
+      <tr><td class="mono">ln x</td><td class="mono">1/x</td><td>Aparece al derivar la entropía cruzada</td></tr>
+      <tr><td class="mono">σ(x)</td><td class="mono">σ(x)·(1 − σ(x))</td><td>Por eso la sigmoide es cómoda en redes</td></tr>
+      <tr><td class="mono">ReLU(x)</td><td class="mono">1 si x &gt; 0, si no 0</td><td>La más barata de calcular</td></tr>
+    </tbody>
+  </table></div>
+  <div class="prose">
+    <h3>Regla de la cadena: el corazón de backpropagation</h3>
+    <p>Cuando una función está dentro de otra, las derivadas se <b>multiplican</b> a lo largo de la cadena. Ejemplo: <var>y</var> = (3<var>x</var> + 1)² en <var>x</var> = 1.</p>
+  </div>
+  <div class="chain" aria-label="Cadena x, u, y con derivadas">
+    <div class="box"><var>x</var> = 1<small>entrada</small></div>
+    <div class="arr">→ <var>u</var> = 3<var>x</var>+1 →<b>du/dx = 3</b></div>
+    <div class="box"><var>u</var> = 4<small>intermedio</small></div>
+    <div class="arr">→ <var>y</var> = <var>u</var>² →<b>dy/du = 2u = 8</b></div>
+    <div class="box"><var>y</var> = 16<small>salida</small></div>
+  </div>
+  <div class="eq">dy/dx = dy/du · du/dx = 8 · 3 = 24<small>Mover x un poquito mueve y 24 veces más</small></div>
+  <div class="prose">
+    <h3>Derivadas parciales</h3>
+    <p>Si la función tiene varias perillas, la derivada parcial mueve una sola y deja las demás quietas. Para <var>f</var>(<var>w</var>, <var>b</var>) = <var>w</var>² + 3<var>b</var>: ∂<var>f</var>/∂<var>w</var> = 2<var>w</var> y ∂<var>f</var>/∂<var>b</var> = 3.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>La secante se vuelve tangente</h3></div>
+    <p class="para">Achica <var>h</var> en Python y mira cómo la pendiente de la secante se acerca a la derivada.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver. Después de la línea del <code>for</code>, pulsa Enter dos veces.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>f = lambda x: x**2</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>for h in [1, 0.1, 0.01, 0.001, 1e-6, 1e-12]: print(h, (f(3 + h) - f(3)) / h)</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> la pendiente baja de 7 a 6.1, 6.01, 6.001…: es el 6 + <var>h</var> del ejercicio 1. Pero con <var>h</var> = 1e-12 el resultado empeora (6.0005): al restar dos números casi iguales la computadora pierde dígitos. Por eso las librerías no derivan así, sino con la regla de la cadena.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Comprueba la cadena y la sigmoide</h3></div>
+    <p class="para">Usa una diferencia centrada para confirmar dos resultados del módulo.</p>
+    <ol>
+      <li>Entra a Python con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>y = lambda x: (3*x + 1)**2</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>h = 1e-6</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>(y(1 + h) - y(1 - h)) / (2*h)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 24</div><div class="cmd-l"><code>sig = lambda z: 1 / (1 + math.exp(-z))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>(sig(h) - sig(-h)) / (2*h)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 0.25</div><div class="cmd-l"><code>sig(2.2)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 0.9</div><div class="cmd-l"><code>(sig(2.2 + h) - sig(2.2 - h)) / (2*h)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 0.09</div></div></div></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> el 24 es el 8 · 3 de la regla de la cadena del módulo. La pendiente de la sigmoide vale 0.25 en 0 y cae a 0.09 donde σ ≈ 0.9: es σ(1 − σ) = 0.9 · 0.1, la sigmoide «cansada» del ejercicio 4.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Una tangente que se mueve, en Desmos</h3></div>
+    <p class="para">Dibuja la recta tangente en cualquier punto y busca dónde queda horizontal.</p>
+    <ol>
+      <li>Abre <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">Desmos</a>.</li>
+      <li>Escribe <code>f(x)=x^3-3x</code>.</li>
+      <li>Escribe <code>a=0.5</code> para crear un deslizador.</li>
+      <li>Escribe <code>y=f'(a)(x-a)+f(a)</code>. Desmos entiende la comilla como derivada.</li>
+      <li>Mueve <var>a</var> de −2 a 2.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> en <var>a</var> = −1 y <var>a</var> = 1 la tangente queda horizontal: la derivada 3<var>x</var>² − 3 vale 0. En esos puntos el descenso del gradiente se detiene; en <var>a</var> = 1 hay un mínimo local.</p>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Una red es una cadena de funciones: capa tras capa. <b>Backpropagation</b> es la regla de la cadena aplicada desde el error hacia atrás, para saber cuánto culpa tiene cada peso. PyTorch y TensorFlow lo hacen automáticamente (<code>loss.backward()</code>), pero entender la idea te permite depurar.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>¿Cuál es la derivada de 3x² en x = 2?</summary><p>f′(x) = 6x → f′(2) = 12</p></details>
+    <details><summary>Si y = (2x)³, ¿cuánto vale dy/dx en x = 1? (usa la cadena)</summary><p>u = 2x = 2; dy/du = 3u² = 12; du/dx = 2 → 12 · 2 = 24</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>Leibniz escribía <var>dy</var>/<var>dx</var> y Newton ponía un punto encima de la letra. ¿Por qué ganó la notación de Leibniz? ¿Quién introdujo <var>f</var>′(<var>x</var>)?<span class="pista">Pista: busca «notación de Leibniz Newton Lagrange derivada».</span></li>
+      <li>El módulo dice que PyTorch deriva solo con <code>loss.backward()</code>. ¿Qué es la diferenciación automática y en qué se diferencia de derivar con un <var>h</var> pequeño?<span class="pista">Pista: busca «diferenciación automática modo inverso».</span></li>
+      <li>La tabla dice que e<sup><var>x</var></sup> es la única función que es su propia derivada. ¿Qué pasa con 5e<sup><var>x</var></sup>? ¿Es cierta la frase tal como está?<span class="pista">Pista: busca «ecuación diferencial y′ = y soluciones».</span></li>
+      <li>El video del cap. 4 menciona la regla del producto. ¿Qué dice, y cuál es la regla del cociente?<span class="pista">Pista: busca «regla del producto y del cociente derivadas».</span></li>
+      <li>ReLU no tiene derivada en 0. ¿Qué valor usan PyTorch y TensorFlow en ese punto?<span class="pista">Pista: busca «subgradiente ReLU en cero».</span></li>
+    </ol>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=WUvTyaaNkzM" target="_blank" rel="noopener">The essence of calculus (cap. 1)</a><span>El panorama completo: derivadas e integrales como dos caras de la misma idea.</span></li><li><a href="https://www.youtube.com/watch?v=9vKqVkMQHKk" target="_blank" rel="noopener">The paradox of the derivative (cap. 2)</a><span>Qué significa una «tasa de cambio instantánea».</span></li><li><a href="https://www.youtube.com/watch?v=S0_qX4VJhMQ" target="_blank" rel="noopener">Derivative formulas through geometry (cap. 3)</a><span>De dónde salen las reglas como xⁿ → n·xⁿ⁻¹.</span></li><li><a href="https://www.youtube.com/watch?v=YG15m2VwSjA" target="_blank" rel="noopener">Visualizing the chain rule and product rule (cap. 4)</a><span>La regla de la cadena que usa backpropagation.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=derivadas" target="_blank" rel="noopener">julioprofe · derivadas</a>
+    <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=regla%20de%20la%20cadena" target="_blank" rel="noopener">julioprofe · regla de la cadena</a>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=chain%20rule" target="_blank" rel="noopener">StatQuest · chain rule <small>EN</small></a>
+  </div>
+  
+</section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>La derivada desde la definición</b><p>Usa <var>f</var>′(<var>x</var>) = lím<sub><var>h</var>→0</sub> [<var>f</var>(<var>x</var> + <var>h</var>) − <var>f</var>(<var>x</var>)] / <var>h</var> para calcular la derivada de <var>f</var>(<var>x</var>) = <var>x</var>² en <var>x</var> = 3.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>f</var>(3 + <var>h</var>) = (3 + <var>h</var>)² = 9 + 6<var>h</var> + <var>h</var>². Y <var>f</var>(3) = 9.</li>
+        <li>Pendiente de la secante:<div class="eq">(9 + 6<var>h</var> + <var>h</var>² − 9) / <var>h</var> = (6<var>h</var> + <var>h</var>²) / <var>h</var> = 6 + <var>h</var></div></li>
+        <li>Prueba con <var>h</var> = 0.1: (3.1² − 9) / 0.1 = (9.61 − 9) / 0.1 = 6.1. Coincide con 6 + 0.1.</li>
+        <li>Cuando <var>h</var> → 0, la pendiente 6 + <var>h</var> → 6. La regla <var>x</var>² → 2<var>x</var> da lo mismo: 2·3 = 6.</li>
+      </ol>
+      <p class="ej-res">Resultado: f′(3) = 6.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Reglas básicas</b><p>Deriva <var>f</var>(<var>x</var>) = 4<var>x</var>³ − 2<var>x</var> + 7 y calcula la pendiente en <var>x</var> = 1.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Término a término. 4<var>x</var>³ → 4·3<var>x</var>² = 12<var>x</var>².</li>
+        <li>−2<var>x</var> → −2 (la derivada de <var>x</var> es 1). La constante 7 → 0.</li>
+        <li>Junta los términos:<div class="eq"><var>f</var>′(<var>x</var>) = 12<var>x</var>² − 2</div></li>
+        <li>En <var>x</var> = 1: 12·1 − 2 = 10.</li>
+      </ol>
+      <p class="ej-res">Resultado: f′(x) = 12x² − 2 y f′(1) = 10. Cerca de x = 1, la salida sube unas 10 veces lo que sube la entrada.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Regla de la cadena</b><p>Si <var>y</var> = (2<var>x</var> − 1)³, ¿cuánto vale <var>dy</var>/<var>dx</var> en <var>x</var> = 2?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Llama <var>u</var> = 2<var>x</var> − 1 a la función de adentro. En <var>x</var> = 2, <var>u</var> = 3.</li>
+        <li>Afuera: <var>y</var> = <var>u</var>³, así que <var>dy</var>/<var>du</var> = 3<var>u</var>² = 3·9 = 27.</li>
+        <li>Adentro: <var>du</var>/<var>dx</var> = 2.</li>
+        <li>Multiplica a lo largo de la cadena:<div class="eq"><var>dy</var>/<var>dx</var> = 27 · 2 = 54</div></li>
+      </ol>
+      <p class="ej-res">Resultado: dy/dx = 54 en x = 2.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>La sigmoide se cansa</b><p>Con σ′(<var>x</var>) = σ(<var>x</var>)·(1 − σ(<var>x</var>)), calcula la pendiente de la sigmoide en <var>x</var> = 0, donde σ = 0.5, y en un punto donde σ = 0.9. ¿En cuál aprende más rápido una neurona?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>En <var>x</var> = 0: σ′ = 0.5 · (1 − 0.5) = 0.5 · 0.5 = 0.25. Es la pendiente máxima de la sigmoide.</li>
+        <li>Donde σ = 0.9: σ′ = 0.9 · 0.1 = 0.09.</li>
+        <li>0.09 / 0.25 = 0.36: la pendiente cae a poco más de un tercio.</li>
+      </ol>
+      <p class="ej-res">Resultado: 0.25 frente a 0.09. Cerca de 0 la neurona aprende casi 3 veces más rápido.</p>
+      <p class="ej-ml">En ML: cuando la sigmoide se satura, la derivada es casi 0 y el gradiente que llega a los pesos se apaga. A esto se le llama «gradiente que se desvanece», y es una de las razones por las que se usa ReLU (<a href="13-neurona.html">módulo 13</a>).</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Cuánta culpa tiene cada perilla</b><p>Un modelo predice <var>ŷ</var> = <var>w</var>·<var>x</var> + <var>b</var> y su error es <var>L</var> = (<var>ŷ</var> − <var>y</var>)². Con <var>x</var> = 2, <var>y</var> = 3, <var>w</var> = 1 y <var>b</var> = 0, calcula ∂<var>L</var>/∂<var>w</var> y ∂<var>L</var>/∂<var>b</var>. Después da un paso de aprendizaje con η = 0.1.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Predicción: <var>ŷ</var> = 1·2 + 0 = 2. Error: <var>L</var> = (2 − 3)² = 1.</li>
+        <li>Cadena: ∂<var>L</var>/∂<var>ŷ</var> = 2(<var>ŷ</var> − <var>y</var>) = 2·(−1) = −2.</li>
+        <li>∂<var>ŷ</var>/∂<var>w</var> = <var>x</var> = 2, así que ∂<var>L</var>/∂<var>w</var> = −2 · 2 = −4. ∂<var>ŷ</var>/∂<var>b</var> = 1, así que ∂<var>L</var>/∂<var>b</var> = −2.</li>
+        <li>Paso de aprendizaje: se va en contra de la derivada.<div class="eq"><var>w</var> = 1 − 0.1·(−4) = 1.4    <var>b</var> = 0 − 0.1·(−2) = 0.2</div></li>
+        <li>Comprueba: <var>ŷ</var> = 1.4·2 + 0.2 = 3.0, y el error baja de 1 a (3 − 3)² = 0.</li>
+      </ol>
+      <p class="ej-res">Resultado: ∂L/∂w = −4 y ∂L/∂b = −2; con un solo paso el error pasa de 1 a 0.</p>
+      <p class="ej-ml">En ML: esto es backpropagation en miniatura. Una red hace lo mismo con millones de pesos, y la siguiente parada es el <a href="10-gradiente.html">descenso del gradiente</a>.</p>
+    </details>
+  </div>
+</section>
+
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const f=x=>.2*x*x*x-x+1,df=x=>.6*x*x-1;
+  bindOut('#dv-x');bindOut('#dv-h');
+  const draw=canvasWidget($('#dv-cv'),wide,(ctx,w,h)=>{
+    const x0=num('#dv-x'),hh=num('#dv-h');$('#dv-x-o').textContent=short(x0);$('#dv-h-o').textContent=short(hh);
+    const F=frame(ctx,w,h,{x0:-4,x1:4,y0:-5,y1:7});
+    curve(ctx,F,f,tok('--ink'),2.5);
+    const ms=(f(x0+hh)-f(x0))/hh,mt=df(x0);
+    curve(ctx,F,x=>f(x0)+ms*(x-x0),tok('--warm'),2,[7,6]);
+    curve(ctx,F,x=>f(x0)+mt*(x-x0),tok('--accent'),2.5);
+    F.clip();dot(ctx,F.X(x0),F.Y(f(x0)),tok('--accent'),6);dot(ctx,F.X(x0+hh),F.Y(f(x0+hh)),tok('--warm'),5);ctx.restore();
+    $('#dv-out').innerHTML=`<span>f(x) = 0.2x³ − x + 1</span><span style="color:var(--warm)">pendiente de la secante = [f(${short(x0)}+${short(hh)}) − f(${short(x0)})] / ${short(hh)} = ${fmt(ms,3)}</span><span class="big">derivada f′(${short(x0)}) = 0.6·(${short(x0)})² − 1 = ${fmt(mt,3)}</span><span>diferencia: ${fmt(Math.abs(ms-mt),3)} ${hh<=.05?'→ <span class="ok">casi idénticas</span>':'→ achica h'}</span>`;
+  });
+  $('#dv-x').addEventListener('input',draw);$('#dv-h').addEventListener('input',draw);
+})();
+})();
+</script>

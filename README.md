@@ -51,3 +51,25 @@ Las gráficas se dibujan con Canvas y JavaScript sin librerías; solo se cargan 
 Cada página carga Google Tag Manager (`GTM-KX76XF8R`): un bloque al inicio de `<head>` y un `<noscript>` al inicio de `<body>`. Toda página nueva debe llevar los dos; cópialos de `index.html`.
 
 Los comandos van en bloques `.cmds`: pestañas por sistema operativo (`.cmd-tabs` con botones `role="tab"` y `data-so="win"`, `"mac linux"`…, y un `.cmd-panel role="tabpanel"` por pestaña) y una línea `.cmd-l` por comando, con su `<code>` y un botón `.copiar`. Los comentarios van en `.cmd-c`, sin botón. Un programa que se guarda en un archivo va en `.code-copia` con un solo botón `.copiar copiar-todo`. `assets/lab.js` elige la pestaña del sistema del lector, la recuerda (`mate-so`) y copia al portapapeles.
+
+## Cómo se genera
+
+Desde noviembre de 2026 las páginas se generan con el [motor de cursos](https://github.com/aaramirez/motor-cursos), el mismo de «Cómo funciona un telco». Las plantillas, `assets/style.css` y `assets/lab.js` vienen del motor: **no se editan los `.html` de la raíz ni `assets/`**, se editan las fuentes y se regenera.
+
+```
+fuente/modulos/NN-slug.html   Un módulo por archivo: su ficha entre líneas --- (id, slug, etapa, corto, titulo,
+                              lede, resumen…) y el contenido. Con formato "html" se publica tal cual
+fuente/modulos/*.md           Un módulo nuevo puede escribirse en Markdown (formato "md") con los bloques del
+                              motor: :::practica, :::investiga, bloques de comandos con pestañas, etc.
+fuente/inicio.html            La cabecera de la portada; las etapas y sus tarjetas salen de las fichas
+fuente/curso.css              Estilos propios de mate, que se agregan al style.css del motor
+fuente/generar.py             El generador
+```
+
+```bash
+# con ../motor-cursos clonado al lado (o MOTOR_CURSOS=/ruta/al/motor)
+python fuente/generar.py
+```
+
+El avance guardado de los lectores no cambia: las claves siguen siendo `mate-ml-<slug>`.
+

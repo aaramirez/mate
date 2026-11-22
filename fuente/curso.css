@@ -1,0 +1,16 @@
+/* Estilos propios de mate: se agregan al final del style.css del motor de cursos */
+.ml b{font-family:var(--f-display);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--good)}
+.practica-title .tag.web{background:var(--good)}
+.practica .para{color:var(--muted)}
+.practica ol{display:block;margin:0;padding-left:1.5em;min-width:0}
+.practica li{min-width:0}
+.practica li+li{margin-top:8px}
+.practica li::marker{font:700 .88rem var(--f-mono);color:var(--good)}
+.practica pre code{font:400 .8rem/1.55 var(--f-mono);white-space:pre;color:var(--ink)}
+.practica .obs{border-left:3px solid var(--good);background:var(--good-soft);padding:10px 14px;border-radius:0 8px 8px 0}
+.practica .obs b{font-family:var(--f-display);color:var(--good)}
+.investiga>p{font-size:.94rem;color:var(--muted)}
+.investiga li+li{margin-top:10px}
+.investiga li::marker{font:600 .85rem var(--f-mono);color:var(--accent)}
+.investiga .pista{display:block;margin-top:2px;font:500 .8rem/1.45 var(--f-display);color:var(--muted)}
+.practica .cmds,.practica .code-copia{margin:8px 0 2px}

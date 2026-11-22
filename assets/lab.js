@@ -68,41 +68,63 @@ function seg(ctx,F,f,xa,xb,color,lw,N){
 function ring(ctx,x,y,color,fill){ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=2.5;ctx.strokeStyle=color;ctx.stroke();}
 
 /* ---------- Navegación entre páginas y avance ---------- */
-const PAGES=[["index","index.html","","Inicio"],["aritmetica","01-aritmetica.html","01","Aritmética y razones"],["notacion","02-notacion.html","02","Notación sin miedo"],["funciones","03-funciones.html","03","Funciones"],["vectores","04-vectores.html","04","Vectores"],["matrices","05-matrices.html","05","Matrices"],["limites","06-limites.html","06","Límites y continuidad"],["derivadas","07-derivadas.html","07","Derivadas"],["integrales","08-integrales.html","08","Integrales"],["probabilidad","09-probabilidad.html","09","Probabilidad"],["gradiente","10-gradiente.html","10","Descenso del gradiente"],["regresion","11-regresion.html","11","Regresión y error"],["modelos","12-modelos.html","12","Modelos clásicos de ML"],["neurona","13-neurona.html","13","La neurona y la red"],["cnn","14-cnn.html","14","Redes convolucionales"],["llm","15-llm.html","15","Cómo funciona un LLM"],["agentes","16-agentes.html","16","Agentes"],["refuerzo","17-refuerzo.html","17","Aprendizaje por refuerzo"],["recursos","recursos.html","","Canales y plan"]];
+// Datos del curso: los escribe el motor al generar el sitio
+const CURSO={"prefijo": "mate-ml-"};
+const PAGES=[["index", "index.html", "", "Inicio", 0, 0], ["aritmetica", "01-aritmetica.html", "01", "Aritmética y razones", 0, 1], ["notacion", "02-notacion.html", "02", "Notación sin miedo", 0, 1], ["funciones", "03-funciones.html", "03", "Funciones", 0, 1], ["vectores", "04-vectores.html", "04", "Vectores", 0, 2], ["matrices", "05-matrices.html", "05", "Matrices", 0, 2], ["limites", "06-limites.html", "06", "Límites y continuidad", 0, 3], ["derivadas", "07-derivadas.html", "07", "Derivadas", 0, 3], ["integrales", "08-integrales.html", "08", "Integrales", 0, 3], ["probabilidad", "09-probabilidad.html", "09", "Probabilidad", 0, 3], ["gradiente", "10-gradiente.html", "10", "Descenso del gradiente", 0, 4], ["regresion", "11-regresion.html", "11", "Regresión y error", 0, 4], ["modelos", "12-modelos.html", "12", "Modelos clásicos de ML", 0, 4], ["neurona", "13-neurona.html", "13", "La neurona y la red", 0, 5], ["cnn", "14-cnn.html", "14", "Redes convolucionales", 0, 5], ["llm", "15-llm.html", "15", "Cómo funciona un LLM", 0, 5], ["agentes", "16-agentes.html", "16", "Agentes", 0, 6], ["refuerzo", "17-refuerzo.html", "17", "Aprendizaje por refuerzo", 0, 6], ["recursos", "recursos.html", "", "Canales y plan", 0, 6]];
+const ETAPAS=[[1, "Etapa 1 · Bases"], [2, "Etapa 2 · Álgebra lineal"], [3, "Etapa 3 · Cálculo y probabilidad"], [4, "Etapa 4 · Aprender de los datos"], [5, "Etapa 5 · Redes neuronales"], [6, "Etapa 6 · Agentes que deciden"]];
+const PREF=CURSO.prefijo;
 const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
 const holder=document.querySelector('[data-page]');
 const page=holder?holder.getAttribute('data-page'):'';
-const mods=PAGES.filter(p=>p[2]);
-const isDone=id=>store.get('mate-ml-'+id)==='1';
+const mods=PAGES.filter(p=>/^\d/.test(p[2])&&!p[4]);
+const isDone=id=>store.get(PREF+id)==='1';
 function sync(){
   let n=0;
   mods.forEach(([id])=>{const d=isDone(id);if(d)n++;document.querySelectorAll('[data-id="'+id+'"]').forEach(a=>a.classList.toggle('done',d));});
   const p=$('#prog'),b=$('#prog-bar');if(p)p.textContent=n+' de '+mods.length;if(b)b.style.width=(n/mods.length*100)+'%';
+  document.querySelectorAll('[data-etapa-cuenta]').forEach(s=>{const k=s.getAttribute('data-etapa-cuenta'),ms=mods.filter(m=>String(m[5])===k);s.textContent=ms.filter(m=>isDone(m[0])).length+'/'+ms.length;});
 }
 (function(){
   const nav=$('#toc');
   if(nav){
-    nav.innerHTML='<span class="eyebrow">Ruta</span><ol>'+PAGES.map(([id,f,n,t])=>`<li><a href="${f}" data-id="${id}"${id===page?' aria-current="page" class="active"':''}><span class="n">${n||'·'}</span>${t}<span class="ck"${n?'':' style="visibility:hidden"'}></span></a></li>`).join('')+
-      '</ol><div class="prog"><span>Tu avance: <b id="prog"></b></span><div class="bar"><i id="prog-bar"></i></div><span>Se guarda solo en este navegador.</span></div>';
-    const cur=nav.querySelector('[aria-current]');if(cur&&window.innerWidth<=900){const ol=nav.querySelector('ol');ol.scrollLeft=Math.max(0,cur.offsetLeft-16);}
+    const item=([id,f,n,t,soon])=>soon?`<li><span class="soon" data-id="${id}" title="En preparación"><span class="n">${n}</span>${t}<span class="ck"></span></span></li>`:`<li><a href="${f}" data-id="${id}"${id===page?' aria-current="page" class="active"':''}><span class="n">${n||'·'}</span>${t}<span class="ck"${n?'':' style="visibility:hidden"'}></span></a></li>`;
+    const actual=PAGES.find(p=>p[0]===page),aqui=actual&&actual[2]?actual[2]+' · '+actual[3]:'Inicio';
+    const grupos=ETAPAS.map(([k,rot])=>{const ps=PAGES.filter(p=>p[5]===k),hay=ps.some(p=>/^\d/.test(p[2]));
+      return `<details class="etapa"${actual&&actual[5]===k?' open':''}><summary><span>${rot}</span>${hay?`<span class="cuenta" data-etapa-cuenta="${k}"></span>`:''}</summary><ol>${ps.map(item).join('')}</ol></details>`;}).join('');
+    const escritorio=matchMedia('(min-width:901px)');
+    const plegada=store.get(PREF+'ruta')==='0';
+    nav.innerHTML=`<details class="ruta"${escritorio.matches&&!plegada?' open':''}><summary><span class="eyebrow">Ruta</span><span class="aqui">${aqui}</span></summary>`+
+      `<ol class="ini">${PAGES.filter(p=>p[5]===0).map(item).join('')}</ol>${grupos}`+
+      '<div class="prog"><span>Tu avance: <b id="prog"></b></span><div class="bar"><i id="prog-bar"></i></div><span>Se guarda solo en este navegador.</span></div></details>';
+    const ruta=nav.querySelector('.ruta');
+    const capa=nav.closest('.layout');
+    const marcar=()=>{if(capa)capa.classList.toggle('toc-cerrada',escritorio.matches&&!ruta.open);};
+    escritorio.addEventListener('change',e=>{ruta.open=e.matches&&store.get(PREF+'ruta')!=='0';marcar();});
+    ruta.addEventListener('toggle',()=>{if(escritorio.matches)store.set(PREF+'ruta',ruta.open?'1':'0');marcar();});
+    marcar();
   }
   const pg=$('#pager');
   if(pg){
-    const i=PAGES.findIndex(p=>p[0]===page),prev=PAGES[i-1],next=PAGES[i+1];
+    const open=PAGES.filter(p=>!p[4]),i=open.findIndex(p=>p[0]===page),prev=open[i-1],next=open[i+1];
     const lab=p=>(p[2]?p[2]+' · ':'')+p[3];
     pg.innerHTML=(prev?`<a class="prev" href="${prev[1]}"><small>← Anterior</small>${lab(prev)}</a>`:'')+(next?`<a class="next" href="${next[1]}"><small>Siguiente →</small>${lab(next)}</a>`:'');
   }
   const cb=$('#got');
-  if(cb){cb.checked=isDone(page);cb.addEventListener('change',()=>{store.set('mate-ml-'+page,cb.checked?'1':'0');sync();});}
+  if(cb){cb.checked=isDone(page);cb.addEventListener('change',()=>{store.set(PREF+page,cb.checked?'1':'0');sync();});}
+  // Portada: un enlace a #parte-N abre su etapa plegada
+  const etapaDe=h=>{const t=h&&h.length>1&&document.getElementById(decodeURIComponent(h.slice(1)));return t&&t.matches('details.stage')?t:null;};
+  const abrirAncla=()=>{const t=etapaDe(location.hash);if(t){t.open=true;t.scrollIntoView();}};
+  document.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]'),t=a&&etapaDe(a.getAttribute('href'));if(t)t.open=true;});
+  window.addEventListener('hashchange',abrirAncla);abrirAncla();
   // Comandos: una pestaña por sistema operativo (se recuerda) y «Copiar» en cada línea
   const soDetectado=(()=>{const p=((navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||navigator.userAgent||'').toLowerCase();return /win/.test(p)?'win':/mac|iphone|ipad/.test(p)?'mac':/linux|android|cros|x11/.test(p)?'linux':'win';})();
-  let so=store.get('mate-so')||soDetectado;
+  let so=store.get(PREF+'so')||soDetectado;
   const cajas=[...document.querySelectorAll('.cmds')];
   const elegir=caja=>{const tabs=[...caja.querySelectorAll('[role="tab"]')];if(!tabs.length)return;const t=tabs.find(b=>b.dataset.so.split(' ').includes(so))||tabs[0];
     tabs.forEach(b=>{const on=b===t;b.setAttribute('aria-selected',on?'true':'false');b.tabIndex=on?0:-1;document.getElementById(b.getAttribute('aria-controls')).hidden=!on;});};
   cajas.forEach((caja,k)=>{const tabs=[...caja.querySelectorAll('[role="tab"]')],panels=[...caja.querySelectorAll('[role="tabpanel"]')];
     tabs.forEach((b,i)=>{b.id='so-'+k+'-'+i;panels[i].id='so-'+k+'-'+i+'-p';b.setAttribute('aria-controls',panels[i].id);panels[i].setAttribute('aria-labelledby',b.id);
-      b.addEventListener('click',()=>{const lista=b.dataset.so.split(' ');if(!lista.includes(so))so=lista[0];store.set('mate-so',so);cajas.forEach(elegir);});
+      b.addEventListener('click',()=>{const lista=b.dataset.so.split(' ');if(!lista.includes(so))so=lista[0];store.set(PREF+'so',so);cajas.forEach(elegir);});
       b.addEventListener('keydown',ev=>{const d=ev.key==='ArrowRight'?1:ev.key==='ArrowLeft'?-1:0;if(!d)return;ev.preventDefault();const n=tabs[(i+d+tabs.length)%tabs.length];n.click();n.focus();});});
     elegir(caja);});
   const aviso=document.createElement('span');aviso.setAttribute('aria-live','polite');aviso.style.cssText='position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';document.body.appendChild(aviso);

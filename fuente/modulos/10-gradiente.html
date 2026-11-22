@@ -1,0 +1,183 @@
+---
+id: "10"
+slug: "gradiente"
+etapa: 4
+corto: "Descenso del gradiente"
+titulo: "Descenso del gradiente: bajar la montaña a ciegas"
+titulo_pagina: "Descenso del gradiente"
+tarjeta: "Descenso del gradiente"
+resumen: "Cómo aprende un modelo: bajar la pérdida paso a paso."
+formato: "html"
+---
+<section>
+  
+  <div class="prose">
+    <p>Imagina que estás en una montaña con niebla y quieres llegar al valle. No ves nada, pero sientes la inclinación bajo tus pies. Das un paso cuesta abajo, vuelves a sentir y repites. Eso es entrenar un modelo.</p>
+    <p>La montaña es la <b>función de pérdida</b> <var>L</var>: mide qué tan mal predice el modelo. La inclinación es la derivada. El <b>gradiente</b> ∇<var>L</var> junta todas las derivadas parciales y apunta cuesta arriba, así que caminamos en sentido contrario:</p>
+  </div>
+  <div class="eq"><var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var><small>η = tasa de aprendizaje (tamaño del paso)</small></div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Entrena un peso</h3></div>
+    <div class="btns" role="group" aria-label="Elegir función de pérdida"><button id="gd-l1" aria-pressed="true">Cuenco simple</button><button id="gd-l2" aria-pressed="false">Con dos valles</button></div>
+    <canvas id="gd-cv" role="img" aria-label="Función de pérdida con la trayectoria del descenso del gradiente"></canvas>
+    <div class="ctls">
+      <label class="ctl">Tasa de aprendizaje η<output id="gd-eta-o"></output><input type="range" id="gd-eta" min="0.05" max="2.2" step="0.05" value="0.3"></label>
+      <label class="ctl">Peso inicial <var>w</var>₀<output id="gd-w0-o"></output><input type="range" id="gd-w0" min="-2.5" max="6.5" step="0.1" value="-2"></label>
+    </div>
+    <div class="btns"><button class="primary" id="gd-step">Dar un paso</button><button id="gd-run">Entrenar 30 pasos</button><button id="gd-reset">Reiniciar</button></div>
+    <div class="readout" id="gd-out"></div>
+    <p class="hint">Experimenta: en el cuenco, η = 0.1 llega lento, η = 1.0 llega en un solo paso, η = 1.9 rebota y η = 2.1 se escapa. En los dos valles, empieza en <var>w</var>₀ = 3 y quedarás atrapado en el valle menos profundo (un mínimo local).</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Entrena un peso en la terminal</h3></div>
+    <p class="para">Escribe el bucle del descenso del gradiente y prueba las tasas de aprendizaje del laboratorio.</p>
+    <ol>
+      <li>Guarda este código en un archivo llamado <code>gradiente.py</code>:<div class="code-copia"><pre><code>eta = 0.3     # tasa de aprendizaje: prueba 0.1, 1.0, 1.9 y 2.1
+w = -2.0      # peso inicial
+
+for paso in range(1, 11):
+    pendiente = w - 2                  # derivada de L(w) = 0.5·(w − 2)² + 0.5
+    w = w - eta * pendiente
+    L = 0.5 * (w - 2) ** 2 + 0.5
+    print(f"paso {paso:2}  w = {w:9.4f}  L = {L:9.4f}")</code></pre><button type="button" class="copiar copiar-todo">Copiar</button></div></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py gradiente.py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3 gradiente.py</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no tienes Python, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Cambia el valor de <code>eta</code>, guarda y vuelve a ejecutar.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con η = 0.3, <var>w</var> se acerca a 2 y la pérdida a 0.5. Con η = 1.0 llega en un paso. Con η = 1.9, <var>w</var> salta de un lado al otro del mínimo (5.6, −1.24…) y con η = 2.1 la pérdida crece sin parar hasta 54: divergió, como en el ejercicio 3.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Por qué el momentum funciona</h3></div>
+    <p class="para">Juega con la tasa de aprendizaje y el momentum en un artículo interactivo.</p>
+    <ol>
+      <li>Abre <a href="https://distill.pub/2017/momentum/" target="_blank" rel="noopener">Why Momentum Really Works</a>, de la revista Distill (en inglés).</li>
+      <li>En la primera figura, pon el momentum β en 0 y mueve el tamaño del paso α.</li>
+      <li>Ahora sube β poco a poco, hasta cerca de 0.99.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con β = 0 es el descenso del gradiente de este módulo: si α es chico avanza lento, y si es grande zigzaguea o se escapa. El momentum suma una parte del paso anterior, como una pelota con inercia: llega más rápido por el valle largo. Es una de las «formas más inteligentes de elegir el paso» que nombra el recuadro.</p>
+  </div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Todo modelo entrenable (regresión lineal, logística, redes neuronales, transformers) aprende así. Una red grande tiene millones de pesos <var>w</var>, pero la regla es la misma para cada uno. Variantes como SGD, Momentum y Adam son formas más inteligentes de elegir el paso.</p></div>
+  <div class="quiz"><h3>Pruébate</h3>
+    <details><summary>Si w = 4, la derivada de la pérdida es 2 y η = 0.1, ¿cuál es el nuevo w?</summary><p>4 − 0.1 · 2 = 3.8</p></details>
+    <details><summary>¿Qué pasa si la tasa de aprendizaje es demasiado grande?</summary><p>Los pasos se pasan del mínimo, rebotan de un lado al otro y la pérdida puede crecer sin control (divergencia).</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Quién propuso el descenso del gradiente y en qué año?<span class="pista">Pista: busca «Cauchy 1847 método del gradiente».</span></li>
+      <li>El recuadro nombra Adam. ¿Qué hace distinto del descenso simple y qué controlan sus parámetros β₁ y β₂?<span class="pista">Pista: busca «optimizador Adam Kingma Ba 2014».</span></li>
+      <li>¿Qué es el descenso estocástico (SGD) y qué es un mini-lote? ¿Por qué su ruido puede ayudar a salir de un mínimo local?<span class="pista">Pista: busca «descenso del gradiente estocástico mini-batch».</span></li>
+      <li>En redes con millones de pesos, ¿el gran obstáculo son los mínimos locales o los puntos de silla?<span class="pista">Pista: busca «puntos de silla redes profundas Dauphin 2014».</span></li>
+      <li>¿Qué es un calendario de tasa de aprendizaje (learning rate schedule) y por qué muchos entrenamientos empiezan con un «calentamiento»?<span class="pista">Pista: busca «learning rate warmup cosine schedule».</span></li>
+    </ol>
+  </div>
+  <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=IHZwWFHWa-w" target="_blank" rel="noopener">Gradient descent, how neural networks learn (Deep learning, cap. 2)</a><span>El descenso del gradiente en una red real de reconocimiento de dígitos.</span></li></ul></div>
+  <div class="vids"><span>Más videos</span>
+    <a class="vid" href="https://www.youtube.com/@statquest/search?query=gradient%20descent" target="_blank" rel="noopener">StatQuest · Gradient Descent, paso a paso <small>EN</small></a>
+    <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=descenso%20del%20gradiente" target="_blank" rel="noopener">Dot CSV · descenso del gradiente</a>
+  </div>
+  
+</section>
+<section>
+  <h2>Ejercicios resueltos</h2>
+  <div class="prose"><p>Intenta cada ejercicio con lápiz y papel antes de abrir la solución. Los ejercicios 1 a 3 usan la pérdida del «cuenco simple» del laboratorio: <var>L</var>(<var>w</var>) = 0.5·(<var>w</var> − 2)² + 0.5, cuya derivada es <var>L</var>′(<var>w</var>) = <var>w</var> − 2.</p></div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">1</span><div><b>Un paso a mano</b><p>Empiezas en <var>w</var> = 6 con tasa de aprendizaje η = 0.5. Da un paso de descenso del gradiente. ¿Cuánto vale la pérdida antes y después?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>La pendiente en el punto actual: <div class="eq"><var>L</var>′(6) = 6 − 2 = 4</div> Es positiva: la pérdida sube hacia la derecha, así que hay que moverse a la izquierda.</li>
+        <li>El paso: <div class="eq"><var>w</var> ← 6 − 0.5 · 4 = 6 − 2 = 4</div></li>
+        <li>Pérdida antes: 0.5·(6 − 2)² + 0.5 = 0.5·16 + 0.5 = 8.5.</li>
+        <li>Pérdida después: 0.5·(4 − 2)² + 0.5 = 0.5·4 + 0.5 = 2.5.</li>
+      </ol>
+      <p class="ej-res">Resultado: w pasa de 6 a 4 y la pérdida baja de 8.5 a 2.5.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Tres pasos y un patrón</b><p>Sigue desde <var>w</var> = 6 con η = 0.5 durante tres pasos. ¿Qué le pasa a la distancia entre <var>w</var> y el mínimo, que está en <var>w</var> = 2?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Paso 1: <var>w</var> = 6 − 0.5·(6 − 2) = 4.</li>
+        <li>Paso 2: <var>w</var> = 4 − 0.5·(4 − 2) = 4 − 1 = 3.</li>
+        <li>Paso 3: <var>w</var> = 3 − 0.5·(3 − 2) = 3 − 0.5 = 2.5.</li>
+        <li>Las distancias al mínimo son 4, 2, 1 y 0.5: se reducen a la mitad en cada paso. Restando 2 a los dos lados de la regla se ve por qué: <div class="eq">(<var>w</var> − 2) ← (1 − η) · (<var>w</var> − 2)</div> Con η = 0.5 el factor es 0.5.</li>
+      </ol>
+      <p class="ej-res">Resultado: w = 4, 3, 2.5; la distancia al mínimo se divide entre 2 en cada paso.</p>
+      <p class="ej-ml">En ML: por eso los primeros pasos bajan mucho la pérdida y los últimos casi nada: cerca del fondo la pendiente es pequeña y el paso también.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">3</span><div><b>Una tasa demasiado grande</b><p>Ahora empieza en <var>w</var> = 3 con η = 2.5. Da dos pasos y calcula la pérdida en cada punto. ¿Converge?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Paso 1: <var>L</var>′(3) = 1, así que <var>w</var> = 3 − 2.5·1 = 0.5. Saltó al otro lado del mínimo.</li>
+        <li>Paso 2: <var>L</var>′(0.5) = 0.5 − 2 = −1.5, así que <var>w</var> = 0.5 − 2.5·(−1.5) = 0.5 + 3.75 = 4.25.</li>
+        <li>Pérdidas: <var>L</var>(3) = 0.5·1 + 0.5 = 1; <var>L</var>(0.5) = 0.5·2.25 + 0.5 = 1.625; <var>L</var>(4.25) = 0.5·5.0625 + 0.5 ≈ 3.03.</li>
+        <li>Con la fórmula del ejercicio 2, el factor es 1 − η = −1.5: la distancia cambia de signo (rebota) y crece 1.5 veces en cada paso.</li>
+      </ol>
+      <p class="ej-res">Resultado: w = 0.5 y luego 4.25; la pérdida sube 1 → 1.625 → 3.03. Diverge.</p>
+      <p class="ej-ml">En ML: si la pérdida de entrenamiento crece o salta a «NaN», lo primero que se revisa es la tasa de aprendizaje.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">4</span><div><b>Dos pesos a la vez</b><p>La pérdida es <var>L</var>(<var>w</var>₁, <var>w</var>₂) = <var>w</var>₁² + 3<var>w</var>₂². Estás en (2, 1) y η = 0.1. Calcula el gradiente, da un paso y compara la pérdida.</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li>Las derivadas parciales (<a href="07-derivadas.html">módulo 07</a>): ∂<var>L</var>/∂<var>w</var>₁ = 2<var>w</var>₁ = 4 y ∂<var>L</var>/∂<var>w</var>₂ = 6<var>w</var>₂ = 6. <div class="eq">∇<var>L</var>(2, 1) = (4, 6)</div></li>
+        <li>Cada peso da su propio paso, con la misma η: <div class="eq"><var>w</var>₁ ← 2 − 0.1·4 = 1.6 &nbsp;&nbsp; <var>w</var>₂ ← 1 − 0.1·6 = 0.4</div></li>
+        <li>Pérdida antes: 2² + 3·1² = 4 + 3 = 7.</li>
+        <li>Pérdida después: 1.6² + 3·0.4² = 2.56 + 0.48 = 3.04.</li>
+      </ol>
+      <p class="ej-res">Resultado: (w₁, w₂) = (1.6, 0.4) y la pérdida baja de 7 a 3.04.</p>
+      <p class="ej-ml">En ML: una red con millones de pesos hace exactamente esto, solo que el gradiente tiene millones de componentes.</p>
+    </details>
+  </div>
+  <div class="ej-item">
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Atrapado en un mínimo local</b><p>Con la pérdida de «dos valles», <var>L</var>(<var>w</var>) = 0.05<var>w</var>⁴ − 0.5<var>w</var>² + 0.3<var>w</var> + 2, su derivada es <var>L</var>′(<var>w</var>) = 0.2<var>w</var>³ − <var>w</var> + 0.3. Empiezas en <var>w</var> = 3 con η = 0.1. Da un paso. Después compara <var>L</var>(2) con <var>L</var>(−2.4). ¿A qué valle llegarás?</p></div></div>
+    <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
+      <ol class="ej-steps">
+        <li><var>L</var>′(3) = 0.2·27 − 3 + 0.3 = 5.4 − 3 + 0.3 = 2.7. Positiva: hay que ir a la izquierda.</li>
+        <li><var>w</var> ← 3 − 0.1·2.7 = 3 − 0.27 = 2.73.</li>
+        <li>Cerca de 2 la derivada casi se anula: <var>L</var>′(2) = 1.6 − 2 + 0.3 = −0.1. Ahí está el fondo del valle derecho, y los pasos se detienen.</li>
+        <li><var>L</var>(2) = 0.05·16 − 0.5·4 + 0.6 + 2 = 0.8 − 2 + 0.6 + 2 = 1.4.</li>
+        <li><var>L</var>(−2.4) = 0.05·33.18 − 0.5·5.76 − 0.72 + 2 ≈ 1.66 − 2.88 − 0.72 + 2 ≈ 0.06.</li>
+      </ol>
+      <p class="ej-res">Resultado: llega al valle de la derecha (pérdida ≈ 1.4), aunque el de la izquierda es mucho más profundo (≈ 0.06).</p>
+      <p class="ej-ml">En ML: el gradiente solo ve la pendiente local. Por eso importan el punto de partida y trucos como el momentum o el ruido de SGD.</p>
+    </details>
+  </div>
+</section>
+
+<script>
+(function(){
+const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide}=Lab;
+(function(){
+  const L={
+    l1:{f:w=>.5*(w-2)*(w-2)+.5,g:w=>w-2,v:{x0:-3,x1:7,y0:-1,y1:14},w0:[-2.5,6.5,-2],tex:'L(w) = 0.5·(w − 2)² + 0.5'},
+    l2:{f:w=>.05*w**4-.5*w*w+.3*w+2,g:w=>.2*w**3-w+.3,v:{x0:-4.2,x1:4.2,y0:-.5,y1:7},w0:[-4,4,3],tex:'L(w) = 0.05w⁴ − 0.5w² + 0.3w + 2'}
+  };
+  let cur='l1',path=[],timer=null,div=false;
+  const eta=$('#gd-eta'),w0=$('#gd-w0');
+  function reset(){stop();path=[+w0.value];div=false;draw();}
+  function step(){if(div)return;const o=L[cur],w=path[path.length-1],nw=w-(+eta.value)*o.g(w);path.push(nw);if(!isFinite(nw)||Math.abs(nw)>60){div=true;stop();}draw();}
+  function stop(){if(timer){clearInterval(timer);timer=null;}}
+  function run(){stop();let n=0;timer=setInterval(()=>{step();n++;const w=path[path.length-1];if(n>=30||div||Math.abs(L[cur].g(w))<1e-4)stop();},window.matchMedia('(prefers-reduced-motion: reduce)').matches?40:220);}
+  const draw=canvasWidget($('#gd-cv'),wide,(ctx,w,h)=>{
+    const o=L[cur];$('#gd-eta-o').textContent=short(+eta.value);$('#gd-w0-o').textContent=short(+w0.value);
+    const F=frame(ctx,w,h,o.v);curve(ctx,F,o.f,tok('--ink'),2.5);
+    F.clip();ctx.strokeStyle=tok('--warm');ctx.lineWidth=1.5;ctx.setLineDash([4,4]);ctx.beginPath();
+    path.forEach((p,i)=>{const px=F.X(p),py=F.Y(o.f(p));i?ctx.lineTo(px,py):ctx.moveTo(px,py);});ctx.stroke();ctx.setLineDash([]);
+    path.forEach((p,i)=>{if(i<path.length-1)dot(ctx,F.X(p),F.Y(o.f(p)),tok('--warm'),3.5);});
+    const last=path[path.length-1];if(isFinite(last))dot(ctx,F.X(last),F.Y(o.f(last)),tok('--accent'),8);ctx.restore();
+    const g=o.g(last);
+    $('#gd-out').innerHTML=`<span>${o.tex}</span><span class="big">paso ${path.length-1} · w = ${isFinite(last)?fmt(last,3):'∞'} · L(w) = ${isFinite(last)?fmt(o.f(last),3):'∞'}</span><span>pendiente ∂L/∂w = ${isFinite(g)?fmt(g,3):'∞'} → próximo w = ${isFinite(last)?fmt(last-(+eta.value)*g,3):'—'}</span>`+
+      (div?'<span class="warn">¡Divergió! La tasa de aprendizaje es demasiado grande: cada paso salta más lejos del mínimo.</span>':Math.abs(g)<1e-3&&path.length>1?'<span class="ok">Llegó a un mínimo: la pendiente es casi 0.</span>':'');
+  });
+  function setLoss(k){cur=k;$('#gd-l1').setAttribute('aria-pressed',k==='l1');$('#gd-l2').setAttribute('aria-pressed',k==='l2');const o=L[k];w0.min=o.w0[0];w0.max=o.w0[1];w0.value=o.w0[2];eta.value=k==='l1'?.3:.1;reset();}
+  $('#gd-l1').onclick=()=>setLoss('l1');$('#gd-l2').onclick=()=>setLoss('l2');
+  $('#gd-step').onclick=step;$('#gd-run').onclick=run;$('#gd-reset').onclick=reset;
+  w0.addEventListener('input',reset);eta.addEventListener('input',()=>{reset();});
+  reset();
+})();
+})();
+</script>
