@@ -30,7 +30,7 @@ El orden sigue las dependencias: bases y álgebra lineal (01–05), cálculo y p
 
 Cada módulo tiene laboratorios interactivos, un recuadro de «Dónde aparece en ML», preguntas de autoevaluación y videos de apoyo. Entre ellos hay capítulos concretos de [3Blue1Brown](https://www.youtube.com/@3blue1brown). La página `recursos.html` reúne los canales recomendados y un plan de 6 semanas.
 
-Cada módulo trae además **prácticas** (de 1 a 3) para hacer fuera de la página, en la terminal con Python o en el navegador con herramientas gratuitas y sin registro, y una lista de **preguntas para investigar** sobre lo que el módulo nombra pero no explica, sin respuestas publicadas. Para agregarlas a un módulo nuevo: cada práctica es un `<div class="practica">` dentro de la sección que ejercita, con `<div class="practica-title"><span class="tag">En la terminal</span><h3>…</h3></div>` (o `<span class="tag web">En el navegador</span>`), un `<p class="para">` con para qué sirve, un `<ol>` de pasos (el código va en `<pre><code>`) y un `<p class="obs"><b>Qué observar:</b> …</p>`. Las preguntas van en un `<div class="investiga">` con `<h3>Para investigar</h3>` y un `<ol>`; cada `<li>` lleva su pista en `<span class="pista">`. Ese bloque se ubica después de «Pruébate» y antes de los videos. Prueba los comandos y las URL antes de publicarlos.
+Cada módulo trae además **prácticas** (de 1 a 3) para hacer fuera de la página, en la terminal con Python o en el navegador con herramientas gratuitas y sin registro, y una lista de **preguntas para investigar** sobre lo que el módulo nombra pero no explica, sin respuestas publicadas.
 
 ## Usarlo localmente
 
@@ -40,7 +40,7 @@ No necesita instalación ni servidor: abre `index.html` en el navegador. El avan
 
 ```
 index.html            Portada y mapa de la ruta
-01-…17-*.html         Un archivo por módulo, generado desde fuente/modulos/
+01-…17-*.html         Un archivo por módulo (generado)
 recursos.html         Canales de YouTube, ruta de 3Blue1Brown y plan de estudio
 assets/style.css      Estilos compartidos (tema claro y oscuro)
 assets/lab.js         Utilidades de gráficas, navegación y avance
@@ -50,26 +50,9 @@ Las gráficas se dibujan con Canvas y JavaScript sin librerías; solo se cargan 
 
 Cada página carga Google Tag Manager (`GTM-KX76XF8R`): un bloque al inicio de `<head>` y un `<noscript>` al inicio de `<body>`. Los ponen las plantillas del motor de cursos (ver «Cómo se genera»).
 
-Los comandos van en bloques `.cmds`: pestañas por sistema operativo (`.cmd-tabs` con botones `role="tab"` y `data-so="win"`, `"mac linux"`…, y un `.cmd-panel role="tabpanel"` por pestaña) y una línea `.cmd-l` por comando, con su `<code>` y un botón `.copiar`. Los comentarios van en `.cmd-c`, sin botón. Un programa que se guarda en un archivo va en `.code-copia` con un solo botón `.copiar copiar-todo`. `assets/lab.js` elige la pestaña del sistema del lector, la recuerda (`mate-so`) y copia al portapapeles.
 
 ## Cómo se genera
 
-Desde noviembre de 2026 las páginas se generan con el [motor de cursos](https://github.com/aaramirez/motor-cursos), el mismo de «Cómo funciona un telco». Las plantillas, `assets/style.css` y `assets/lab.js` vienen del motor: **no se editan los `.html` de la raíz ni `assets/`**, se editan las fuentes y se regenera.
+Este repositorio solo tiene el sitio **generado**: los `.html` y `assets/`. No se editan a mano, porque se reescriben al regenerar. La fuente editable (módulos, portada, estilos propios y generador) vive en un repositorio privado, `mate-source`. Las páginas se arman con el [motor de cursos](https://github.com/aaramirez/motor-cursos), el mismo de «Cómo funciona un telco».
 
-```
-fuente/modulos/NN-slug.html   Un módulo por archivo: su ficha entre líneas --- (id, slug, etapa, corto, titulo,
-                              lede, resumen…) y el contenido. Con formato "html" se publica tal cual
-fuente/modulos/*.md           Un módulo nuevo puede escribirse en Markdown (formato "md") con los bloques del
-                              motor: :::practica, :::investiga, bloques de comandos con pestañas, etc.
-fuente/inicio.html            La cabecera de la portada; las etapas y sus tarjetas salen de las fichas
-fuente/curso.css              Estilos propios de mate, que se agregan al style.css del motor
-fuente/generar.py             El generador
-```
-
-```bash
-# con ../motor-cursos clonado al lado (o MOTOR_CURSOS=/ruta/al/motor)
-python fuente/generar.py
-```
-
-El avance guardado de los lectores no cambia: las claves siguen siendo `mate-ml-<slug>`.
-
+El avance guardado de los lectores usa las claves `mate-ml-<slug>`.
