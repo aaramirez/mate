@@ -45,3 +45,5 @@ assets/lab.js         Utilidades de gráficas, navegación y avance
 ```
 
 Las gráficas se dibujan con Canvas y JavaScript sin librerías; solo se cargan fuentes de Google Fonts.
+
+Cada página carga Google Tag Manager (`GTM-KX76XF8R`): un bloque al inicio de `<head>` y un `<noscript>` al inicio de `<body>`. Toda página nueva debe llevar los dos; cópialos de `index.html`.
