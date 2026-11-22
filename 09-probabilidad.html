@@ -36,17 +36,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>La estadística resume datos con pocos números. Con los datos <span class="mono">[2, 4, 4, 4, 5, 5, 7, 9]</span>:</p>
   </div>
   <div class="cards">
-    <div class="fact"><h3>Media</h3><span class="ex">x̄ = 40 / 8 = 5</span><p>El centro de los datos: suma entre cantidad.</p></div>
-    <div class="fact"><h3>Varianza</h3><span class="ex">(9+1+1+1+0+0+4+16) / 8 = 4</span><p>Promedio de las distancias al cuadrado a la media.</p></div>
-    <div class="fact"><h3>Desviación estándar</h3><span class="ex">σ = √4 = 2</span><p>Qué tan dispersos están, en las mismas unidades que los datos.</p></div>
+    <div class="fact"><h3>Media (<i>mean</i>)</h3><span class="ex">x̄ = 40 / 8 = 5</span><p>El centro de los datos: suma entre cantidad. La barra de x̄ se lee «promedio de x».</p></div>
+    <div class="fact"><h3>Varianza (<i>variance</i>)</h3><span class="ex">(9+1+1+1+0+0+4+16) / 8 = 4</span><p>Promedio de las distancias al cuadrado a la media.</p></div>
+    <div class="fact"><h3>Desviación estándar (<i>standard deviation</i>)</h3><span class="ex">σ = √4 = 2</span><p>La raíz de la varianza (σ es la letra griega sigma): qué tan dispersos están, en las mismas unidades que los datos.</p></div>
   </div>
 </section>
 
 <section>
   <h2>Variables aleatorias: discretas y continuas</h2>
   <div class="prose">
-    <p>Una <b>variable aleatoria</b> <var>X</var> es un número que sale de un experimento: lo que marca un dado, la estatura de una persona, los segundos hasta el próximo clic. Hay dos tipos, y cada uno se describe con una función distinta:</p>
-    <p><b>Discreta</b>: toma valores separados que se pueden contar (1, 2, 3…). Cada valor tiene su propia probabilidad, y la función que las reúne es la <b>función de masa</b>: <var>p</var>(<var>k</var>) = P(<var>X</var> = <var>k</var>). Las probabilidades de todos los valores suman 1.</p>
+    <p>Una <b>variable aleatoria</b> (<i>random variable</i>) <var>X</var> es un número que sale de un experimento: lo que marca un dado, la estatura de una persona, los segundos hasta el próximo clic. Hay dos tipos, y cada uno se describe con una función distinta:</p>
+    <p><b>Discreta</b>: toma valores separados que se pueden contar (1, 2, 3…). Cada valor tiene su propia probabilidad, y la función que las reúne es la <b>función de masa</b> (PMF, <i>probability mass function</i>, función de masa de probabilidad): <var>p</var>(<var>k</var>) = P(<var>X</var> = <var>k</var>). Las probabilidades de todos los valores suman 1.</p>
     <p><b>Continua</b>: puede tomar cualquier valor de un intervalo (1.7231… metros). Aquí la probabilidad de un valor <i>exacto</i> es 0, y hace falta una idea nueva: la densidad.</p>
   </div>
   <div class="lab">
@@ -55,7 +55,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <canvas id="pm-cv" role="img" aria-label="Barras con la probabilidad de cada suma"></canvas>
     <div class="ctls"><label class="ctl">Valor <var>k</var> de la suma<output id="pm-k-o"></output><input type="range" id="pm-k" min="2" max="12" step="1" value="7"></label></div>
     <div class="readout" id="pm-out"></div>
-    <p class="hint">Con un dado todas las caras valen lo mismo. Al sumar más dados aparece una campana: es el teorema central del límite, y explica por qué la distribución normal está en todas partes.</p>
+    <p class="hint">Con un dado todas las caras valen lo mismo. Al sumar más dados aparece una campana: es el <b>teorema central del límite</b> (<i>central limit theorem</i>), que dice que la suma de muchas variables aleatorias independientes tiende a esa forma, y explica por qué la distribución normal está en todas partes.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Lanza 36 000 pares de dados</h3></div>
@@ -70,7 +70,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <section>
-  <h2>La función de densidad (PDF)</h2>
+  <h2>La función de densidad (PDF, <i>probability density function</i>)</h2>
   <div class="prose">
     <p>Imagina que mides la estatura de miles de personas y haces un histograma. Si en vez de contar personas pones en cada barra la <b>proporción de datos dividida entre el ancho de la barra</b>, el área de cada barra es la fracción de datos que cae en ella, y el área total es 1.</p>
     <p>Ahora usa más datos y barras más angostas. Los bordes de las barras se suavizan hasta formar una curva: esa curva es la <b>función de densidad</b> <var>f</var>(<var>x</var>). Mueve los controles y mírala aparecer.</p>
@@ -97,7 +97,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <section>
-  <h2>La función de distribución acumulada (CDF)</h2>
+  <h2>La función de distribución acumulada (CDF, <i>cumulative distribution function</i>)</h2>
   <div class="prose">
     <p>La <b>función de distribución</b> <var>F</var>(<var>x</var>) responde: ¿qué probabilidad hay de obtener un valor <b>menor o igual</b> que <var>x</var>? Es el área acumulada bajo la densidad, desde la izquierda hasta <var>x</var>.</p>
   </div>
@@ -129,8 +129,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="ctls">
       <label class="ctl">Media μ<output id="nd-mu-o"></output><input type="range" id="nd-mu" min="-3" max="3" step="0.1" value="0"></label>
       <label class="ctl">Desviación σ<output id="nd-sd-o"></output><input type="range" id="nd-sd" min="0.4" max="3" step="0.1" value="1"></label>
-      <label class="ctl">Desde <var>a</var><output id="nd-a-o"></output><input type="range" id="nd-a" min="-8" max="8" step="0.1" value="-1"></label>
-      <label class="ctl">Hasta <var>b</var><output id="nd-b-o"></output><input type="range" id="nd-b" min="-8" max="8" step="0.1" value="1"></label>
+      <label class="ctl">Desde <var>a</var><output id="nd-a-o"></output><input type="range" id="nd-a" min="-12" max="12" step="0.1" value="-1"></label>
+      <label class="ctl">Hasta <var>b</var><output id="nd-b-o"></output><input type="range" id="nd-b" min="-12" max="12" step="0.1" value="1"></label>
     </div>
     <div class="btns"><button id="nd-1s">μ ± σ</button><button id="nd-2s">μ ± 2σ</button><button id="nd-3s">μ ± 3σ</button></div>
     <div class="readout" id="nd-out"></div>
@@ -150,7 +150,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h2>Probabilidad condicional: preguntar dentro de un mundo más pequeño</h2>
   <div class="prose">
     <p>Toda probabilidad se calcula <b>dentro de un espacio</b>: el conjunto Ω de todo lo que puede pasar. Con dos dados, Ω tiene 36 resultados y cada uno vale 1/36. Ahora alguien mira los dados y te da una pista: «la suma es 8». De golpe, 31 de los 36 resultados dejan de ser posibles. <span class="hl">Tu universo se achicó a los 5 resultados que suman 8, y ahora las preguntas se hacen ahí dentro.</span></p>
-    <p>Eso es la probabilidad condicional. P(A | B) se lee «la probabilidad de A <b>dado</b> B» y significa: <b>suponiendo que B ya pasó</b>, ¿qué fracción de B es también A?</p>
+    <p>Eso es la <b>probabilidad condicional</b> (<i>conditional probability</i>). P(A | B) se lee «la probabilidad de A <b>dado</b> B» y significa: <b>suponiendo que B ya pasó</b>, ¿qué fracción de B es también A?</p>
   </div>
   <div class="eq">P(A | B) = P(A ∩ B) / P(B) &nbsp;&nbsp;=&nbsp;&nbsp; casos de A dentro de B / casos de B</div>
   <div class="prose">
@@ -172,7 +172,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="cards">
     <div class="fact"><h3>El orden importa</h3><span class="ex">P(A | B) ≠ P(B | A)</span><p>Casi todos los que tienen gripe tosen, pero pocos de los que tosen tienen gripe. Son dos preguntas hechas en universos distintos: el de los enfermos y el de los que tosen.</p></div>
     <div class="fact"><h3>Independencia</h3><span class="ex">P(A | B) = P(A)</span><p>Si la pista no cambia la respuesta, A y B son independientes. Saber que el primer dado es par no dice nada del segundo.</p></div>
-    <div class="fact"><h3>Regla del producto</h3><span class="ex">P(A ∩ B) = P(B) · P(A | B)</span><p>Despejando la definición. Encadenada muchas veces, es como un <a href="15-llm.html">LLM</a> calcula la probabilidad de una frase: palabra por palabra, cada una dado lo anterior.</p></div>
+    <div class="fact"><h3>Regla del producto</h3><span class="ex">P(A ∩ B) = P(B) · P(A | B)</span><p>Despejando la definición. Encadenada muchas veces, es como un <a href="15-llm.html">modelo de lenguaje</a> (el que predice la siguiente palabra) calcula la probabilidad de una frase: palabra por palabra, cada una dado lo anterior.</p></div>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Cambiar el punto de vista: la parte se vuelve el todo</h3></div>
@@ -208,13 +208,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="eq">P(spam | gratis) = P(gratis | spam) · P(spam) / P(gratis) = (0.6 · 0.2) / (0.6 · 0.2 + 0.05 · 0.8) = 0.12 / 0.16 = 0.75</div>
   <div class="prose">
-    <p>En palabras: de cada 1000 correos, 200 son spam y 120 de ellos dicen «gratis». De los 800 normales, 40 dicen «gratis». En el universo de los que dicen «gratis» hay 160 correos, y 120 son spam: 120 / 160 = 75 %. P(spam) = 0.2 es la creencia <b>antes</b> de leer el correo (a priori) y 0.75 la creencia <b>después</b> de ver la evidencia (a posteriori).</p>
+    <p>En palabras: de cada 1000 correos, 200 son spam y 120 de ellos dicen «gratis». De los 800 normales, 40 dicen «gratis». En el universo de los que dicen «gratis» hay 160 correos, y 120 son spam: 120 / 160 = 75 %. P(spam) = 0.2 es la creencia <b>antes</b> de leer el correo (probabilidad <b>a priori</b>, <i>prior</i>) y 0.75 la creencia <b>después</b> de ver la evidencia (probabilidad <b>a posteriori</b>, <i>posterior</i>).</p>
   </div>
 </section>
 
 <section>
   <h2>Repaso del módulo</h2>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Un clasificador entrega una distribución discreta (las salidas de softmax). Los modelos generativos, como los de difusión, aprenden densidades de imágenes o sonidos. Los pesos de una red se inicializan con muestras de una normal o una uniforme (<code>torch.randn</code>). La verosimilitud y la entropía cruzada se calculan con densidades y funciones de masa. Los datos se estandarizan con media y desviación (<code>StandardScaler</code>). Y Naive Bayes clasifica con el teorema de Bayes.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Un clasificador entrega una distribución discreta: las salidas de <b>softmax</b>, la función que convierte puntajes en probabilidades que suman 1 (<a href="13-neurona.html">módulo 13</a>). Los modelos generativos, que crean datos nuevos, aprenden densidades de imágenes o sonidos; los <b>modelos de difusión</b> (<i>diffusion models</i>), por ejemplo, generan una imagen quitando ruido paso a paso. Los pesos de una red se inicializan con muestras de una normal o una uniforme (<code>torch.randn</code>, la función de la librería PyTorch que saca números de una normal con μ = 0 y σ = 1). La <b>verosimilitud</b> (<i>likelihood</i>) y la <b>entropía cruzada</b> (<i>cross-entropy</i>, la pérdida que mide qué tan lejos está la distribución predicha de la correcta; <a href="13-neurona.html">módulo 13</a>) se calculan con densidades y funciones de masa. Los datos se estandarizan con media y desviación: <code>StandardScaler</code>, de la librería scikit-learn, aplica z = (x − μ) / σ a cada columna. Y <b>Naive Bayes</b> (Bayes ingenuo), un clasificador que supone independientes las palabras o rasgos, clasifica con el teorema de Bayes (<a href="12-modelos.html">módulo 12</a>).</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>¿Probabilidad de sacar 5 o más con un dado?</summary><p>2 casos favorables (5 y 6) / 6 posibles = 1/3 ≈ 0.333</p></details>
     <details><summary>¿Puede una función de densidad valer 3 en algún punto?</summary><p>Sí. La uniforme en [0, 1/3] vale 3 en todo el tramo; su área es 3 × 1/3 = 1.</p></details>
@@ -257,15 +257,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </details>
   </div>
   <div class="ej-item">
-    <div class="ej-q"><span class="ej-n">2</span><div><b>Densidad y distribución de una uniforme</b><p><var>X</var> es uniforme entre 0 y 10. Escribe su densidad <var>p</var>(<var>x</var>) y su distribución <var>F</var>(<var>x</var>). Calcula <var>P</var>(2 ≤ <var>X</var> ≤ 5) y <var>P</var>(<var>X</var> = 4).</p></div></div>
+    <div class="ej-q"><span class="ej-n">2</span><div><b>Densidad y distribución de una uniforme</b><p><var>X</var> es uniforme entre 0 y 10. Escribe su densidad <var>f</var>(<var>x</var>) y su distribución <var>F</var>(<var>x</var>). Calcula <var>P</var>(2 ≤ <var>X</var> ≤ 5) y <var>P</var>(<var>X</var> = 4).</p></div></div>
     <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
       <ol class="ej-steps">
-        <li>La densidad es constante y el área total debe ser 1: altura · 10 = 1, así que <var>p</var>(<var>x</var>) = 1/10.</li>
+        <li>La densidad es constante y el área total debe ser 1: altura · 10 = 1, así que <var>f</var>(<var>x</var>) = 1/10.</li>
         <li>La distribución acumula el área desde 0: <var>F</var>(<var>x</var>) = <var>x</var>/10, para <var>x</var> entre 0 y 10.</li>
         <li>Probabilidad del intervalo:<div class="eq"><var>P</var>(2 ≤ <var>X</var> ≤ 5) = <var>F</var>(5) − <var>F</var>(2) = 0.5 − 0.2 = 0.3</div></li>
         <li>Un valor exacto es una tira de ancho 0, y su área es 0. Por eso <var>P</var>(<var>X</var> = 4) = 0, aunque 4 sea perfectamente posible.</li>
       </ol>
-      <p class="ej-res">Resultado: p(x) = 0.1, F(x) = x/10, P(2 ≤ X ≤ 5) = 0.3 y P(X = 4) = 0.</p>
+      <p class="ej-res">Resultado: f(x) = 0.1, F(x) = x/10, P(2 ≤ X ≤ 5) = 0.3 y P(X = 4) = 0.</p>
     </details>
   </div>
   <div class="ej-item">
@@ -310,7 +310,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>
@@ -403,7 +403,7 @@ function drawPdf(ctx,F,d,color){
     ids.forEach(k=>$('#nd-'+k+'-o').textContent=short(num('#nd-'+k)));
     if(a>b)[a,b]=[b,a];
     const pdf=x=>Math.exp(-.5*((x-mu)/sd)**2)/(sd*Math.sqrt(2*Math.PI));
-    const F=frame(ctx,w,h,{x0:-8,x1:8,y0:0,y1:1.1,sy:.2});
+    const F=frame(ctx,w,h,{x0:-12,x1:12,y0:0,y1:1.1,sx:2,sy:.2});
     F.clip();ctx.fillStyle=tok('--accent-soft');ctx.beginPath();ctx.moveTo(F.X(a),F.Y(0));
     for(let i=0;i<=200;i++){const x=a+(b-a)*i/200;ctx.lineTo(F.X(x),F.Y(pdf(x)));}
     ctx.lineTo(F.X(b),F.Y(0));ctx.closePath();ctx.fill();

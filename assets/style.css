@@ -96,7 +96,7 @@ section{background:var(--card);border:1px solid var(--line);border-radius:14px;p
 .tbl{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:.94rem}
 th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-family:var(--f-display);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+th{font-family:var(--f-display);font-size:.82rem;letter-spacing:.02em;color:var(--muted);font-weight:600}
 td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 td .sym{font-size:1.2rem}
 
@@ -234,7 +234,7 @@ footer{margin-top:40px;font-size:.88rem;color:var(--muted);display:grid;gap:4px}
 main section>h2{font-size:clamp(1.3rem,2.6vw,1.65rem)}
 figure{margin:0}
 .fig{display:grid;gap:6px;min-width:0}
-.cap{font:600 .74rem/1.35 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.cap{font:600 .8rem/1.35 var(--f-display);letter-spacing:.02em;color:var(--muted)}
 .cap .fa{color:var(--accent)} .cap .fw{color:var(--warm)}
 .twin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
 @media (max-width:640px){.twin{grid-template-columns:minmax(0,1fr)}}

@@ -32,12 +32,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section>
   <h2>Las cuentas de base</h2>
   <div class="prose">
-    <p>Un modelo de Machine Learning es, en el fondo, una calculadora enorme que hace millones de sumas y multiplicaciones. Antes de hablar de redes conviene tener fresca la aritmética con la que trabaja.</p>
+    <p>Un modelo de <b>ML</b> (<i>Machine Learning</i>, aprendizaje automático), un programa que aprende patrones a partir de ejemplos en lugar de seguir reglas escritas a mano, es, en el fondo, una calculadora enorme que hace millones de sumas y multiplicaciones. Antes de hablar de redes conviene tener fresca la aritmética con la que trabaja.</p>
   </div>
   <div class="cards">
     <div class="fact"><h3>Orden de operaciones</h3><span class="ex">2 + 3 × 4² = 2 + 3 × 16 = 50</span><p>Paréntesis, potencias, multiplicación y división, y al final suma y resta.</p></div>
     <div class="fact"><h3>Potencias y raíces</h3><span class="ex">2³ = 8 · √16 = 4 · x⁻¹ = 1/x</span><p>La distancia entre dos puntos es la raíz de una suma de cuadrados.</p></div>
-    <div class="fact"><h3>Notación científica</h3><span class="ex">0.001 = 1 × 10⁻³ = 1e-3</span><p>Así verás la tasa de aprendizaje en el código: <code>lr = 1e-3</code>.</p></div>
+    <div class="fact"><h3>Notación científica</h3><span class="ex">0.001 = 1 × 10⁻³ = 1e-3</span><p>Así verás la tasa de aprendizaje (<i>learning rate</i>, <code>lr</code>), el tamaño de cada ajuste que el modelo hace al aprender, en el código: <code>lr = 1e-3</code>.</p></div>
     <div class="fact"><h3>Signos</h3><span class="ex">(−3) × (−2) = 6 · (−3) × 2 = −6</span><p>Los pesos de una red pueden ser negativos: en vez de sumar influencia, la restan.</p></div>
   </div>
   <div class="practica">
@@ -48,7 +48,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>2 + 3 * 4**2</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 50: primero la potencia, luego ×, al final +</div><div class="cmd-l"><code>(2 + 3) * 4**2</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 80: el paréntesis cambia todo</div><div class="cmd-l"><code>1e-3</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.001: así se escribe lr = 1e-3</div><div class="cmd-l"><code>(-3) * (-2)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 6</div><div class="cmd-l"><code>5 / 0</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ZeroDivisionError: no se puede</div><div class="cmd-l"><code>5 / (0 + 1e-8)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 500000000.0</div></div></div></li>
       <li>Cambia el <code>1e-8</code> por <code>1e-3</code> y vuelve a dividir.</li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> en Python la potencia se escribe <code>**</code>. Dividir entre 0 es un error, y el truco <code>b + 1e-8</code> del recuadro «Cuidado con el denominador» lo evita a cambio de un número enorme: la razón se dispara cuando el denominador se acerca a 0.</p>
+    <p class="obs"><b>Qué observar:</b> en Python la potencia se escribe <code>**</code>. Dividir entre 0 es un error, y el truco <code>b + 1e-8</code>, que verás más abajo en el recuadro «Cuidado con el denominador», lo evita a cambio de un número enorme: la razón se dispara cuando el denominador se acerca a 0.</p>
   </div>
 </section>
 
@@ -123,7 +123,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </ol>
     <p class="obs"><b>Qué observar:</b> con g(x) = x² + x la razón se pega a la recta y = 2: las dos crecen al mismo ritmo, como en el ejercicio 3. Con x³ la razón se aplasta contra 0 (gana g) y con x se dispara (gana f). Cerca de x = 0 y x = −1 la curva explota: ahí g vale 0.</p>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Comparar quién crece más rápido es lo que hace la notación O(<var>n</var>) al medir algoritmos: O(<var>n</var>²) frente a O(<var>n</var>). Los momios <var>p</var> / (1 − <var>p</var>) y su logaritmo, el <i>logit</i>, son la base de la regresión logística. Y softmax compara exponenciales: <var>e</var><sup><var>a</var></sup> / <var>e</var><sup><var>b</var></sup> = <var>e</var><sup><var>a</var> − <var>b</var></sup>.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Comparar quién crece más rápido es lo que hace la notación O(<var>n</var>) al medir algoritmos: O(<var>n</var>²) frente a O(<var>n</var>). Los momios (<i>odds</i>) <var>p</var> / (1 − <var>p</var>), cuántas veces es más probable que algo ocurra a que no ocurra, y su logaritmo, el <i>logit</i>, son la base de la regresión logística (<i>logistic regression</i>), el modelo que calcula la probabilidad de un sí o un no. Y softmax, la función que convierte varias puntuaciones en probabilidades que suman 1, compara exponenciales: <var>e</var><sup><var>a</var></sup> / <var>e</var><sup><var>b</var></sup> = <var>e</var><sup><var>a</var> − <var>b</var></sup>.</p></div>
 </section>
 
 <section>
@@ -146,7 +146,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section>
   <h2>Las métricas de un modelo son razones</h2>
   <div class="prose">
-    <p>Imagina un filtro de spam que revisó 1000 correos. La <b>matriz de confusión</b> cuenta aciertos y errores. Cambia los números y mira cómo se mueven las métricas.</p>
+    <p>Imagina un filtro de spam que revisó 1000 correos. La <b>matriz de confusión</b> (<i>confusion matrix</i>), una tabla que cruza lo que el modelo predijo con lo que era en realidad, cuenta aciertos y errores. Cambia los números y mira cómo se mueven las métricas.</p>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Matriz de confusión</h3></div>
@@ -168,7 +168,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
     <div class="readout" id="cm-note"></div>
-    <p class="hint">Exactitud = aciertos / total. Precisión = VP / (VP + FP): de lo que marqué como spam, ¿cuánto lo era? Sensibilidad = VP / (VP + FN): del spam real, ¿cuánto atrapé?</p>
+    <p class="hint">Exactitud (<i>accuracy</i>) = aciertos / total. Precisión (<i>precision</i>) = VP / (VP + FP): de lo que marqué como spam, ¿cuánto lo era? Sensibilidad (<i>recall</i>) = VP / (VP + FN): del spam real, ¿cuánto atrapé? F1 (<i>F1 score</i>): media armónica de precisión y sensibilidad, un solo número que resume las dos.</p>
+    <p class="hint">Falso amigo: en inglés <i>accuracy</i> es la exactitud y <i>precision</i> es la precisión; no se traduce <i>accuracy</i> como «precisión». En inglés las casillas se llaman TP, FN, FP y TN (<i>true positive</i>, <i>false negative</i>, <i>false positive</i>, <i>true negative</i>), que equivalen a VP, FN, FP y VN.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Las métricas en cuatro líneas</h3></div>
@@ -225,7 +226,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li>Al final, la suma: 3 + 8 = 11.</li>
       </ol>
       <p class="ej-res">Resultado: 11</p>
-      <p class="ej-ml">En ML: un error en el orden de operaciones dentro de una fórmula de pérdida cambia por completo lo que aprende el modelo.</p>
+      <p class="ej-ml">En ML: un error en el orden de operaciones dentro de la función de pérdida (<i>loss</i>), que mide cuánto se equivoca el modelo, cambia por completo lo que aprende el modelo.</p>
     </details>
   </div>
 
@@ -239,7 +240,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li>Si P duplica las dos magnitudes: 300 / 120 = 2.5. Es la misma razón, porque las dos se multiplicaron por el mismo número.</li>
       </ol>
       <p class="ej-res">Resultado: P (2.5 mil $/m²) es más caro que Q (2 mil $/m²); duplicar ambas no cambia la razón.</p>
-      <p class="ej-ml">En ML: el precio por m² es una variable nueva creada como razón, un truco muy común en la ingeniería de variables.</p>
+      <p class="ej-ml">En ML: el precio por m² es una variable nueva creada como razón, un truco muy común en la ingeniería de variables (<i>feature engineering</i>), el trabajo de crear con los datos crudos variables que le sirvan más al modelo.</p>
     </details>
   </div>
 
@@ -289,7 +290,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

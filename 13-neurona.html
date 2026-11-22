@@ -28,16 +28,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 13 DE 17</span><h1>La neurona y la red: todo junto</h1></header>
+<header class="page-head"><span class="num">MÓDULO 13 DE 17</span><h1>La neurona y la red: todo junto</h1><p class="lede">Una neurona es un producto punto, una suma y una función. Muchas neuronas forman una red, y la red aprende con el mismo ciclo de siempre: predecir, medir el error, retroceder con la regla de la cadena y ajustar.</p></header>
 <section>
-  
+  <h2>Una neurona: producto punto, suma y activación</h2>
   <div class="prose">
-    <p>Ahora tienes todas las piezas. Una neurona hace un <b>producto punto</b> entre sus pesos y la entrada, le <b>suma</b> un sesgo y pasa el resultado por una <b>función</b> de activación:</p>
+    <p>Ahora tienes todas las piezas. Una neurona hace un <b>producto punto</b> entre sus pesos y la entrada, le <b>suma</b> un sesgo (<i>bias</i>, un número que mueve el resultado) y pasa el resultado por una <b>función</b> de activación (<i>activation function</i>, la que decide cuánto «se enciende» la neurona):</p>
   </div>
   <div class="eq"><var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> &nbsp;&nbsp;→&nbsp;&nbsp; ŷ = σ(<var>z</var>)</div>
+  <div class="prose">
+    <p>El laboratorio trae tres funciones de activación. La <b>sigmoide</b> (<i>sigmoid</i>, σ) aplasta <var>z</var> entre 0 y 1. La <b>tangente hiperbólica</b> (tanh) lo aplasta entre −1 y 1. <b>ReLU</b> (<i>Rectified Linear Unit</i>, unidad lineal rectificada) deja pasar <var>z</var> si es positivo y da 0 si es negativo: ReLU(<var>z</var>) = máx(0, <var>z</var>).</p>
+  </div>
   <div class="lab neuron">
     <div class="lab-title"><span class="tag">Reto</span><h3>Ajusta los pesos para separar los puntos</h3></div>
-    <p class="hint">La neurona dice «azul» cuando <var>z</var> &gt; 0 y «rojo» cuando <var>z</var> &lt; 0. La línea es la frontera de decisión: donde <var>z</var> = 0. Mueve <var>w</var>₁, <var>w</var>₂ y <var>b</var> hasta acertar los 12 puntos.</p>
+    <p class="hint">La neurona dice «azul» cuando <var>z</var> &gt; 0 y «rojo» cuando <var>z</var> &lt; 0. La línea es la frontera de decisión (<i>decision boundary</i>): donde <var>z</var> = 0. Mueve <var>w</var>₁, <var>w</var>₂ y <var>b</var> hasta acertar los 12 puntos.</p>
     <div class="split">
       <canvas id="nn-cv" role="img" aria-label="Mapa de salida de la neurona con puntos de dos clases"></canvas>
       <div style="display:grid;gap:12px;align-content:start;min-width:0">
@@ -57,7 +60,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="prose">
     <h3>De una neurona a una red</h3>
-    <p>Varias neuronas en paralelo forman una <b>capa</b>: sus pesos se apilan en una <b>matriz</b> <b>W</b>. Varias capas en fila forman una <b>red</b>: una cadena de funciones. Una red pequeña para clasificar en 2 clases se escribe así:</p>
+    <p>Varias neuronas en paralelo forman una <b>capa</b> (<i>layer</i>): sus pesos se apilan en una <b>matriz</b> <b>W</b>. Varias capas en fila forman una <b>red</b>: una cadena de funciones. Una red pequeña para clasificar en 2 clases se escribe así:</p>
   </div>
   <div class="eq"><b>h</b> = ReLU(<b>W</b>₁<b>x</b> + <b>b</b>₁) &nbsp;→&nbsp; ŷ = softmax(<b>W</b>₂<b>h</b> + <b>b</b>₂)</div>
   <div class="tbl"><svg id="net-svg" viewBox="0 0 520 230" style="width:100%;min-width:420px;height:auto;display:block" role="img" aria-label="Red de 3 entradas, 4 neuronas ocultas y 2 salidas"></svg></div>
@@ -78,7 +81,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="prose">
     <h3>¿Qué tan mal le fue? La función de pérdida</h3>
-    <p>Para clasificar se usa la <b>entropía cruzada</b>: −ln(probabilidad que el modelo le dio a la respuesta correcta). Castiga poco a un modelo seguro y acertado, y muchísimo a uno seguro y equivocado.</p>
+    <p>Para clasificar se usa la <b>entropía cruzada</b> (<i>cross-entropy</i>):−ln(probabilidad que el modelo le dio a la respuesta correcta). Castiga poco a un modelo seguro y acertado, y muchísimo a uno seguro y equivocado.</p>
   </div>
   <div class="tbl"><table>
     <thead><tr><th>Probabilidad dada a la clase correcta</th><th class="num">Pérdida −ln(p)</th><th>Lectura</th></tr></thead>
@@ -91,9 +94,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </table></div>
   <div class="prose"><h3>El ciclo de entrenamiento</h3></div>
   <ol class="steps">
-    <li><span><b>Propagación hacia adelante.</b> Los datos atraviesan la red: matrices, sumas y activaciones (módulos 03, 04 y 05).</span></li>
-    <li><span><b>Calcular la pérdida.</b> Comparar ŷ con la respuesta real usando MSE o entropía cruzada (módulos 02 y 09).</span></li>
-    <li><span><b>Backpropagation.</b> Aplicar la regla de la cadena desde la pérdida hacia atrás para obtener el gradiente de cada peso (módulo 07).</span></li>
+    <li><span><b>Propagación hacia adelante</b> (<i>forward pass</i>). Los datos atraviesan la red: matrices, sumas y activaciones (módulos 03, 04 y 05).</span></li>
+    <li><span><b>Calcular la pérdida.</b> Comparar ŷ con la respuesta real usando el MSE (<i>Mean Squared Error</i>, error cuadrático medio) o la entropía cruzada (módulos 02 y 09).</span></li>
+    <li><span><b>Retropropagación</b> (<i>backpropagation</i>). Aplicar la regla de la cadena desde la pérdida hacia atrás para obtener el gradiente de cada peso (módulo 07).</span></li>
     <li><span><b>Actualizar.</b> Mover cada peso un paso: <var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var> (módulo 10).</span></li>
     <li><span><b>Repetir</b> con más datos, miles de veces, hasta que la pérdida deje de bajar.</span></li>
   </ol>
@@ -180,7 +183,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li>Total: 16 + 10 = 26.</li>
       </ol>
       <p class="ej-res">Resultado: 26 parámetros.</p>
-      <p class="ej-ml">En ML: un LLM hace la misma cuenta con matrices de miles por miles, y por eso llega a miles de millones de parámetros.</p>
+      <p class="ej-ml">En ML: un LLM (<i>Large Language Model</i>, modelo de lenguaje grande) hace la misma cuenta con matrices de miles por miles, y por eso llega a miles de millones de parámetros.</p>
     </details>
   </div>
   <div class="ej-item">
@@ -228,7 +231,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

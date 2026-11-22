@@ -50,15 +50,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <tbody>
       <tr><td class="mono">c (constante)</td><td class="mono">0</td><td>Lo que no cambia no tiene pendiente</td></tr>
       <tr><td class="mono">xⁿ</td><td class="mono">n·xⁿ⁻¹</td><td>x² → 2x, x³ → 3x²</td></tr>
-      <tr><td class="mono">eˣ</td><td class="mono">eˣ</td><td>La única función que es su propia derivada</td></tr>
-      <tr><td class="mono">ln x</td><td class="mono">1/x</td><td>Aparece al derivar la entropía cruzada</td></tr>
-      <tr><td class="mono">σ(x)</td><td class="mono">σ(x)·(1 − σ(x))</td><td>Por eso la sigmoide es cómoda en redes</td></tr>
-      <tr><td class="mono">ReLU(x)</td><td class="mono">1 si x &gt; 0, si no 0</td><td>La más barata de calcular</td></tr>
+      <tr><td class="mono">eˣ</td><td class="mono">eˣ</td><td>La función que es su propia derivada y vale 1 en 0</td></tr>
+      <tr><td class="mono">ln x</td><td class="mono">1/x</td><td>Aparece al derivar la entropía cruzada (<i>cross-entropy</i>, la pérdida de clasificación: castiga dar poca probabilidad a la clase correcta)</td></tr>
+      <tr><td class="mono">σ(x)</td><td class="mono">σ(x)·(1 − σ(x))</td><td>La sigmoide (<i>sigmoid</i>), σ(x) = 1 / (1 + e<sup>−x</sup>), curva en S entre 0 y 1. Su derivada sale de ella misma: por eso es cómoda en redes</td></tr>
+      <tr><td class="mono">ReLU(x) = máx(0, x)</td><td class="mono">1 si x &gt; 0; 0 si x &lt; 0; no existe en 0</td><td>ReLU (<i>Rectified Linear Unit</i>, unidad lineal rectificada) deja pasar los positivos y anula los negativos. Su derivada es la más barata de calcular</td></tr>
     </tbody>
   </table></div>
   <div class="prose">
-    <h3>Regla de la cadena: el corazón de backpropagation</h3>
-    <p>Cuando una función está dentro de otra, las derivadas se <b>multiplican</b> a lo largo de la cadena. Ejemplo: <var>y</var> = (3<var>x</var> + 1)² en <var>x</var> = 1.</p>
+    <h3>Regla de la cadena: el corazón de la retropropagación</h3>
+    <p>Cuando una función está dentro de otra, las derivadas se <b>multiplican</b> a lo largo de la cadena. Es la base de <i>backpropagation</i> (retropropagación), la regla de la cadena aplicada desde el error hacia atrás para entrenar redes neuronales. Ejemplo: <var>y</var> = (3<var>x</var> + 1)² en <var>x</var> = 1.</p>
   </div>
   <div class="chain" aria-label="Cadena x, u, y con derivadas">
     <div class="box"><var>x</var> = 1<small>entrada</small></div>
@@ -79,11 +79,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
       <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver. Después de la línea del <code>for</code>, pulsa Enter dos veces.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>f = lambda x: x**2</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>for h in [1, 0.1, 0.01, 0.001, 1e-6, 1e-12]: print(h, (f(3 + h) - f(3)) / h)</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> la pendiente baja de 7 a 6.1, 6.01, 6.001…: es el 6 + <var>h</var> del ejercicio 1. Pero con <var>h</var> = 1e-12 el resultado empeora (6.0005): al restar dos números casi iguales la computadora pierde dígitos. Por eso las librerías no derivan así, sino con la regla de la cadena.</p>
+    <p class="obs"><b>Qué observar:</b> la pendiente baja de 7 a 6.1, 6.01, 6.001…: es el 6 + <var>h</var> del ejercicio 1. Pero con <var>h</var> = 1e-12 el resultado empeora (6.0005): al restar dos números casi iguales la computadora pierde dígitos.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Comprueba la cadena y la sigmoide</h3></div>
-    <p class="para">Usa una diferencia centrada para confirmar dos resultados del módulo.</p>
+    <p class="para">Usa una diferencia centrada, (<var>f</var>(<var>x</var> + <var>h</var>) − <var>f</var>(<var>x</var> − <var>h</var>)) / (2<var>h</var>), que mira a los dos lados del punto y es más precisa que la secante de un solo lado, para confirmar dos resultados del módulo.</p>
     <ol>
       <li>Entra a Python con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>y = lambda x: (3*x + 1)**2</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>h = 1e-6</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>(y(1 + h) - y(1 - h)) / (2*h)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 24</div><div class="cmd-l"><code>sig = lambda z: 1 / (1 + math.exp(-z))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>(sig(h) - sig(-h)) / (2*h)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 0.25</div><div class="cmd-l"><code>sig(2.2)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 0.9</div><div class="cmd-l"><code>(sig(2.2 + h) - sig(2.2 - h)) / (2*h)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 0.09</div></div></div></li>
     </ol>
@@ -99,9 +99,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>Escribe <code>y=f'(a)(x-a)+f(a)</code>. Desmos entiende la comilla como derivada.</li>
       <li>Mueve <var>a</var> de −2 a 2.</li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> en <var>a</var> = −1 y <var>a</var> = 1 la tangente queda horizontal: la derivada 3<var>x</var>² − 3 vale 0. En esos puntos el descenso del gradiente se detiene; en <var>a</var> = 1 hay un mínimo local.</p>
+    <p class="obs"><b>Qué observar:</b> en <var>a</var> = −1 y <var>a</var> = 1 la tangente queda horizontal: la derivada 3<var>x</var>² − 3 vale 0. En esos puntos el descenso del gradiente (<i>gradient descent</i>: bajar por la curva dando pasos en contra de la derivada, <a href="10-gradiente.html">módulo 10</a>) se detiene; en <var>a</var> = 1 hay un mínimo local.</p>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Una red es una cadena de funciones: capa tras capa. <b>Backpropagation</b> es la regla de la cadena aplicada desde el error hacia atrás, para saber cuánto culpa tiene cada peso. PyTorch y TensorFlow lo hacen automáticamente (<code>loss.backward()</code>), pero entender la idea te permite depurar.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Una red es una cadena de funciones: capa tras capa. <b>Backpropagation</b> recorre esa cadena desde el error hacia atrás para saber cuánta culpa tiene cada peso. PyTorch y TensorFlow (librerías de Python para redes neuronales) lo hacen automáticamente (<code>loss.backward()</code>), pero entender la idea te permite depurar.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>¿Cuál es la derivada de 3x² en x = 2?</summary><p>f′(x) = 6x → f′(2) = 12</p></details>
     <details><summary>Si y = (2x)³, ¿cuánto vale dy/dx en x = 1? (usa la cadena)</summary><p>u = 2x = 2; dy/du = 3u² = 12; du/dx = 2 → 12 · 2 = 24</p></details>
@@ -111,8 +111,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
     <ol>
       <li>Leibniz escribía <var>dy</var>/<var>dx</var> y Newton ponía un punto encima de la letra. ¿Por qué ganó la notación de Leibniz? ¿Quién introdujo <var>f</var>′(<var>x</var>)?<span class="pista">Pista: busca «notación de Leibniz Newton Lagrange derivada».</span></li>
-      <li>El módulo dice que PyTorch deriva solo con <code>loss.backward()</code>. ¿Qué es la diferenciación automática y en qué se diferencia de derivar con un <var>h</var> pequeño?<span class="pista">Pista: busca «diferenciación automática modo inverso».</span></li>
-      <li>La tabla dice que e<sup><var>x</var></sup> es la única función que es su propia derivada. ¿Qué pasa con 5e<sup><var>x</var></sup>? ¿Es cierta la frase tal como está?<span class="pista">Pista: busca «ecuación diferencial y′ = y soluciones».</span></li>
+      <li>El módulo dice que PyTorch deriva solo con <code>loss.backward()</code>. ¿Qué es la diferenciación automática en «modo inverso» y por qué una sola pasada hacia atrás por el grafo de cómputo da la derivada respecto de millones de pesos a la vez?<span class="pista">Pista: busca «diferenciación automática modo inverso grafo de cómputo».</span></li>
+      <li>La tabla dice que e<sup><var>x</var></sup> es la función que es su propia derivada y vale 1 en 0. ¿Qué pasa con 5e<sup><var>x</var></sup>? ¿Qué funciones cumplen <var>f</var>′ = <var>f</var> y por qué hace falta la condición «vale 1 en 0» para quedarse con una sola?<span class="pista">Pista: busca «ecuación diferencial y′ = y soluciones».</span></li>
       <li>El video del cap. 4 menciona la regla del producto. ¿Qué dice, y cuál es la regla del cociente?<span class="pista">Pista: busca «regla del producto y del cociente derivadas».</span></li>
       <li>ReLU no tiene derivada en 0. ¿Qué valor usan PyTorch y TensorFlow en ese punto?<span class="pista">Pista: busca «subgradiente ReLU en cero».</span></li>
     </ol>
@@ -177,7 +177,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </details>
   </div>
   <div class="ej-item">
-    <div class="ej-q"><span class="ej-n">5</span><div><b>Cuánta culpa tiene cada perilla</b><p>Un modelo predice <var>ŷ</var> = <var>w</var>·<var>x</var> + <var>b</var> y su error es <var>L</var> = (<var>ŷ</var> − <var>y</var>)². Con <var>x</var> = 2, <var>y</var> = 3, <var>w</var> = 1 y <var>b</var> = 0, calcula ∂<var>L</var>/∂<var>w</var> y ∂<var>L</var>/∂<var>b</var>. Después da un paso de aprendizaje con η = 0.1.</p></div></div>
+    <div class="ej-q"><span class="ej-n">5</span><div><b>Cuánta culpa tiene cada perilla</b><p>Un modelo predice <var>ŷ</var> = <var>w</var>·<var>x</var> + <var>b</var> y su error es <var>L</var> = (<var>ŷ</var> − <var>y</var>)². Con <var>x</var> = 2, <var>y</var> = 3, <var>w</var> = 1 y <var>b</var> = 0, calcula ∂<var>L</var>/∂<var>w</var> y ∂<var>L</var>/∂<var>b</var>. Después da un paso de aprendizaje con tasa de aprendizaje (<i>learning rate</i>) η = 0.1 (η es la letra griega «eta»: el tamaño del paso).</p></div></div>
     <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
       <ol class="ej-steps">
         <li>Predicción: <var>ŷ</var> = 1·2 + 0 = 2. Error: <var>L</var> = (2 − 3)² = 1.</li>
@@ -195,7 +195,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

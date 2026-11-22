@@ -135,15 +135,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="eq">∫<sub>0</sub><sup>2</sup> <var>x</var>² <var>dx</var> = [<var>x</var>³ / 3]<sub>0</sub><sup>2</sup> = 8/3 − 0 ≈ 2.667<small>Compáralo con lo que se acercaban las sumas del laboratorio</small></div>
   <div class="cards">
-    <div class="fact"><h3>Potencias</h3><span class="ex">∫ xⁿ dx = xⁿ⁺¹ / (n + 1)</span><p>La regla de la derivada, al revés.</p></div>
-    <div class="fact"><h3>Exponencial</h3><span class="ex">∫ eˣ dx = eˣ</span><p>Su propia derivada y su propia integral.</p></div>
-    <div class="fact"><h3>Recíproco</h3><span class="ex">∫ 1/x dx = ln x</span><p>De aquí sale el logaritmo de la entropía cruzada.</p></div>
+    <div class="fact"><h3>Potencias</h3><span class="ex">∫ xⁿ dx = xⁿ⁺¹ / (n + 1) + C</span><p>La regla de la derivada, al revés (vale para n ≠ −1). La <b>+ C</b> es la constante de integración: cualquier número, porque su derivada es 0.</p></div>
+    <div class="fact"><h3>Exponencial</h3><span class="ex">∫ eˣ dx = eˣ + C</span><p>Su propia derivada y su propia integral.</p></div>
+    <div class="fact"><h3>Recíproco</h3><span class="ex">∫ 1/x dx = ln|x| + C</span><p>El caso n = −1 que faltaba. Las barras |x| (valor absoluto) hacen que valga también para x &lt; 0. El logaritmo, que reaparece en la entropía cruzada (<i>cross-entropy</i>, la pérdida de clasificación), es la integral de 1/x.</p></div>
   </div>
 </section>
 
 <section>
   <h2>Repaso del módulo</h2>
-  <div class="ml"><b>Dónde aparece en ML</b><p>En probabilidad, <b>el área es la probabilidad</b>: P(<var>a</var> &lt; <var>X</var> &lt; <var>b</var>) es la integral de la función de densidad (<a href="09-probabilidad.html">módulo 09</a>). El valor esperado es otra integral: E[<var>X</var>] = ∫ <var>x</var>·<var>p</var>(<var>x</var>) <var>dx</var>. La métrica AUC-ROC es literalmente el área bajo una curva, y scikit-learn la calcula con trapecios, es decir, con una suma de Riemann. En la práctica casi todas las integrales de ML se aproximan con sumas.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>En probabilidad, <b>el área es la probabilidad</b>: P(<var>a</var> &lt; <var>X</var> &lt; <var>b</var>), que se lee «la probabilidad de que la variable aleatoria <var>X</var> caiga entre <var>a</var> y <var>b</var>», es la integral de la función de densidad (<a href="09-probabilidad.html">módulo 09</a>). El valor esperado (<i>expected value</i>) es otra integral: E[<var>X</var>] = ∫ <var>x</var>·<var>p</var>(<var>x</var>) <var>dx</var>, que se lee «el promedio de <var>X</var>»: cada valor <var>x</var> pesado por su densidad <var>p</var>(<var>x</var>). La métrica AUC (<i>Area Under the Curve</i>, área bajo la curva) de la curva ROC (<i>Receiver Operating Characteristic</i>), que evalúa clasificadores, es literalmente un área, y scikit-learn (librería de Python para ML clásico) la calcula con trapecios, una variante de la suma de Riemann. En la práctica casi todas las integrales de ML se aproximan con sumas.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Suma de Riemann por la izquierda de f(x) = x en [0, 2] con n = 2. ¿Cuánto da y cuál es el área real?</summary><p>Δx = 1; f(0)·1 + f(1)·1 = 0 + 1 = 1. El área real es 2 (un triángulo de base 2 y alto 2).</p></details>
     <details><summary>¿Es integrable la función escalón en [−1, 1]? ¿Cuánto vale?</summary><p>Sí: tiene un solo salto y está acotada. Vale 1 (un rectángulo de 1 × 1).</p></details>
@@ -157,7 +157,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>¿Qué es la integral de Lebesgue y por qué sí puede integrar la función de Dirichlet?<span class="pista">Pista: busca «integral de Lebesgue función de Dirichlet».</span></li>
       <li>El módulo nombra la integral impropia. ¿Qué es? ¿Cuánto vale el área bajo 1/<var>x</var>² desde 1 hasta infinito?<span class="pista">Pista: busca «integral impropia» y compara 1/<var>x</var> con 1/<var>x</var>².</span></li>
       <li>¿Qué es la integración de Monte Carlo y por qué se usa cuando hay muchas dimensiones?<span class="pista">Pista: busca «integración Monte Carlo dimensiones».</span></li>
-      <li>El recuadro de ML nombra la métrica AUC-ROC. ¿Qué curva es la ROC y qué significa que su área valga 0.5?<span class="pista">Pista: busca «curva ROC AUC interpretación».</span></li>
+      <li>El recuadro de ML nombra la métrica AUC de la curva ROC. ¿Qué curva es la ROC y qué significa que su área valga 0.5?<span class="pista">Pista: busca «curva ROC AUC interpretación».</span></li>
     </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=rfG8ce4nNh0" target="_blank" rel="noopener">Integration and the fundamental theorem of calculus (cap. 8)</a><span>El área como suma de rectángulos cada vez más finos, y el límite que la convierte en integral.</span></li><li><a href="https://www.youtube.com/watch?v=FnJqaIESC2s" target="_blank" rel="noopener">What does area have to do with slope? (cap. 9)</a><span>Por qué integrar y derivar son operaciones inversas.</span></li></ul></div>
@@ -234,7 +234,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

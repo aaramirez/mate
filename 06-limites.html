@@ -43,14 +43,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <canvas id="lim-cv" role="img" aria-label="Función cerca del punto, con dos valores a cada lado"></canvas>
     <div class="ctls"><label class="ctl">Distancia al punto δ<output id="lim-d-o"></output><input type="range" id="lim-d" min="0" max="3" step="0.05" value="0.3"></label></div>
     <div class="readout" id="lim-out"></div>
-    <p class="hint">Desliza el control hacia la derecha para acercarte: δ va de 1 a 0.001. Los puntos naranjas son <var>f</var>(<var>a</var> − δ) y <var>f</var>(<var>a</var> + δ). Un círculo vacío marca un valor que la función no toma.</p>
+    <p class="hint">Desliza el control hacia la derecha para acercarte: δ va de 1 a 0.001. Los puntos naranjas son <var>f</var>(<var>a</var> − δ) y <var>f</var>(<var>a</var> + δ). Un círculo vacío marca un valor que la función no toma. El caso «ReLU» es la función ReLU (<i>Rectified Linear Unit</i>, unidad lineal rectificada), <var>f</var>(<var>x</var>) = máx(0, <var>x</var>): deja pasar los positivos y convierte los negativos en 0. Es la más usada en redes neuronales.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Acércate al punto en Python</h3></div>
     <p class="para">Calcula la función del módulo cada vez más cerca de 1, desde los dos lados.</p>
     <ol>
       <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
-      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>f = lambda x: (x**2 - 1) / (x - 1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>f(1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ZeroDivisionError: 0 / 0</div><div class="cmd-l"><code>f(0.9), f(1.1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># (1.9, 2.1)</div><div class="cmd-l"><code>f(0.999), f(1.001)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># (1.998..., 2.000...)</div><div class="cmd-l"><code>f(0.999999), f(1.000001)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># (1.999999..., 2.000001...)</div></div></div></li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>f = lambda x: (x**2 - 1) / (x - 1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>f(1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ZeroDivisionError: division by zero</div><div class="cmd-l"><code>f(0.9), f(1.1)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># (1.9, 2.1)</div><div class="cmd-l"><code>f(0.999), f(1.001)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># (1.998..., 2.000...)</div><div class="cmd-l"><code>f(0.999999), f(1.000001)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># (1.999999..., 2.000001...)</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> en 1 la función no existe, pero los dos lados se acercan a 2: eso es el límite. Los dígitos raros del final, como 1.9989999999999712, son redondeo de la computadora, no matemática.</p>
   </div>
@@ -76,9 +76,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="prose"><p>También se puede preguntar qué pasa cuando <var>x</var> crece sin parar, o cuando avanzamos en una lista infinita de números. Esta segunda idea es la que convierte las sumas en <a href="08-integrales.html">integrales</a>.</p></div>
   <div class="cards">
     <div class="fact"><h3>Cuando x crece</h3><span class="ex">lím (x→∞) 1/x = 0</span><p>La fracción se hace tan pequeña como quieras, aunque nunca llega exactamente a 0.</p></div>
-    <div class="fact"><h3>La sigmoide</h3><span class="ex">σ(x) → 1 si x → ∞; σ(x) → 0 si x → −∞</span><p>Por eso sus salidas sirven como probabilidades: nunca se salen de (0, 1).</p></div>
+    <div class="fact"><h3>La sigmoide</h3><span class="ex">σ(x) → 1 si x → ∞; σ(x) → 0 si x → −∞</span><p>La sigmoide (<i>sigmoid</i>) es σ(<var>x</var>) = 1 / (1 + <var>e</var><sup>−<var>x</var></sup>), una curva en forma de S. Por eso sus salidas sirven como probabilidades: nunca se salen de (0, 1).</p></div>
     <div class="fact"><h3>Razón de funciones</h3><span class="ex">lím (x→∞) (2x+1)/(x+1) = 2</span><p>El comportamiento que viste en el <a href="01-aritmetica.html">módulo 01</a>, escrito como límite.</p></div>
-    <div class="fact"><h3>Una sucesión</h3><span class="ex">1, 1/2, 1/3, 1/4, … → 0</span><p>Una lista infinita de números puede acercarse a un valor. Las sumas de Riemann S₁, S₂, S₃… hacen lo mismo con el área.</p></div>
+    <div class="fact"><h3>Una sucesión</h3><span class="ex">1, 1/2, 1/3, 1/4, … → 0</span><p>Una lista infinita de números puede acercarse a un valor. Las sumas de Riemann S₁, S₂, S₃… (sumas de rectángulos cada vez más angostos que aproximan un área, <a href="08-integrales.html">módulo 08</a>) hacen lo mismo con el área.</p></div>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag web">En el navegador</span><h3>Límites con WolframAlpha</h3></div>
@@ -125,7 +125,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <section>
   <h2>Repaso del módulo</h2>
-  <div class="ml"><b>Dónde aparece en ML</b><p>La <a href="07-derivadas.html">derivada</a> se define con un límite, y la <a href="08-integrales.html">integral</a> también. Para entrenar con descenso del gradiente la red debe ser continua: la función escalón del perceptrón original tiene un salto y su derivada vale 0 en casi todas partes, así que no da ninguna señal para aprender. Por eso se reemplazó por la sigmoide, que es continua y suave. ReLU es continua, aunque tiene una esquina en 0. Y el ε que ves en el código, como <code>log(p + 1e-9)</code> o <code>a / (b + 1e-8)</code>, existe para esquivar asíntotas.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>La <a href="07-derivadas.html">derivada</a> se define con un límite, y la <a href="08-integrales.html">integral</a> también. Para entrenar con descenso del gradiente (<i>gradient descent</i>: ajustar los pesos con pasos pequeños en la dirección que más reduce el error, <a href="10-gradiente.html">módulo 10</a>) la red debe ser continua: la función escalón del perceptrón (<i>perceptron</i>, uno de los primeros modelos de neurona artificial) original tiene un salto y su derivada vale 0 en casi todas partes, así que no da ninguna señal para aprender. Por eso se reemplazó por la sigmoide, que es continua y suave. ReLU es continua, aunque tiene una esquina en 0. Y el ε que ves en el código, como <code>log(p + 1e-9)</code> o <code>a / (b + 1e-8)</code>, existe para esquivar asíntotas.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>¿Cuánto vale lím (x→3) (x² − 9) / (x − 3)?</summary><p>(x − 3)(x + 3) / (x − 3) = x + 3 → 6</p></details>
     <details><summary>¿Es continua f(x) = |x| en x = 0?</summary><p>Sí: los dos límites laterales valen 0 y f(0) = 0. Tiene una esquina, pero no un salto.</p></details>
@@ -204,7 +204,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </details>
   </div>
   <div class="ej-item">
-    <div class="ej-q"><span class="ej-n">5</span><div><b>El piso del error</b><p>Al entrenar un modelo, el error después de <var>n</var> épocas sigue la sucesión <var>e<sub>n</sub></var> = 2 + 8 / <var>n</var>. Calcula <var>e</var><sub>1</sub>, <var>e</var><sub>4</sub> y <var>e</var><sub>100</sub>. ¿A qué valor converge el error?</p></div></div>
+    <div class="ej-q"><span class="ej-n">5</span><div><b>El piso del error</b><p>Al entrenar un modelo, el error después de <var>n</var> épocas (<i>epochs</i>, pasadas completas por los datos) sigue la sucesión <var>e<sub>n</sub></var> = 2 + 8 / <var>n</var>. Calcula <var>e</var><sub>1</sub>, <var>e</var><sub>4</sub> y <var>e</var><sub>100</sub>. ¿A qué valor converge el error?</p></div></div>
     <details class="ej-sol"><summary>Ver la solución paso a paso</summary>
       <ol class="ej-steps">
         <li><var>e</var><sub>1</sub> = 2 + 8/1 = 10. <var>e</var><sub>4</sub> = 2 + 8/4 = 4. <var>e</var><sub>100</sub> = 2 + 8/100 = 2.08.</li>
@@ -220,7 +220,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

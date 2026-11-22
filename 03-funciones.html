@@ -56,7 +56,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ol>
       <li>Abre <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">Desmos</a>.</li>
       <li>Escribe <code>y=mx+b</code>. Desmos ofrece crear deslizadores para <var>m</var> y <var>b</var>: acéptalos y muévelos.</li>
-      <li>Agrega <code>y=1/(1+e^(-x))</code> (la sigmoide) y <code>y=max(0,x)</code> (ReLU).</li>
+      <li>Agrega <code>y=1/(1+e^(-x))</code> (la sigmoide) y <code>y=max(0,x)</code> (ReLU, <i>Rectified Linear Unit</i>, unidad lineal rectificada: deja pasar los positivos y cambia los negativos por 0).</li>
       <li>Agrega <code>y=e^x</code>, <code>y=ln(x)</code> y la recta <code>y=x</code>.</li>
     </ol>
     <p class="obs"><b>Qué observar:</b> la sigmoide nunca toca 0 ni 1, y ReLU tiene una esquina en 0. La curva de ln(<var>x</var>) es el reflejo de e<sup><var>x</var></sup> sobre la recta <var>y</var> = <var>x</var>: así se ve que una deshace a la otra.</p>
@@ -65,12 +65,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="practica-title"><span class="tag">En la terminal</span><h3>El logaritmo te salva del cero</h3></div>
     <p class="para">Multiplica muchas probabilidades pequeñas y comprueba la «regla de oro del log».</p>
     <ol>
-      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>. Necesitas Python 3.8 o más reciente (por <code>math.prod</code>).</li>
       <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>import math</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>math.e</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 2.718281828459045</div><div class="cmd-l"><code>math.log(math.e)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 1.0: ln deshace eˣ</div><div class="cmd-l"><code>math.prod([0.001] * 200)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 0.0: ¡se perdió todo!</div><div class="cmd-l"><code>sum(math.log(0.001) for _ in range(200))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># -1381.55...</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> el producto real es 10<sup>−600</sup>, más chico que el menor número que la computadora puede guardar, así que lo redondea a 0. La suma de logaritmos, −1381.55, sí cabe y conserva toda la información.</p>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Regresión lineal (recta), funciones de pérdida (parábola), activaciones de la red (sigmoide, ReLU, tanh), softmax (exponencial) y entropía cruzada (logaritmo).</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Regresión lineal (recta), funciones de pérdida (<i>loss functions</i>, que miden cuánto se equivoca el modelo; parábola), funciones de activación (<i>activation functions</i>, la curva que cada neurona aplica a su suma antes de pasarla a la siguiente: sigmoide, ReLU, tanh o tangente hiperbólica), softmax (exponencial; convierte puntuaciones en probabilidades que suman 1) y entropía cruzada (<i>cross-entropy</i>, que mide qué tan lejos está una probabilidad de la respuesta correcta; logaritmo).</p></div>
   </section>
 
 <section>
@@ -122,7 +122,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </ol>
     <p class="obs"><b>Qué observar:</b> <code>sig(logit(p))</code> devuelve el mismo <var>p</var>, porque la sigmoide es biyectiva de ℝ en (0, 1). El logit de 1 falla: 1 no está en (0, 1). Y ReLU manda −3, −1 y 0 al mismo 0: viendo ese 0 no hay forma de saber de dónde vino.</p>
   </div>
-  <div class="ml"><b>Por qué importa en ML</b><p>Del logit (lo que calcula la red) se pasa a la probabilidad con la sigmoide, y de vuelta con su inversa. Estandarizar datos con z = (x − μ) / σ es biyectivo, así que siempre se puede volver a las unidades originales. ReLU no es inyectiva: todas las entradas negativas terminan en 0, y esa información se pierde. Los modelos generativos de tipo <i>normalizing flow</i> están hechos a propósito solo con funciones biyectivas, para poder ir y volver entre los datos y el ruido.</p></div>
+  <div class="ml"><b>Por qué importa en ML</b><p>Del logit (lo que calcula la red) se pasa a la probabilidad con la sigmoide, y de vuelta con su inversa. Estandarizar datos con z = (x − μ) / σ, donde μ (mu) es la media y σ (sigma) la desviación estándar (aquí σ no es la sigmoide), es biyectivo, así que siempre se puede volver a las unidades originales. ReLU no es inyectiva: todas las entradas negativas terminan en 0, y esa información se pierde. Los modelos generativos de tipo <i>normalizing flow</i> (flujo normalizador) están hechos a propósito solo con funciones biyectivas, para poder ir y volver entre los datos y el ruido.</p></div>
 <div class="quiz"><h3>Pruébate</h3><details><summary>Una recta horizontal corta la gráfica de f en x = −1 y en x = 3. ¿Puede f ser biyectiva?</summary><p>No. f(−1) = f(3): dos entradas distintas con la misma salida, así que f no es inyectiva y por lo tanto no es biyectiva. No tiene inversa en todo su dominio.</p></details>
     <details><summary>¿Cuánto vale la sigmoide en x = 0?</summary><p>σ(0) = 1 / (1 + e⁰) = 1 / 2 = 0.5</p></details>
     <details><summary>¿Cuánto vale ReLU(−2)? ¿Y ReLU(3)?</summary><p>ReLU(−2) = 0 · ReLU(3) = 3</p></details>
@@ -135,7 +135,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>El recuadro de ML nombra la activación tanh, pero el módulo no la dibuja. ¿Qué relación exacta hay entre tanh y la sigmoide?<span class="pista">Pista: busca «tanh sigmoide relación» o grafica las dos en Desmos.</span></li>
       <li>ReLU tiene variantes como Leaky ReLU y GELU. ¿Qué problema de ReLU intentan resolver?<span class="pista">Pista: busca «dying ReLU».</span></li>
       <li>¿Qué es un normalizing flow y por qué tiene que calcular un determinante en cada paso?<span class="pista">Pista: busca «normalizing flows jacobiano».</span></li>
-      <li>La tabla dice que arcsen solo funciona en [−π/2, π/2]. ¿Por qué se eligió ese tramo y no otro?<span class="pista">Pista: busca «rama principal del arcoseno».</span></li>
+      <li>El tramo [π/2, 3π/2] también pasa la prueba de la recta horizontal para el seno. ¿Por qué la convención para arcsen es [−π/2, π/2]?<span class="pista">Pista: busca «rama principal del arcoseno».</span></li>
     </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=m2MIpDrF7Es" target="_blank" rel="noopener">What's so special about Euler's number e?</a><span>Por qué la exponencial con base e es su propia derivada.</span></li></ul></div>
@@ -224,7 +224,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

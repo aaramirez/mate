@@ -32,32 +32,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section>
   <h2>Todos los modelos siguen la misma receta</h2>
   <div class="prose">
-    <p>Hay decenas de algoritmos de Machine Learning con nombres intimidantes, pero casi todos se construyen con los mismos tres ingredientes. Si los identificas, cualquier modelo nuevo deja de ser una caja negra:</p>
+    <p>Hay decenas de algoritmos de <i>Machine Learning</i> (aprendizaje automático: programas que aprenden de los datos en lugar de seguir reglas escritas a mano) con nombres intimidantes, pero casi todos se construyen con los mismos tres ingredientes. Si los identificas, cualquier modelo nuevo deja de ser una caja negra:</p>
   </div>
   <ol class="steps">
     <li><span><b>Una forma de función.</b> Qué tipo de máquina vamos a usar: una recta, una curva en S, un árbol de preguntas, una lista de ejemplos guardados.</span></li>
-    <li><span><b>Una medida del error</b> (la <i>función de pérdida</i>). Un número que dice qué tan mal lo está haciendo el modelo con los datos de entrenamiento.</span></li>
+    <li><span><b>Una medida del error</b> (la <b>función de pérdida</b>, <i>loss function</i>). Un número que dice qué tan mal lo está haciendo el modelo con los datos de entrenamiento.</span></li>
     <li><span><b>Una forma de reducir ese error.</b> Descenso del gradiente, buscar el mejor corte, mover promedios… Entrenar es exactamente esto.</span></li>
   </ol>
   <div class="cards">
-    <div class="fact"><h3>Regresión</h3><span class="ex">predice un número</span><p>¿Cuánto costará esta casa? ¿Cuántas ventas habrá el lunes?</p></div>
-    <div class="fact"><h3>Clasificación</h3><span class="ex">predice una categoría</span><p>¿Este correo es spam? ¿El cliente se dará de baja? ¿Es un gato o un perro?</p></div>
-    <div class="fact"><h3>Agrupamiento</h3><span class="ex">sin respuestas correctas</span><p>No hay etiquetas: el modelo descubre por sí solo qué datos se parecen entre sí.</p></div>
+    <div class="fact"><h3>Regresión (<i>regression</i>)</h3><span class="ex">predice un número</span><p>¿Cuánto costará esta casa? ¿Cuántas ventas habrá el lunes?</p></div>
+    <div class="fact"><h3>Clasificación (<i>classification</i>)</h3><span class="ex">predice una categoría</span><p>¿Este correo es spam? ¿El cliente se dará de baja? ¿Es un gato o un perro?</p></div>
+    <div class="fact"><h3>Agrupamiento (<i>clustering</i>)</h3><span class="ex">sin respuestas correctas</span><p>No hay <b>etiquetas</b> (<i>labels</i>, la respuesta correcta de cada ejemplo): el modelo descubre por sí solo qué datos se parecen entre sí.</p></div>
   </div>
   <div class="prose">
-    <p>Los dos primeros son <b>aprendizaje supervisado</b>: aprendemos de ejemplos que ya traen la respuesta. El tercero es <b>no supervisado</b>. Recorramos los modelos más importantes, cada uno con su idea, su fórmula mínima y lo que aprende.</p>
+    <p>Los dos primeros son <b>aprendizaje supervisado</b> (<i>supervised learning</i>): aprendemos de ejemplos que ya traen la respuesta. El tercero es <b>no supervisado</b> (<i>unsupervised learning</i>). Recorramos los modelos más importantes, cada uno con su idea, su fórmula mínima y lo que aprende.</p>
   </div>
 </section>
 
 <section>
-  <h2>Regresión logística: una recta que da probabilidades</h2>
+  <h2>Regresión logística (<i>logistic regression</i>): una recta que da probabilidades</h2>
   <div class="prose">
-    <p><b>La idea en una frase:</b> calcular un puntaje como en la regresión lineal y aplastarlo con la sigmoide para que salga una probabilidad entre 0 y 1.</p>
+    <p><b>La idea en una frase:</b> calcular un puntaje como en la regresión lineal y aplastarlo con la <b>sigmoide</b> σ (<i>sigmoid</i>, la curva en S del <a href="03-funciones.html">módulo 03</a>) para que salga una probabilidad entre 0 y 1.</p>
   </div>
   <div class="eq"><var>z</var> = <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> &nbsp;&nbsp;→&nbsp;&nbsp; <var>p</var> = σ(<var>z</var>) = 1 / (1 + e<sup>−<var>z</var></sup>)</div>
   <div class="prose">
-    <p>Si <var>p</var> &gt; 0.5 decimos «sí»; si no, «no». El punto donde <var>p</var> = 0.5 es justo donde <var>z</var> = 0, así que la <b>frontera de decisión</b> es la recta <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> = 0: de un lado todo es «sí» y del otro todo es «no».</p>
-    <p><b>Qué minimiza:</b> la <b>entropía cruzada</b>. Para un ejemplo cuya respuesta real es <var>y</var> (1 o 0):</p>
+    <p>Si <var>p</var> &gt; 0.5 decimos «sí»; si no, «no». El punto donde <var>p</var> = 0.5 es justo donde <var>z</var> = 0, así que la <b>frontera de decisión</b> (<i>decision boundary</i>) es la recta <var>w</var>₁<var>x</var>₁ + <var>w</var>₂<var>x</var>₂ + <var>b</var> = 0: de un lado todo es «sí» y del otro todo es «no». Los <b>pesos</b> (<i>weights</i>) <var>w</var>₁ y <var>w</var>₂ inclinan esa recta y el <b>sesgo</b> (<i>bias</i>) <var>b</var>, un número fijo que se suma al puntaje, la desplaza.</p>
+    <p><b>Qué minimiza:</b> la <b>entropía cruzada</b> (<i>cross-entropy</i>), que castiga dar poca probabilidad a la respuesta correcta. Para un ejemplo cuya respuesta real es <var>y</var> (1 o 0):</p>
   </div>
   <div class="eq">pérdida = −[ <var>y</var>·ln(<var>p</var>) + (1 − <var>y</var>)·ln(1 − <var>p</var>) ]</div>
   <div class="cards">
@@ -69,13 +69,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Los pesos <var>w</var> y <var>b</var> se ajustan con <a href="10-gradiente.html">descenso del gradiente</a>. Y el gradiente sale sorprendentemente simple: (<var>p</var> − <var>y</var>)·<var>x</var>, es decir, «cuánto me equivoqué» por «cuánto pesaba esa entrada». <b>Ejemplo cotidiano:</b> un filtro de spam que suma puntos por cada palabra sospechosa y convierte el total en una probabilidad.</p>
     <p><span class="hl">Una neurona con sigmoide es exactamente una regresión logística.</span> Una red neuronal es muchas de ellas apiladas (<a href="13-neurona.html">módulo 13</a>).</p>
   </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Mueve la frontera y mira la probabilidad</h3></div>
+    <canvas id="lg-cv" role="img" aria-label="Puntos de dos clases, la frontera de decisión y el fondo coloreado según la probabilidad p" style="touch-action:none;cursor:crosshair"></canvas>
+    <div class="ctls">
+      <label class="ctl"><span>Peso <var>w</var>₁</span><output id="lg-w1-o"></output><input type="range" id="lg-w1" min="-3" max="3" step="0.05" value="0.2"></label>
+      <label class="ctl"><span>Peso <var>w</var>₂</span><output id="lg-w2-o"></output><input type="range" id="lg-w2" min="-3" max="3" step="0.05" value="0.6"></label>
+      <label class="ctl"><span>Sesgo <var>b</var></span><output id="lg-b-o"></output><input type="range" id="lg-b" min="-15" max="15" step="0.1" value="-3"></label>
+    </div>
+    <div class="btns"><button class="primary" id="lg-train">Entrenar 300 pasos</button><button id="lg-reset">Volver al inicio</button></div>
+    <div class="readout" id="lg-out"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Clase A (<var>y</var> = 0)</span><span><i style="background:var(--warm)"></i>Clase B (<var>y</var> = 1)</span><span><i style="background:var(--ink)"></i>Frontera: <var>z</var> = 0, <var>p</var> = 0.5</span></div>
+    <p class="hint">El fondo se colorea con <var>p</var> = σ(<var>z</var>): más intenso donde el modelo está más seguro y casi blanco junto a la frontera. Las líneas punteadas marcan <var>p</var> = 0.1 y <var>p</var> = 0.9. Los puntos con un anillo están mal clasificados. Toca el gráfico para medir <var>p</var> en un punto, y pulsa «Entrenar» para ver cómo el descenso del gradiente baja la entropía cruzada.</p>
+  </div>
 </section>
 
 <section>
   <h2>k vecinos más cercanos: dime con quién andas</h2>
   <div class="prose">
-    <p><b>La idea en una frase:</b> para clasificar un punto nuevo, mira los <var>k</var> ejemplos más parecidos y haz que voten.</p>
-    <p>«Parecido» significa «cerca», y la cercanía se mide con la distancia euclídea, el teorema de Pitágoras aplicado a <a href="04-vectores.html">vectores</a>:</p>
+    <p><b>La idea en una frase:</b> para clasificar un punto nuevo, mira los <var>k</var> ejemplos más parecidos y haz que voten. En inglés se llama <i>k-nearest neighbors</i> (k-NN).</p>
+    <p>«Parecido» significa «cerca», y la cercanía se mide con la distancia euclídea (<i>Euclidean distance</i>), el teorema de Pitágoras aplicado a <a href="04-vectores.html">vectores</a>:</p>
   </div>
   <div class="eq"><var>d</var>(<b>a</b>, <b>b</b>) = √[ (<var>a</var>₁ − <var>b</var>₁)² + (<var>a</var>₂ − <var>b</var>₂)² + … ]</div>
   <div class="prose">
@@ -104,16 +117,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <section>
-  <h2>Árboles de decisión: veinte preguntas con los datos</h2>
+  <h2>Árboles de decisión (<i>decision trees</i>): veinte preguntas con los datos</h2>
   <div class="prose">
     <p><b>La idea en una frase:</b> partir los datos con preguntas de sí o no («¿x₁ ≤ 5?») elegidas para que cada grupo quede lo más «puro» posible.</p>
-    <p>Para elegir la mejor pregunta hace falta medir el desorden de un grupo. La medida más usada es la <b>impureza de Gini</b>, donde <var>p</var>ᵢ es la proporción de cada clase en el grupo:</p>
+    <p>Para elegir la mejor pregunta hace falta medir el desorden de un grupo. La medida más usada es la <b>impureza de Gini</b> (<i>Gini impurity</i>), donde <var>p</var>ᵢ es la proporción de cada clase en el grupo. La otra opción es la <b>entropía</b> (<i>entropy</i>), que mide cuánta sorpresa hay, en promedio, al sacar un dato al azar del grupo: 0 si todos son de la misma clase y 1 (con dos clases) si están mitad y mitad.</p>
   </div>
   <div class="eq">Gini = 1 − Σ <var>p</var>ᵢ² &nbsp;&nbsp;·&nbsp;&nbsp; Entropía = −Σ <var>p</var>ᵢ·log₂(<var>p</var>ᵢ)</div>
   <div class="cards">
     <div class="fact"><h3>Grupo puro</h3><span class="ex">10 A y 0 B → Gini = 0</span><p>No queda nada que separar.</p></div>
     <div class="fact"><h3>Mitad y mitad</h3><span class="ex">5 A y 5 B → Gini = 0.5</span><p>El máximo desorden con dos clases.</p></div>
-    <div class="fact"><h3>Ganancia</h3><span class="ex">Gini antes − Gini después</span><p>El «después» es el promedio de los dos lados, pesado por cuántos datos tiene cada uno.</p></div>
+    <div class="fact"><h3>Ganancia (<i>gain</i>)</h3><span class="ex">Gini antes − Gini después</span><p>El «después» es el promedio de los dos lados, pesado por cuántos datos tiene cada uno.</p></div>
   </div>
   <div class="prose">
     <p><b>Qué aprende:</b> las preguntas y sus umbrales. Prueba todos los cortes posibles, se queda con el de mayor ganancia y repite dentro de cada lado. <b>Ejemplo cotidiano:</b> un médico que pregunta «¿hay fiebre?», luego «¿hace más de tres días?», y así hasta un diagnóstico.</p>
@@ -145,18 +158,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <section>
-  <h2>k-means: agrupar sin respuestas</h2>
+  <h2>k-means (k medias): agrupar sin respuestas</h2>
   <div class="prose">
-    <p><b>La idea en una frase:</b> elegir <var>k</var> centros al azar y repetir dos pasos, asignar y mover, hasta que nada cambie.</p>
+    <p><b>La idea en una frase:</b> elegir <var>k</var> centros (o centroides, <i>centroids</i>) al azar y repetir dos pasos, asignar y mover, hasta que nada cambie.</p>
   </div>
   <ol class="steps">
     <li><span><b>Asignar:</b> cada punto se une al centro más cercano.</span></li>
     <li><span><b>Mover:</b> cada centro se muda al promedio de sus puntos.</span></li>
   </ol>
   <div class="prose">
-    <p><b>Qué minimiza:</b> la <b>inercia</b>, la suma de las distancias al cuadrado de cada punto a su centro. <span class="hl">Cada uno de los dos pasos solo puede bajarla o dejarla igual</span>, así que el algoritmo siempre termina. Eso sí, puede quedarse en una solución mediocre si los centros empezaron mal; por eso en la práctica se corre varias veces.</p>
+    <p><b>Qué minimiza:</b> la <b>inercia</b> (<i>inertia</i>), la suma de las distancias al cuadrado de cada punto a su centro. <span class="hl">Cada uno de los dos pasos solo puede bajarla o dejarla igual</span>, así que el algoritmo siempre termina. Eso sí, puede quedarse en una solución mediocre si los centros empezaron mal; por eso en la práctica se corre varias veces.</p>
   </div>
-  <div class="eq">inercia = Σ ‖<b>x</b> − <b>μ</b><sub>c(x)</sub>‖²</div>
+  <div class="eq">inercia = Σ ‖<b>x</b> − <b>μ</b><sub>c(x)</sub>‖²<small><b>μ</b><sub>c(x)</sub> es el centro del grupo del punto <b>x</b>, y ‖ ‖ la longitud de un vector</small></div>
   <div class="prose">
     <p><b>Ejemplo cotidiano:</b> segmentar clientes por cuánto compran y cada cuánto, sin decirle al modelo qué segmentos existen.</p>
   </div>
@@ -186,7 +199,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <section>
-  <h2>Naive Bayes: sumar evidencias</h2>
+  <h2>Naive Bayes (Bayes ingenuo): sumar evidencias</h2>
   <div class="prose">
     <p><b>La idea en una frase:</b> usar el <a href="09-probabilidad.html">teorema de Bayes</a> y suponer, con «ingenuidad», que cada pista es independiente de las demás.</p>
   </div>
@@ -207,22 +220,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <section>
-  <h2>Máquinas de soporte vectorial (SVM): la calle más ancha</h2>
+  <h2>Máquinas de soporte vectorial (SVM, <i>support vector machines</i>): la calle más ancha</h2>
   <div class="prose">
     <p><b>La idea en una frase:</b> entre todas las rectas que separan dos clases, elegir la que deja la «calle» más ancha entre ellas.</p>
   </div>
   <div class="eq">ancho de la calle = 2 / ‖<b>w</b>‖ &nbsp;&nbsp;→&nbsp;&nbsp; minimizar ‖<b>w</b>‖² con todos los puntos del lado correcto</div>
   <div class="prose">
-    <p>La frontera es la misma recta <b>w</b>·<b>x</b> + <var>b</var> = 0 que en la regresión logística. Lo que cambia es el criterio: aquí importa el <b>margen</b>. Solo los puntos que tocan el borde de la calle, los <b>vectores de soporte</b>, definen la solución; los demás podrían moverse sin cambiar nada. Con el <b>truco del kernel</b>, una SVM puede trazar fronteras curvas: mide la similitud de los puntos como si vivieran en un espacio con más dimensiones, donde sí se pueden separar con un plano.</p>
+    <p>La frontera es la misma recta <b>w</b>·<b>x</b> + <var>b</var> = 0 que en la regresión logística. Lo que cambia es el criterio: aquí importa el <b>margen</b> (<i>margin</i>), el ancho de la calle. Solo los puntos que tocan el borde de la calle, los <b>vectores de soporte</b> (<i>support vectors</i>), definen la solución; los demás podrían moverse sin cambiar nada. Con el <b>truco del kernel</b> (<i>kernel trick</i>; <i>kernel</i> significa «núcleo» y aquí es una función que mide la similitud entre dos puntos), una SVM puede trazar fronteras curvas: mide la similitud de los puntos como si vivieran en un espacio con más dimensiones, donde sí se pueden separar con un plano.</p>
     <p><b>Ejemplo cotidiano:</b> trazar la línea entre dos barrios dejando la mayor distancia posible a las casas de ambos lados.</p>
+  </div>
+  <div class="lab">
+    <div class="lab-title"><span class="tag">Prueba</span><h3>Busca la calle más ancha</h3></div>
+    <canvas id="sv-cv" role="img" aria-label="Dos clases de puntos, una recta separadora, los bordes de la calle y los vectores de soporte marcados"></canvas>
+    <div class="ctls">
+      <label class="ctl"><span>Inclinación de la recta</span><output id="sv-a-o"></output><input type="range" id="sv-a" min="0" max="179" step="1" value="45"></label>
+    </div>
+    <div class="btns"><button class="primary" id="sv-best">Buscar la calle más ancha</button></div>
+    <div class="readout" id="sv-out"></div>
+    <div class="legend"><span><i style="background:var(--accent)"></i>Clase A</span><span><i style="background:var(--warm)"></i>Clase B</span><span><i style="background:var(--ink)"></i>Recta central y vectores de soporte (con anillo)</span></div>
+    <p class="hint">Para cada inclinación, el laboratorio pone la calle lo más ancha posible sin dejar puntos adentro: sus bordes (punteados) tocan el punto más cercano de cada clase. Esos puntos son los vectores de soporte. Si mueves cualquier otro punto sin cruzar un borde, la calle no cambia. En la fórmula, los bordes son <b>w</b>·<b>x</b> + <var>b</var> = 1 y <b>w</b>·<b>x</b> + <var>b</var> = −1, y por eso el ancho es 2 / ‖<b>w</b>‖.</p>
   </div>
 </section>
 
 <section>
-  <h2>Ensambles: la sabiduría de muchos modelos</h2>
+  <h2>Ensambles (<i>ensembles</i>): la sabiduría de muchos modelos</h2>
   <div class="cards">
-    <div class="fact"><h3>Random forest</h3><span class="ex">ŷ = promedio de T árboles</span><p>Cientos de árboles, cada uno entrenado con una muestra al azar de los datos y de las variables. Cada árbol se equivoca distinto y al promediarlos los errores se cancelan. Es como preguntar a muchas personas en lugar de a una.</p></div>
-    <div class="fact"><h3>Boosting</h3><span class="ex">F<sub>nuevo</sub> = F<sub>anterior</sub> + η · h</span><p>Árboles en fila: cada uno nuevo, <var>h</var>, aprende a corregir los errores (residuos) que dejaron los anteriores, y se suma con un paso pequeño η. Es descenso del gradiente, pero sumando árboles en lugar de mover pesos. XGBoost y LightGBM son de esta familia.</p></div>
+    <div class="fact"><h3>Random forest (bosque aleatorio)</h3><span class="ex">ŷ = promedio de T árboles</span><p>Cientos de árboles, cada uno entrenado con una muestra al azar de los datos y de las variables. Cada árbol se equivoca distinto y al promediarlos los errores se cancelan. Es como preguntar a muchas personas en lugar de a una.</p></div>
+    <div class="fact"><h3>Boosting (refuerzo)</h3><span class="ex">F<sub>nuevo</sub> = F<sub>anterior</sub> + η · h</span><p>Árboles en fila: cada uno nuevo, <var>h</var>, aprende a corregir los errores (residuos) que dejaron los anteriores, y se suma con un paso pequeño η. Es descenso del gradiente, pero sumando árboles en lugar de mover pesos. XGBoost y LightGBM, dos librerías gratuitas muy usadas en competencias de datos, son de esta familia.</p></div>
   </div>
   <div class="prose">
     <p><span class="hl">Con datos en tabla (filas y columnas, como una hoja de cálculo), el boosting suele ser el modelo más preciso.</span> Las redes neuronales dominan con imágenes, audio y texto.</p>
@@ -245,7 +269,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <tr><td>Red neuronal</td><td>Ambos</td><td>Millones de pesos en capas</td><td>Entropía cruzada o error cuadrático</td></tr>
     </tbody>
   </table></div>
-  <div class="ml"><b>En la práctica</b><p>Empieza siempre por un modelo simple, como una regresión lineal o logística, que sirva de línea base. Luego prueba un árbol o un ensamble. Con <code>scikit-learn</code>, todos estos modelos se usan igual: <code>modelo.fit(X, y)</code> para entrenar y <code>modelo.predict(X_nuevo)</code> para predecir. Lo que cambia por dentro es la matemática de esta página.</p></div>
+  <div class="ml"><b>En la práctica</b><p>Empieza siempre por un modelo simple, como una regresión lineal o logística, que sirva de <b>línea base</b> (<i>baseline</i>): el resultado mínimo que cualquier modelo más complejo debe superar. Luego prueba un árbol o un ensamble. Con <code>scikit-learn</code>, la librería de Python más usada para estos modelos, todos estos modelos se usan igual: <code>modelo.fit(X, y)</code> para entrenar y <code>modelo.predict(X_nuevo)</code> para predecir. Lo que cambia por dentro es la matemática de esta página.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Un grupo tiene 8 de la clase A y 2 de la clase B. ¿Cuál es su Gini?</summary><p>1 − (0.8² + 0.2²) = 1 − (0.64 + 0.04) = 0.32</p></details>
     <details><summary>Con <var>p</var> = σ(<var>z</var>), ¿qué valor de <var>z</var> está justo sobre la frontera de decisión?</summary><p><var>z</var> = 0, porque σ(0) = 0.5.</p></details>
@@ -304,7 +328,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li><var>k</var> = 5: B, A, A, A, B → gana A por 3 a 2.</li>
       </ol>
       <p class="ej-res">Resultado: k = 1 → B · k = 3 → A · k = 5 → A.</p>
-      <p class="ej-ml">En ML: k es un hiperparámetro. Un k pequeño se deja llevar por un solo vecino; uno grande suaviza la decisión.</p>
+      <p class="ej-ml">En ML: k es un <b>hiperparámetro</b> (<i>hyperparameter</i>): un valor que eliges tú antes de entrenar, en lugar de aprenderlo de los datos. Un k pequeño se deja llevar por un solo vecino; uno grande suaviza la decisión.</p>
     </details>
   </div>
   <div class="ej-item">
@@ -350,7 +374,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>
@@ -398,6 +422,96 @@ const d2=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2;
   cv.addEventListener("pointerup",()=>drag=false);cv.addEventListener("pointercancel",()=>drag=false);
   reg.onclick=()=>{show=!show;reg.setAttribute('aria-pressed',show);out();};
   K.addEventListener('input',out);out();
+})();
+
+/* ---------- 13 Regresión logística ---------- */
+(function(){
+  const pts=blobs(31,[[3.4,6.4,1.25,22,0],[6.6,3.8,1.25,22,1]]);
+  const IN=[$('#lg-w1'),$('#lg-w2'),$('#lg-b')],OUT=['#lg-w1-o','#lg-w2-o','#lg-b-o'],cv=$('#lg-cv'),S0=[.2,.6,-3];
+  let S=S0.slice(),F=null,probe=null,timer=0;
+  const sig=z=>1/(1+Math.exp(-z));
+  const zf=p=>S[0]*p[0]+S[1]*p[1]+S[2];
+  function line(ctx,z0){ // la recta w1·x1 + w2·x2 + b = z0, de borde a borde de la caja
+    const [a,c,b]=S;if(Math.abs(a)<1e-9&&Math.abs(c)<1e-9)return;
+    ctx.beginPath();
+    if(Math.abs(c)>=Math.abs(a)){ctx.moveTo(F.X(0),F.Y((z0-b)/c));ctx.lineTo(F.X(10),F.Y((z0-b-10*a)/c));}
+    else{ctx.moveTo(F.X((z0-b)/a),F.Y(0));ctx.lineTo(F.X((z0-b-10*c)/a),F.Y(10));}
+    ctx.stroke();
+  }
+  const draw=canvasWidget(cv,w=>w<560?SQ(w):.62,(ctx,w,h)=>{
+    const col=[tok('--accent'),tok('--warm')];
+    F=frame(ctx,w,h,BOX);F.clip();
+    const st=.25;
+    for(let x=0;x<10;x+=st)for(let y=0;y<10;y+=st){const p=sig(zf([x+st/2,y+st/2]));ctx.globalAlpha=Math.abs(p-.5)*.5;ctx.fillStyle=col[p>.5?1:0];ctx.fillRect(F.X(x),F.Y(y+st),F.X(x+st)-F.X(x)+.5,F.Y(y)-F.Y(y+st)+.5);}
+    ctx.globalAlpha=1;
+    ctx.strokeStyle=tok('--muted');ctx.lineWidth=1.2;ctx.setLineDash([4,4]);line(ctx,-2.2);line(ctx,2.2);ctx.setLineDash([]);
+    ctx.strokeStyle=tok('--ink');ctx.lineWidth=2.5;line(ctx,0);
+    pts.forEach(t=>dot(ctx,F.X(t[0]),F.Y(t[1]),col[t[2]],4));
+    pts.forEach(t=>{if((zf(t)>0?1:0)!==t[2]){ctx.strokeStyle=tok('--ink');ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(F.X(t[0]),F.Y(t[1]),6.5,0,2*Math.PI);ctx.stroke();}});
+    if(probe)ring(ctx,F.X(probe[0]),F.Y(probe[1]),tok('--ink'),col[zf(probe)>0?1:0]);
+    ctx.restore();
+  });
+  const loss=()=>{let ok=0,L=0;pts.forEach(t=>{const p=Math.min(1-1e-12,Math.max(1e-12,sig(zf(t))));if((p>.5?1:0)===t[2])ok++;L-=t[2]?Math.log(p):Math.log(1-p);});return [ok,L/pts.length];};
+  function out(){
+    IN.forEach((el,i)=>{el.value=S[i];$(OUT[i]).textContent=fmt(S[i],2);});
+    const [ok,L]=loss(),n=pts.length,sg=v=>v<0?'− '+fmt(-v,2):'+ '+fmt(v,2);
+    let html=`<span class="big">z = ${fmt(S[0],2)}·x₁ ${sg(S[1])}·x₂ ${sg(S[2])} · aciertos: ${ok} de ${n}</span><span>Entropía cruzada media = ${fmt(L,3)}. ${ok===n?'<span class="ok">La frontera separa las dos clases.</span> Al seguir entrenando, la pérdida aún baja: el modelo gana seguridad y la franja entre p = 0.1 y p = 0.9 se angosta.':'Hay puntos del lado equivocado: cada uno suma mucha pérdida.'}</span>`;
+    if(probe){const z=zf(probe),p=sig(z);html+=`<span>En el punto (${fmt(probe[0],1)}, ${fmt(probe[1],1)}): z = ${fmt(z,2)} y p = σ(z) = ${fmt(p,3)}. El modelo dice «clase ${p>.5?'B':'A'}» con probabilidad ${fmt(p>.5?p:1-p,3)}.</span>`;}
+    $('#lg-out').innerHTML=html;draw();
+  }
+  function train(n){ // descenso del gradiente sobre la entropía cruzada media
+    const lr=.05,lim=[3,3,15];
+    for(let k=0;k<n;k++){const g=[0,0,0];pts.forEach(t=>{const e=sig(zf(t))-t[2];g[0]+=e*t[0];g[1]+=e*t[1];g[2]+=e;});
+      S=S.map((v,i)=>Math.max(-lim[i],Math.min(lim[i],v-lr*g[i]/pts.length)));}
+  }
+  IN.forEach((el,i)=>el.addEventListener('input',()=>{clearTimeout(timer);S[i]=+el.value;out();}));
+  $('#lg-train').onclick=()=>{clearTimeout(timer);let left=30;const go=()=>{train(10);out();if(--left>0)timer=setTimeout(go,40);};go();};
+  $('#lg-reset').onclick=()=>{clearTimeout(timer);S=S0.slice();probe=null;out();};
+  function move(e){if(!F)return;const r=cv.getBoundingClientRect();probe=[Math.min(10,Math.max(0,F.IX(e.clientX-r.left))),Math.min(10,Math.max(0,F.IY(e.clientY-r.top)))];out();}
+  let drag=false;
+  cv.addEventListener('pointerdown',e=>{drag=true;cv.setPointerCapture(e.pointerId);move(e);});
+  cv.addEventListener('pointermove',e=>{if(drag)move(e);});
+  cv.addEventListener('pointerup',()=>drag=false);cv.addEventListener('pointercancel',()=>drag=false);
+  out();
+})();
+
+/* ---------- 13 SVM: la calle más ancha ---------- */
+(function(){
+  const A=[[1.5,6],[2.5,8.2],[3,5.6],[1,8.6],[3.9,7.8],[2,3.8],[4.6,9.2],[1.2,2]];
+  const B=[[6,3],[7.5,4.6],[5.5,1.5],[8.4,2.2],[7,6.6],[8.8,7.4],[4.8,3.9],[9,4.8]];
+  const AN=$('#sv-a');let ang=+AN.value;
+  function street(d){ // para la inclinación d, la calle más ancha sin puntos adentro
+    const r=d*Math.PI/180,u=[Math.cos(r),Math.sin(r)],v=[-u[1],u[0]],s=p=>p[0]*v[0]+p[1]*v[1];
+    const sa=A.map(s),sb=B.map(s),g1=Math.min(...sb)-Math.max(...sa),g2=Math.min(...sa)-Math.max(...sb);
+    const [lo,hi]=g1>=g2?[Math.max(...sa),Math.min(...sb)]:[Math.max(...sb),Math.min(...sa)];
+    return {u,v,s,lo,hi,w:hi-lo};
+  }
+  let best={w:-Infinity,d:0};for(let i=0;i<18000;i++){const d=i/100,st=street(d);if(st.w>best.w)best={w:st.w,d};}
+  const draw=canvasWidget($('#sv-cv'),w=>w<560?SQ(w):.62,(ctx,w,h)=>{
+    const st=street(ang),F=frame(ctx,w,h,BOX),col=[tok('--accent'),tok('--warm')],L=30;
+    const P=(c,t)=>[c*st.v[0]+t*st.u[0],c*st.v[1]+t*st.u[1]];
+    const seg2=c=>{const p=P(c,-L),q=P(c,L);ctx.beginPath();ctx.moveTo(F.X(p[0]),F.Y(p[1]));ctx.lineTo(F.X(q[0]),F.Y(q[1]));ctx.stroke();};
+    F.clip();
+    const sep=st.w>0;
+    if(sep){const c=[P(st.lo,-L),P(st.lo,L),P(st.hi,L),P(st.hi,-L)];ctx.fillStyle=tok('--good');ctx.globalAlpha=.15;ctx.beginPath();c.forEach((p,i)=>i?ctx.lineTo(F.X(p[0]),F.Y(p[1])):ctx.moveTo(F.X(p[0]),F.Y(p[1])));ctx.closePath();ctx.fill();ctx.globalAlpha=1;
+      ctx.strokeStyle=tok('--muted');ctx.lineWidth=1.5;ctx.setLineDash([5,4]);seg2(st.lo);seg2(st.hi);ctx.setLineDash([]);}
+    ctx.strokeStyle=sep?tok('--ink'):tok('--warm');ctx.lineWidth=2.5;seg2((st.lo+st.hi)/2);
+    A.forEach(p=>dot(ctx,F.X(p[0]),F.Y(p[1]),col[0],5));B.forEach(p=>dot(ctx,F.X(p[0]),F.Y(p[1]),col[1],5));
+    if(sep)A.concat(B).forEach(p=>{const s=st.s(p);if(Math.abs(s-st.lo)<.02||Math.abs(s-st.hi)<.02){ctx.strokeStyle=tok('--ink');ctx.lineWidth=2;ctx.beginPath();ctx.arc(F.X(p[0]),F.Y(p[1]),9,0,2*Math.PI);ctx.stroke();}});
+    ctx.restore();
+  });
+  function out(){
+    const st=street(ang);$('#sv-a-o').textContent=fmt(ang,ang%1?1:0)+'°';
+    const nsv=st.w>0?A.concat(B).filter(p=>{const s=st.s(p);return Math.abs(s-st.lo)<.02||Math.abs(s-st.hi)<.02;}).length:0;
+    const isBest=Math.abs(st.w-best.w)<.005;
+    $('#sv-out').innerHTML=st.w>0
+      ?`<span class="big">Ancho de la calle = ${fmt(st.w,2)} · la más ancha posible: ${fmt(best.w,2)}</span><span>${nsv} vectores de soporte tocan los bordes. ${isBest?'<span class="ok">Esta es la recta que elige la SVM:</span> cualquier otra inclinación angosta la calle.':'Prueba otras inclinaciones: la SVM se queda con la que da la calle más ancha.'}</span>`
+      :`<span class="big">Con esta inclinación no hay calle</span><span><span class="warn">Ninguna recta con esta inclinación separa las dos clases:</span> siempre queda algún punto del lado equivocado. Gira la recta.</span>`;
+    draw();
+  }
+  AN.addEventListener('input',()=>{ang=+AN.value;out();});
+  $('#sv-best').onclick=()=>{ang=best.d;AN.value=Math.round(best.d);out();};
+  out();
 })();
 
 /* ---------- 13 Árbol de decisión (Gini) ---------- */

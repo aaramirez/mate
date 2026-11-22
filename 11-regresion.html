@@ -33,17 +33,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h2>Qué es el error de una predicción</h2>
   <div class="prose">
     <p>Una regresión predice un número: el precio de una casa, la nota de un examen, la demanda de mañana. El modelo más simple es una recta, ŷ = <var>m</var>·<var>x</var> + <var>b</var> (la viste en el <a href="03-funciones.html">módulo 03</a>). Para saber si la recta es buena, comparamos lo que predice con lo que pasó de verdad.</p>
-    <p>Para cada dato, el <b>residuo</b> o error es la distancia vertical entre el punto real y la recta:</p>
+    <p>Para cada dato, el <b>residuo</b> (<i>residual</i>) o error es la distancia vertical entre el punto real y la recta:</p>
   </div>
   <div class="eq"><var>e</var>ᵢ = <var>y</var>ᵢ − ŷᵢ &nbsp;&nbsp;(real menos predicho)</div>
   <div class="prose">
     <p>Si <var>e</var> es positivo, el modelo se quedó corto; si es negativo, se pasó. Ahora hay que resumir todos los errores en <b>un solo número</b>, para poder decir «esta recta es mejor que aquella». Sumarlos tal cual no sirve: un error de +5 y otro de −5 se cancelan y parecería que el modelo es perfecto. Hay dos arreglos:</p>
   </div>
   <div class="cards">
-    <div class="fact"><h3>MAE: error absoluto medio</h3><span class="ex">MAE = (1/n) Σ |yᵢ − ŷᵢ|</span><p>El promedio de los errores sin signo. Se lee fácil: «en promedio me equivoco por 1.2 puntos».</p></div>
-    <div class="fact"><h3>MSE: error cuadrático medio</h3><span class="ex">MSE = (1/n) Σ (yᵢ − ŷᵢ)²</span><p>Eleva cada error al cuadrado: castiga mucho más los errores grandes. Es suave, así que se puede derivar; por eso es la pérdida favorita para entrenar.</p></div>
-    <div class="fact"><h3>RMSE</h3><span class="ex">RMSE = √MSE</span><p>Deshace el cuadrado para volver a las unidades originales (puntos, dólares, metros).</p></div>
-    <div class="fact"><h3>R²</h3><span class="ex">R² = 1 − MSE / Var(y)</span><p>Compara tu modelo con el más tonto posible: predecir siempre el promedio. R² = 1 es perfecto y R² = 0 no mejora nada.</p></div>
+    <div class="fact"><h3>MAE (<i>mean absolute error</i>): error absoluto medio</h3><span class="ex">MAE = (1/n) Σ |yᵢ − ŷᵢ|</span><p>El promedio de los errores sin signo. Se lee fácil: «en promedio me equivoco por 1.2 puntos».</p></div>
+    <div class="fact"><h3>MSE (<i>mean squared error</i>): error cuadrático medio</h3><span class="ex">MSE = (1/n) Σ (yᵢ − ŷᵢ)²</span><p>Eleva cada error al cuadrado: castiga mucho más los errores grandes. Es suave, así que se puede derivar; por eso es la pérdida favorita para entrenar.</p></div>
+    <div class="fact"><h3>RMSE (<i>root mean squared error</i>): raíz del error cuadrático medio</h3><span class="ex">RMSE = √MSE</span><p>Deshace el cuadrado para volver a las unidades originales (puntos, dólares, metros).</p></div>
+    <div class="fact"><h3>R²: coeficiente de determinación (<i>coefficient of determination</i>)</h3><span class="ex">R² = 1 − MSE / Var(y)</span><p>Var(<var>y</var>) es la varianza de los datos reales (<a href="09-probabilidad.html">módulo 09</a>). Compara tu modelo con el más tonto posible: predecir siempre el promedio. R² = 1 es perfecto y R² = 0 no mejora nada.</p></div>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Ajusta la recta a mano y mira los cuadrados</h3></div>
@@ -54,7 +54,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="btns"><button id="rg-sq" aria-pressed="true">Ver los cuadrados</button><button class="primary" id="rg-best">Mostrar la mejor recta</button></div>
     <div class="readout" id="rg-out"></div>
-    <p class="hint">Cada cuadrado tiene de lado el error de ese punto: su área es el error al cuadrado. El MSE es el área promedio. Mover la recta para que la suma de áreas sea mínima es exactamente el método de <b>mínimos cuadrados</b>.</p>
+    <p class="hint">Cada cuadrado tiene de lado el error de ese punto: su área es el error al cuadrado. El MSE es el área promedio. Mover la recta para que la suma de áreas sea mínima es exactamente el método de <b>mínimos cuadrados</b> (<i>least squares</i>).</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag web">En el navegador</span><h3>Mínimos cuadrados en Desmos</h3></div>
@@ -65,7 +65,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>En una fila nueva escribe <code>y_1 ~ m x_1 + b</code>. La tilde <code>~</code> le pide a Desmos un ajuste por mínimos cuadrados.</li>
       <li>Agrega un cuarto punto lejos de la recta, por ejemplo (4, 1).</li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> Desmos muestra <var>m</var> = 1.5, <var>b</var> ≈ 0.667 y <var>R</var>² ≈ 0.964, los números del ejercicio 3. Con el punto (4, 1) la recta se inclina mucho y <var>R</var>² se desploma: el MSE eleva al cuadrado los errores grandes, así que un solo dato raro pesa muchísimo.</p>
+    <p class="obs"><b>Qué observar:</b> Desmos muestra <var>m</var> = 1.5, <var>b</var> ≈ 0.667 y <var>R</var>² ≈ 0.964, los números del ejercicio 3. Con el punto (4, 1) la pendiente pasa de 1.5 a −0.2 (la recta casi se aplana, con <var>b</var> = 3.5) y <var>R</var>² cae a 0.02: el MSE eleva al cuadrado los errores grandes, así que un solo dato raro pesa muchísimo.</p>
   </div>
 </section>
 
@@ -100,7 +100,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="hint">Empieza desde la recta que dejaste en el laboratorio anterior. Haz clic en el mapa para elegir otro punto de partida. Prueba una η grande: el error rebota y puede crecer sin control.</p>
   </div>
   <div class="prose">
-    <p>Para la regresión lineal existe también un atajo exacto, sin pasos: la <b>ecuación normal</b> θ = (XᵀX)⁻¹Xᵀ<b>y</b>, que usa las <a href="05-matrices.html">matrices</a> del módulo 05. Es lo que hace el botón «Mostrar la mejor recta». En modelos grandes, como las redes neuronales, no hay atajo y solo queda bajar paso a paso.</p>
+    <p>Para la regresión lineal existe también un atajo exacto, sin pasos: la <b>ecuación normal</b> (<i>normal equation</i>) θ = (XᵀX)⁻¹Xᵀ<b>y</b>, que usa las <a href="05-matrices.html">matrices</a> del módulo 05. Ahí θ (theta) = (<var>b</var>, <var>m</var>) son los dos parámetros de la recta; X es la matriz de datos, con una columna de unos (para <var>b</var>) y una columna con los <var>x</var>ᵢ; <b>y</b> es el vector de valores reales; ᵀ es la transpuesta y ⁻¹ la inversa. Es lo que hace el botón «Mostrar la mejor recta». En modelos grandes, como las redes neuronales, no hay atajo y solo queda bajar paso a paso.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>El entrenamiento, paso a paso</h3></div>
@@ -131,7 +131,7 @@ print(linear_regression(x, y))             # la respuesta exacta</code></pre><bu
 <section>
   <h2>Menos error en entrenamiento no siempre es mejor</h2>
   <div class="prose">
-    <p>Un modelo más flexible, como un polinomio de grado alto, siempre puede bajar más el error con los datos que ya vio. Pero puede estar <b>memorizando el ruido</b> en lugar de aprender la tendencia. Por eso se separan los datos: unos para <b>entrenar</b> y otros, que el modelo nunca vio, para <b>probar</b>. <span class="hl">El error que importa es el de prueba.</span></p>
+    <p>Un modelo más flexible, como un polinomio de grado alto, siempre puede bajar más el error con los datos que ya vio. Pero puede estar <b>memorizando el ruido</b> en lugar de aprender la tendencia. Por eso se separan los datos: unos para <b>entrenar</b> (el conjunto de entrenamiento, <i>training set</i>) y otros, que el modelo nunca vio, para <b>probar</b> (el conjunto de prueba, <i>test set</i>). <span class="hl">El error que importa es el de prueba.</span></p>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Subajuste y sobreajuste</h3></div>
@@ -143,14 +143,14 @@ print(linear_regression(x, y))             # la respuesta exacta</code></pre><bu
     <div class="readout" id="ov-out"></div>
   </div>
   <div class="cards">
-    <div class="fact"><h3>Subajuste</h3><span class="ex">error alto en ambos</span><p>El modelo es demasiado simple para la forma de los datos: una recta para una curva.</p></div>
+    <div class="fact"><h3>Subajuste (<i>underfitting</i>)</h3><span class="ex">error alto en ambos</span><p>El modelo es demasiado simple para la forma de los datos: una recta para una curva.</p></div>
     <div class="fact"><h3>Buen ajuste</h3><span class="ex">error de prueba mínimo</span><p>Captura la tendencia y deja pasar el ruido. Es el punto que buscamos.</p></div>
-    <div class="fact"><h3>Sobreajuste</h3><span class="ex">entrenamiento ≈ 0, prueba alto</span><p>Pasa por todos los puntos de entrenamiento y se dispara entre ellos. Memorizó, no aprendió.</p></div>
-    <div class="fact"><h3>Regularización</h3><span class="ex">pérdida = MSE + λ·Σ wⱼ²</span><p>Suma un castigo a los coeficientes grandes, para que el modelo prefiera curvas tranquilas.</p></div>
+    <div class="fact"><h3>Sobreajuste (<i>overfitting</i>)</h3><span class="ex">entrenamiento ≈ 0, prueba alto</span><p>Pasa por todos los puntos de entrenamiento y se dispara entre ellos. Memorizó, no aprendió.</p></div>
+    <div class="fact"><h3>Regularización (<i>regularization</i>)</h3><span class="ex">pérdida = MSE + λ·Σ wⱼ²</span><p>Suma un castigo a los coeficientes grandes <var>w</var>ⱼ, para que el modelo prefiera curvas tranquilas. λ (lambda) dice cuánto pesa el castigo: con λ = 0 no hay castigo.</p></div>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag web">En el navegador</span><h3>Sesgo y varianza, de forma interactiva</h3></div>
-    <p class="para">Recorre una explicación visual del subajuste y el sobreajuste.</p>
+    <p class="para">Recorre una explicación visual del subajuste y el sobreajuste. El <b>sesgo</b> (<i>bias</i>) es el error que viene de un modelo demasiado simple, que falla igual con cualquier muestra de datos; la <b>varianza</b> (<i>variance</i>) es cuánto cambia el modelo si lo entrenas con otra muestra. Mucho sesgo es subajuste; mucha varianza, sobreajuste.</p>
     <ol>
       <li>Abre <a href="https://mlu-explain.github.io/bias-variance/" target="_blank" rel="noopener">The Bias Variance Tradeoff</a>, de MLU-Explain (en inglés).</li>
       <li>Baja con la rueda del ratón: las gráficas cambian a medida que lees.</li>
@@ -158,7 +158,7 @@ print(linear_regression(x, y))             # la respuesta exacta</code></pre><bu
     </ol>
     <p class="obs"><b>Qué observar:</b> las dos curvas de error son las del laboratorio de este módulo: el error de entrenamiento siempre baja con la complejidad, y el de prueba baja y luego vuelve a subir. El punto más bajo de la curva de prueba es el «buen ajuste».</p>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Todo entrenamiento sigue este guion: una <b>función de pérdida</b> que mide el error (MSE en regresión; entropía cruzada en clasificación), el descenso del gradiente para reducirla y un conjunto de validación para vigilar el sobreajuste. Las curvas de pérdida de entrenamiento y validación que verás en el curso son la gráfica de la derecha, contada en épocas en lugar de grados.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Todo entrenamiento sigue este guion: una <b>función de pérdida</b> que mide el error (MSE en regresión; en clasificación, la <b>entropía cruzada</b>, <i>cross-entropy</i>, que castiga dar poca probabilidad a la clase correcta; <a href="12-modelos.html">módulo 12</a>), el descenso del gradiente para reducirla y un <b>conjunto de validación</b> (<i>validation set</i>), datos apartados que no se usan para entrenar, para vigilar el sobreajuste durante el entrenamiento. Las curvas de pérdida de entrenamiento y validación que verás en el curso son la gráfica de la derecha, contada en <b>épocas</b> (<i>epochs</i>, pasadas completas por los datos de entrenamiento) en lugar de grados.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Errores de un modelo: 2, −2, 1, −1. ¿Cuánto valen la suma, el MAE y el MSE?</summary><p>Suma = 0 (engañosa) · MAE = (2 + 2 + 1 + 1) / 4 = 1.5 · MSE = (4 + 4 + 1 + 1) / 4 = 2.5</p></details>
     <details><summary>Si la recta queda por debajo de casi todos los puntos, ¿qué signo tiene ∂MSE/∂b y hacia dónde se mueve b?</summary><p>Los errores son positivos, así que ∂MSE/∂b = −(2/n)Σeᵢ es negativa. Como b ← b − η·(negativo), b aumenta y la recta sube.</p></details>
@@ -258,7 +258,7 @@ print(linear_regression(x, y))             # la respuesta exacta</code></pre><bu
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

@@ -28,27 +28,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 17 DE 17</span><h1>Aprendizaje por refuerzo: aprender probando</h1><p class="lede">Cómo un agente aprende a decidir sin conocer las reglas del mundo: solo con recompensas, la sorpresa de cada paso y muchas repeticiones. De Q-learning al RLHF de los LLM.</p></header>
+<header class="page-head"><span class="num">MÓDULO 17 DE 17</span><h1>Aprendizaje por refuerzo: aprender probando</h1><p class="lede">Cómo un agente aprende a decidir sin conocer las reglas del mundo: solo con recompensas, la sorpresa de cada paso y muchas repeticiones. De Q-learning al RLHF (aprendizaje por refuerzo con retroalimentación humana, <i>reinforcement learning from human feedback</i>) de los modelos de lenguaje grandes (LLM, <i>large language models</i>).</p></header>
 <section>
   <h2>Aprender sin conocer las reglas</h2>
   <div class="prose">
     <p>En el <a href="16-agentes.html">módulo 16</a> resolvimos la ecuación de Bellman <b>conociendo el mundo</b>: sabíamos la probabilidad de cada transición P(s′ | s, a) y cada recompensa R(s, a). Eso es <b>planificar</b>. En la vida real casi nunca se conocen esas tablas. Un robot no sabe de antemano cómo responde el piso, y un juego no te entrega sus reglas en una matriz.</p>
-    <p>El <b>aprendizaje por refuerzo</b> (<i>reinforcement learning</i>, RL) resuelve el mismo problema <span class="hl">solo con experiencia: probar, ver qué pasa y corregir</span>. El agente nunca ve P ni R; solo ve tripletas (estado, acción, recompensa, siguiente estado) una tras otra.</p>
+    <p>El <b>aprendizaje por refuerzo</b> (<i>reinforcement learning</i>, RL) resuelve el mismo problema <span class="hl">solo con experiencia: probar, ver qué pasa y corregir</span>. El agente nunca ve P ni R; solo ve tuplas (<var>s</var>, <var>a</var>, <var>r</var>, <var>s</var>′), es decir, (estado, acción, recompensa, siguiente estado), una tras otra.</p>
   </div>
   <div class="tbl"><table>
-    <thead><tr><th></th><th>Aprendizaje supervisado</th><th>Aprendizaje por refuerzo</th></tr></thead>
+    <thead><tr><th></th><th>Aprendizaje supervisado (<i>supervised learning</i>)</th><th>Aprendizaje por refuerzo</th></tr></thead>
     <tbody>
       <tr><td>Qué recibe</td><td>La respuesta correcta para cada ejemplo</td><td>Solo una recompensa: buena o mala, a veces mucho después</td></tr>
-      <tr><td>Datos</td><td>Un dataset fijo</td><td>Los genera el propio agente al actuar</td></tr>
+      <tr><td>Datos</td><td>Un conjunto de datos (<i>dataset</i>) fijo</td><td>Los genera el propio agente al actuar</td></tr>
       <tr><td>Qué aprende</td><td>Una función entrada → salida</td><td>Una política π(a | s): qué hacer en cada situación</td></tr>
       <tr><td>Dificultad típica</td><td>Sobreajuste</td><td>Recompensa retrasada y equilibrio entre explorar y explotar</td></tr>
     </tbody>
   </table></div>
   <div class="cards">
-    <div class="fact"><h3>Basado en valores</h3><span class="ex">aprende Q(s, a)</span><p>Estima qué tan buena es cada acción en cada estado y elige la mejor. Ejemplo: Q-learning, DQN.</p></div>
-    <div class="fact"><h3>Basado en política</h3><span class="ex">aprende π_θ(a | s)</span><p>Ajusta directamente las probabilidades de actuar. Ejemplo: REINFORCE, PPO.</p></div>
-    <div class="fact"><h3>Actor-crítico</h3><span class="ex">π_θ y V_w a la vez</span><p>El actor decide y el crítico le dice si la jugada fue mejor o peor de lo esperado.</p></div>
-    <div class="fact"><h3>Con o sin modelo</h3><span class="ex">aprender P o no</span><p>Algunos agentes aprenden también una simulación del mundo para planificar dentro de ella, como AlphaZero o MuZero.</p></div>
+    <div class="fact"><h3>Basado en valores</h3><span class="ex">aprende Q(s, a)</span><p>Estima qué tan buena es cada acción en cada estado y elige la mejor. Ejemplo: Q-learning, DQN (<i>Deep Q-Network</i>, red Q profunda).</p></div>
+    <div class="fact"><h3>Basado en política</h3><span class="ex">aprende π_θ(a | s)</span><p>Ajusta directamente las probabilidades de actuar. Ejemplo: REINFORCE, PPO (<i>Proximal Policy Optimization</i>, optimización de política proximal).</p></div>
+    <div class="fact"><h3>Actor-crítico</h3><span class="ex">π_θ y V_w a la vez</span><p>En inglés, <i>actor-critic</i>. El actor decide y el crítico le dice si la jugada fue mejor o peor de lo esperado.</p></div>
+    <div class="fact"><h3>Con o sin modelo</h3><span class="ex">aprender P o no</span><p>Algunos agentes planifican con un modelo del mundo. AlphaZero usa las reglas del juego, que le dan; MuZero aprende además su propio modelo y planifica dentro de él.</p></div>
   </div>
 </section>
 
@@ -72,7 +72,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <ol class="steps">
     <li><span>Estás en s, eliges a (con ε-greedy: casi siempre la mejor, a veces al azar), recibes la recompensa r y llegas a s′.</span></li>
     <li><span>El <b>objetivo</b> (en verde) es lo que acabas de ganar más lo mejor que crees que puedes ganar desde s′, descontado por γ. Es la ecuación de Bellman, pero con una muestra real en vez de las probabilidades.</span></li>
-    <li><span>La diferencia δ = objetivo − Q(s, a) se llama <b>error de diferencia temporal</b> (TD): la sorpresa de este paso.</span></li>
+    <li><span>La diferencia δ = objetivo − Q(s, a) se llama <b>error de diferencia temporal</b> (error TD, de <i>temporal difference</i>): la sorpresa de este paso.</span></li>
     <li><span>Mueves Q(s, a) una fracción α de esa sorpresa. Repites miles de veces y Q converge al valor verdadero.</span></li>
   </ol>
   <div class="lab">
@@ -99,7 +99,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>Cuando las flechas se estabilicen, baja el deslizador de exploración ε a 0.</li>
       <li>Haz clic en una casilla del camino, cámbiale la recompensa y mira cómo el agente rehace su política.</li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> al principio el agente vaga al azar; después el valor de la meta «viaja» hacia atrás y las flechas apuntan a ella. Cada actualización es la regla Q ← Q + α·δ del módulo. En el cuadro de configuración puedes cambiar <code>'qlearn'</code> por <code>'sarsa'</code> y comparar.</p>
+    <p class="obs"><b>Qué observar:</b> al principio el agente vaga al azar; después el valor de la meta «viaja» hacia atrás y las flechas apuntan a ella. Cada actualización es la regla Q ← Q + α·δ del módulo. En el cuadro de configuración puedes cambiar <code>'qlearn'</code> por <code>'sarsa'</code> (SARSA, una variante de Q-learning) y pulsar «Reinit agent» para que el cambio tome efecto; luego compara.</p>
   </div>
 </section>
 
@@ -110,7 +110,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="eq">θ ← θ + α · (G − b) · ∇<sub>θ</sub> ln π<sub>θ</sub>(a | s)</div>
   <div class="prose">
-    <p>G es el retorno que se obtuvo y b una <b>línea base</b>, como el retorno promedio. El factor (G − b) es la ventaja: positivo empuja hacia la acción, negativo la aleja. ∇ ln π apunta en la dirección que más aumenta la probabilidad de la acción tomada. Es descenso del gradiente al revés: <b>ascenso</b>, porque queremos maximizar la recompensa, no minimizar un error.</p>
+    <p>G es el retorno que se obtuvo y b una <b>línea base</b> (<i>baseline</i>), como el retorno promedio. El factor (G − b) es la <b>ventaja</b> (<i>advantage</i>): positivo empuja hacia la acción, negativo la aleja. ∇ ln π apunta en la dirección que más aumenta la probabilidad de la acción tomada. Es descenso del gradiente al revés: <b>ascenso</b>, porque queremos maximizar la recompensa, no minimizar un error.</p>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Una política que aprende a elegir</h3></div>
@@ -155,22 +155,61 @@ for intento in range(1, 501):
 <section>
   <h2>Deep RL y RLHF: cuando la tabla no alcanza</h2>
   <div class="prose">
-    <p>En el acantilado hay 28 estados y cabe una tabla. En el ajedrez hay más posiciones que átomos en el universo, y en un videojuego el estado es una imagen. La solución es reemplazar la tabla por una <b>red neuronal</b>: Q<sub>θ</sub>(s, a) o π<sub>θ</sub>(a | s). Eso es el <b>deep reinforcement learning</b>.</p>
+    <p>En el acantilado hay 28 estados y cabe una tabla. En el go hay unas 10<sup>170</sup> posiciones legales, muchísimas más que los cerca de 10<sup>80</sup> átomos del universo observable, y en un videojuego el estado es una imagen. La solución es reemplazar la tabla por una <b>red neuronal</b>: Q<sub>θ</sub>(s, a) o π<sub>θ</sub>(a | s). Eso es el <b>aprendizaje por refuerzo profundo</b> (<i>deep reinforcement learning</i>, deep RL).</p>
   </div>
   <div class="cards">
     <div class="fact"><h3>DQN</h3><span class="ex">pérdida = (r + γ máx Q′ − Q<sub>θ</sub>)²</span><p>La regla de Q-learning convertida en un <a href="11-regresion.html">error cuadrático</a> que se baja con descenso del gradiente. Aprendió a jugar Atari a partir de los píxeles.</p></div>
-    <div class="fact"><h3>PPO</h3><span class="ex">gradiente de política con freno</span><p>Como REINFORCE, pero recorta cada actualización para que la política no cambie demasiado de golpe. Es el método más usado en la práctica.</p></div>
+    <div class="fact"><h3>PPO</h3><span class="ex">gradiente de política con freno</span><p>Como REINFORCE, pero recorta cada actualización para que la política no cambie demasiado de golpe. Es uno de los métodos más usados en la práctica.</p></div>
     <div class="fact"><h3>AlphaGo / AlphaZero</h3><span class="ex">red + búsqueda + autojuego</span><p>Una red que propone jugadas y evalúa posiciones, entrenada jugando millones de partidas contra sí misma.</p></div>
   </div>
   <div class="prose">
-    <p><b>RLHF</b> (refuerzo con retroalimentación humana) es cómo se pule un <a href="15-llm.html">LLM</a> para que sea útil y seguro. Las piezas encajan una por una:</p>
+    <p><b>RLHF</b> (<i>reinforcement learning from human feedback</i>, aprendizaje por refuerzo con retroalimentación humana) es cómo se pule un <a href="15-llm.html">LLM</a> (modelo de lenguaje grande) para que sea útil y seguro. Las piezas encajan una por una:</p>
   </div>
   <ol class="steps">
     <li><span><b>La política</b> es el propio LLM: el estado es el texto hasta ahora y la acción es el siguiente token.</span></li>
-    <li><span><b>El modelo de recompensa:</b> personas comparan dos respuestas y eligen la mejor. Se entrena una red r(x, y) para que P(A gana a B) = σ(r<sub>A</sub> − r<sub>B</sub>), la sigmoide de la diferencia de puntajes (modelo de Bradley-Terry).</span></li>
-    <li><span><b>La optimización:</b> se ajusta el LLM con PPO para maximizar E[r] − β·KL(π<sub>θ</sub> ‖ π<sub>ref</sub>). El segundo término castiga alejarse demasiado del modelo original, para que no aprenda a «engañar» al juez con texto raro.</span></li>
-    <li><span><b>Recompensas verificables:</b> en matemáticas y programación la recompensa puede ser automática (¿la respuesta es correcta?, ¿pasan las pruebas?). Así se entrenan los modelos que «razonan» paso a paso.</span></li>
+    <li><span><b>El modelo de recompensa</b> (<i>reward model</i>): personas comparan dos respuestas y eligen la mejor. Se entrena una red r(x, y) para que P(A gana a B) = σ(r<sub>A</sub> − r<sub>B</sub>), la sigmoide de la diferencia de puntajes (modelo de Bradley-Terry).</span></li>
+    <li><span><b>La optimización:</b> se ajusta el LLM con PPO para maximizar E[r] − β·KL(π<sub>θ</sub> ‖ π<sub>ref</sub>), donde KL es la divergencia de Kullback-Leibler y π<sub>ref</sub>, el modelo de referencia, es una copia congelada del LLM original. El segundo término castiga alejarse demasiado del modelo original, para que no aprenda a «engañar» al juez con texto raro.</span></li>
+    <li><span><b>Recompensas verificables</b> (<i>verifiable rewards</i>): en matemáticas y programación la recompensa puede ser automática (¿la respuesta es correcta?, ¿pasan las pruebas?). Así se entrenan los modelos que «razonan» paso a paso.</span></li>
   </ol>
+  <figure class="fig">
+    <div class="lienzo"><svg viewBox="0 0 330 402" style="max-width:480px;margin:0 auto" role="img" aria-label="Flujo del RLHF en dos fases. Fase 1, entrenar al juez: el LLM genera dos respuestas, A y B, a la misma pregunta; una persona elige la mejor; con esa preferencia se ajusta el modelo de recompensa r(x, y). Fase 2, afinar el LLM: el LLM escribe una respuesta nueva; el juez le da un puntaje r; PPO calcula el objetivo r menos beta por KL frente al modelo de referencia y actualiza los pesos theta del LLM. Las dos fases se repiten">
+      <defs>
+        <marker id="rl-fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--accent)"/></marker>
+        <marker id="rl-fw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--warm)"/></marker>
+      </defs>
+      <!-- participantes -->
+      <rect x="4" y="8" width="76" height="46" rx="10" class="caja"/><text x="42" y="28" text-anchor="middle" class="t t-b">Persona</text><text x="42" y="45" text-anchor="middle" class="t t-xs t-m">compara</text>
+      <rect x="86" y="8" width="76" height="46" rx="10" class="caja"/><text x="124" y="28" text-anchor="middle" class="t t-b">LLM π<tspan class="t-s" dy="3">θ</tspan></text><text x="124" y="45" text-anchor="middle" class="t t-xs t-m">la política</text>
+      <rect x="168" y="8" width="76" height="46" rx="10" class="caja"/><text x="206" y="28" text-anchor="middle" class="t t-b">Juez r</text><text x="206" y="45" text-anchor="middle" class="t t-xs t-m">recompensa</text>
+      <rect x="250" y="8" width="76" height="46" rx="10" class="caja"/><text x="288" y="28" text-anchor="middle" class="t t-b">PPO</text><text x="288" y="45" text-anchor="middle" class="t t-xs t-m">optimizador</text>
+      <line x1="42" y1="54" x2="42" y2="394" class="vida"/>
+      <line x1="124" y1="54" x2="124" y2="394" class="vida"/>
+      <line x1="206" y1="54" x2="206" y2="394" class="vida"/>
+      <line x1="288" y1="54" x2="288" y2="394" class="vida"/>
+      <!-- fase 1 -->
+      <text x="4" y="80" class="t t-xs t-m t-b">FASE 1 · ENTRENAR AL JUEZ</text>
+      <text x="83" y="104" text-anchor="middle" class="t t-s">① A y B</text>
+      <line x1="122" y1="112" x2="46" y2="112" class="ln" style="stroke:var(--accent);stroke-width:2" marker-end="url(#rl-fa)"/>
+      <text x="124" y="142" text-anchor="middle" class="t t-s">② «A es mejor»</text>
+      <line x1="44" y1="150" x2="202" y2="150" class="ln" style="stroke:var(--accent);stroke-width:2" marker-end="url(#rl-fa)"/>
+      <rect x="156" y="164" width="100" height="40" rx="8" class="caja" style="stroke:var(--accent)"/>
+      <text x="206" y="180" text-anchor="middle" class="t t-s">③ se ajusta r</text>
+      <text x="206" y="196" text-anchor="middle" class="t t-xs t-m">σ(r<tspan dy="2">A</tspan><tspan dy="-2"> − r</tspan><tspan dy="2">B</tspan><tspan dy="-2">)</tspan></text>
+      <!-- fase 2 -->
+      <line x1="4" y1="222" x2="326" y2="222" class="ln ln-d" style="stroke:var(--line)"/>
+      <text x="4" y="242" class="t t-xs t-m t-b">FASE 2 · AFINAR EL LLM</text>
+      <text x="165" y="266" text-anchor="middle" class="t t-s">④ respuesta y</text>
+      <line x1="126" y1="274" x2="202" y2="274" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#rl-fw)"/>
+      <text x="247" y="298" text-anchor="middle" class="t t-s">⑤ puntaje r</text>
+      <line x1="208" y1="306" x2="284" y2="306" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#rl-fw)"/>
+      <rect x="226" y="318" width="100" height="40" rx="8" class="caja" style="stroke:var(--warm)"/>
+      <text x="276" y="334" text-anchor="middle" class="t t-s">⑥ r − β·KL</text>
+      <text x="276" y="350" text-anchor="middle" class="t t-xs t-m">frente a π<tspan dy="2">ref</tspan></text>
+      <text x="170" y="374" text-anchor="middle" class="t t-s">⑦ actualiza θ</text>
+      <line x1="286" y1="382" x2="128" y2="382" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#rl-fw)"/>
+    </svg></div>
+    <figcaption>El RLHF como flujo. En la fase 1, las preferencias de las personas entrenan al juez. En la fase 2, el juez califica respuestas nuevas y PPO ajusta los pesos θ del LLM, frenado por el término β·KL que lo mantiene cerca del modelo de referencia π<sub>ref</sub>. En la práctica las dos fases se repiten varias veces.</figcaption>
+  </figure>
   <div class="ml"><b>Dónde aparece en ML</b><p>RL entrena a los agentes del <a href="16-agentes.html">módulo 16</a>, a los LLM con RLHF y con recompensas verificables, a robots, a sistemas de recomendación que optimizan a largo plazo y a controladores industriales. Los ingredientes son siempre los mismos: una política, una recompensa, una estimación del valor y una actualización que corrige con la sorpresa.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Q(s, →) = 2, r = −1, γ = 0.9, máx Q(s′, ·) = 5, α = 0.5. ¿Cuál es el nuevo Q(s, →)?</summary><p>Objetivo = −1 + 0.9·5 = 3.5. Sorpresa δ = 3.5 − 2 = 1.5. Nuevo Q = 2 + 0.5·1.5 = 2.75.</p></details>
@@ -275,7 +314,7 @@ for intento in range(1, 501):
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>

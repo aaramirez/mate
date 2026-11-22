@@ -28,7 +28,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="layout">
 <nav class="toc" id="toc" aria-label="Ruta de aprendizaje"></nav>
 <main>
-<header class="page-head"><span class="num">MÓDULO 16 DE 17</span><h1>Agentes: decidir, actuar y aprender</h1><p class="lede">Un agente observa, decide, actúa y recibe una recompensa. Aquí lo escribimos con matemática (estados, acciones, política, retorno y la ecuación de Bellman) y vemos que un asistente con LLM que usa herramientas es exactamente lo mismo.</p></header>
+<header class="page-head"><span class="num">MÓDULO 16 DE 17</span><h1>Agentes: decidir, actuar y aprender</h1><p class="lede">Un agente observa, decide, actúa y recibe una recompensa. Aquí lo escribimos con matemática (estados, acciones, política, retorno y la ecuación de Bellman) y vemos que un asistente con un modelo de lenguaje grande (LLM, <i>large language model</i>) que usa herramientas es exactamente lo mismo.</p></header>
 <style>
 .lp-wrap{display:grid;gap:12px}
 .lp-ctx{display:grid;gap:6px;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--paper);min-height:120px}
@@ -48,24 +48,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section>
   <h2>¿Qué es un agente?</h2>
   <div class="prose">
-    <p>Un <b>agente</b> es cualquier cosa que <b>observa</b> una situación, <b>decide</b> qué hacer, <b>actúa</b> y luego <b>ve qué pasó</b>. Un termostato, un robot aspiradora, un programa que juega ajedrez y un asistente con IA que busca en internet cumplen esa descripción. Lo que cambia es qué tan inteligente es la decisión.</p>
-    <p>La matemática de los agentes viene del <b>aprendizaje por refuerzo</b>. La idea es la de entrenar a una mascota: nadie le dice la respuesta correcta, solo recibe premios o castigos y aprende qué conviene hacer en cada situación.</p>
+    <p>Un <b>agente</b> es cualquier cosa que <b>observa</b> una situación, <b>decide</b> qué hacer, <b>actúa</b> y luego <b>ve qué pasó</b>. Un termostato, un robot aspiradora, un programa que juega ajedrez y un asistente de inteligencia artificial (IA) que busca en internet cumplen esa descripción. Lo que cambia es qué tan inteligente es la decisión.</p>
+    <p>La matemática de los agentes viene del <b>aprendizaje por refuerzo</b> (<i>reinforcement learning</i>). La idea es la de entrenar a una mascota: nadie le dice la respuesta correcta, solo recibe premios o castigos y aprende qué conviene hacer en cada situación.</p>
   </div>
   <ol class="steps">
     <li><span><b>Observar:</b> el agente ve el estado del mundo, <var>s</var>ₜ.</span></li>
-    <li><span><b>Decidir:</b> su <b>política</b> π elige una acción <var>a</var>ₜ.</span></li>
+    <li><span><b>Decidir:</b> su <b>política</b> (<i>policy</i>) π, la regla con la que decide, elige una acción <var>a</var>ₜ.</span></li>
     <li><span><b>Actuar:</b> el entorno reacciona y pasa a un nuevo estado <var>s</var>ₜ₊₁.</span></li>
-    <li><span><b>Recibir:</b> el entorno le devuelve una recompensa <var>r</var>ₜ (un número: positivo es bueno, negativo es malo). Y se vuelve al paso 1.</span></li>
+    <li><span><b>Recibir:</b> el entorno le devuelve una <b>recompensa</b> (<i>reward</i>) <var>r</var>ₜ (un número: positivo es bueno, negativo es malo). Y se vuelve al paso 1.</span></li>
   </ol>
+  <figure class="fig">
+    <div class="lienzo"><svg viewBox="0 0 320 176" style="max-width:440px;margin:0 auto" role="img" aria-label="El bucle agente y entorno: el agente manda una acción al entorno por la flecha de arriba, y el entorno le devuelve el nuevo estado y la recompensa por la flecha de abajo; el tiempo avanza un paso en cada vuelta">
+      <defs>
+        <marker id="ag-fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--accent)"/></marker>
+        <marker id="ag-fw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--warm)"/></marker>
+      </defs>
+      <rect x="6" y="62" width="100" height="50" rx="10" class="caja" style="stroke:var(--accent);stroke-width:2"/>
+      <text x="56" y="84" text-anchor="middle" class="t t-b">Agente</text>
+      <text x="56" y="101" text-anchor="middle" class="t t-m">política π</text>
+      <rect x="214" y="62" width="100" height="50" rx="10" class="caja" style="stroke:var(--warm);stroke-width:2"/>
+      <text x="264" y="84" text-anchor="middle" class="t t-b">Entorno</text>
+      <text x="264" y="101" text-anchor="middle" class="t t-m">el mundo</text>
+      <path d="M56 60 C56 30, 264 30, 264 58" class="ln" style="stroke:var(--accent);stroke-width:2" marker-end="url(#ag-fa)"/>
+      <text x="160" y="26" text-anchor="middle" class="t">acción <tspan class="t-mono">aₜ</tspan></text>
+      <path d="M264 114 C264 144, 56 144, 56 116" class="ln" style="stroke:var(--warm);stroke-width:2" marker-end="url(#ag-fw)"/>
+      <text x="160" y="164" text-anchor="middle" class="t">nuevo estado <tspan class="t-mono">sₜ₊₁</tspan> y recompensa <tspan class="t-mono">rₜ</tspan></text>
+      <text x="160" y="91" text-anchor="middle" class="t t-m">t → t + 1</text>
+    </svg></div>
+    <figcaption>El bucle agente–entorno. Arriba, el agente actúa; abajo, el entorno responde con el nuevo estado y la recompensa. Cada vuelta es un paso de tiempo.</figcaption>
+  </figure>
   <div class="prose">
-    <p>El subíndice <var>t</var> es el tiempo, contado en pasos: 0, 1, 2, … Todo el juego consiste en elegir acciones que junten la mayor recompensa posible <b>a largo plazo</b>, no solo en el próximo paso.</p>
+    <p>El subíndice <var>t</var> es el tiempo, contado en pasos: 0, 1, 2, … Todo el juego consiste en elegir acciones que junten la mayor recompensa posible <b>a largo plazo</b>, no solo en el próximo paso. Una partida completa, desde el inicio hasta que la tarea termina, se llama <b>episodio</b> (<i>episode</i>).</p>
   </div>
 </section>
 
 <section>
   <h2>La definición formal: un proceso de decisión de Markov</h2>
   <div class="prose">
-    <p>Para escribirlo con matemática, el mundo del agente se describe con cinco piezas. A esa quíntupla se le llama <b>proceso de decisión de Markov</b> (MDP):</p>
+    <p>Para escribirlo con matemática, el mundo del agente se describe con cinco piezas. A esa quíntupla se le llama <b>proceso de decisión de Markov</b> (MDP, <i>Markov decision process</i>):</p>
   </div>
   <div class="eq">MDP = (S, A, P, R, γ)</div>
   <div class="cards">
@@ -73,7 +93,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>A: acciones</h3><span class="ex">a ∈ A</span><p>Lo que el agente puede hacer: ↑, ↓, ←, →; o «responder», «buscar», «calcular».</p></div>
     <div class="fact"><h3>P: transición</h3><span class="ex">P(s′ | s, a)</span><p>La <a href="09-probabilidad.html">probabilidad</a> de llegar a s′ si estoy en s y hago a. El mundo puede ser imprevisible: a veces uno resbala.</p></div>
     <div class="fact"><h3>R: recompensa</h3><span class="ex">R(s, a)</span><p>El premio o castigo inmediato. Es la única señal de «lo hiciste bien» que recibe el agente.</p></div>
-    <div class="fact"><h3>γ: descuento</h3><span class="ex">0 ≤ γ &lt; 1</span><p>Cuánto valen las recompensas futuras frente a las de hoy. Con γ = 0.9, un premio dentro de un paso vale el 90 %.</p></div>
+    <div class="fact"><h3>γ: descuento</h3><span class="ex">0 ≤ γ &lt; 1</span><p>El factor de descuento (<i>discount factor</i>): cuánto valen las recompensas futuras frente a las de hoy. Con γ = 0.9, un premio dentro de un paso vale el 90 %.</p></div>
   </div>
   <div class="prose">
     <p>«De Markov» significa que <span class="hl">el futuro solo depende del estado actual, no de cómo se llegó a él</span>. El estado tiene que resumir todo lo importante.</p>
@@ -81,7 +101,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="eq">π(a | s) = probabilidad de hacer a estando en s</div>
   <div class="prose">
-    <p>Si el agente juega, deja un rastro llamado <b>trayectoria</b>: τ = (<var>s</var>₀, <var>a</var>₀, <var>r</var>₀, <var>s</var>₁, <var>a</var>₁, <var>r</var>₁, …). Y lo que se quiere hacer grande es el <b>retorno</b>, la suma de las recompensas con descuento:</p>
+    <p>Si el agente juega, deja un rastro llamado <b>trayectoria</b> (<i>trajectory</i>): τ = (<var>s</var>₀, <var>a</var>₀, <var>r</var>₀, <var>s</var>₁, <var>a</var>₁, <var>r</var>₁, …). Y lo que se quiere hacer grande es el <b>retorno</b> (<i>return</i>), la suma de las recompensas con descuento:</p>
   </div>
   <div class="eq">G = r₀ + γ·r₁ + γ²·r₂ + γ³·r₃ + … = Σₜ γᵗ·rₜ</div>
   <div class="prose">
@@ -95,7 +115,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p class="para">Calcula retornos con descuento y comprueba que la suma infinita se queda en 1 / (1 − γ).</p>
     <ol>
       <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3</code><button type="button" class="copiar">Copiar</button></div></div></div> Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
-      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>r = [-1, -1, -1, 10]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sum(0.9**t * rt for t, rt in enumerate(r))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 4.58: el ejercicio 1</div><div class="cmd-l"><code>sum(0.5**t * rt for t, rt in enumerate(r))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># -0.5: agente miope</div><div class="cmd-l"><code>sum(0.9**t for t in range(1000))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 10.000000000000002</div><div class="cmd-l"><code>1 / (1 - 0.9)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># el mismo 10</div><div class="cmd-l"><code>sum(0.99**t for t in range(10000))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># casi 100</div></div></div></li>
+      <li>Copia cada línea con su botón, pégala en Python y pulsa Enter; debajo, después de <code>#</code>, está lo que deberías ver.<div class="cmds"><div class="cmd-panel" data-so="win mac linux"><div class="cmd-l"><code>r = [-1, -1, -1, 10]</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-l"><code>sum(0.9**t * rt for t, rt in enumerate(r))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># ≈ 4.58: el ejercicio 1 (Python muestra 4.580000000000001 por el redondeo binario)</div><div class="cmd-l"><code>sum(0.5**t * rt for t, rt in enumerate(r))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># -0.5: agente miope</div><div class="cmd-l"><code>sum(0.9**t for t in range(1000))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># 10.000000000000002</div><div class="cmd-l"><code>1 / (1 - 0.9)</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># el mismo 10</div><div class="cmd-l"><code>sum(0.99**t for t in range(10000))</code><button type="button" class="copiar">Copiar</button></div><div class="cmd-c"># casi 100</div></div></div></li>
     </ol>
     <p class="obs"><b>Qué observar:</b> con mil términos la suma ya no se mueve de 10: la serie geométrica tiene un límite finito. Con γ = 0.99 el límite sube a 100: cuanto más cerca de 1 está γ, más lejos mira el agente.</p>
   </div>
@@ -104,13 +124,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section>
   <h2>El valor de un estado y la ecuación de Bellman</h2>
   <div class="prose">
-    <p>¿Cómo sabe el agente qué tan buena es una casilla? Con la <b>función de valor</b>: V(<var>s</var>) es el retorno que se espera conseguir si se empieza en <var>s</var> y se juega bien desde ahí. Su prima, Q(<var>s</var>, <var>a</var>), es lo mismo pero fijando la primera acción: «¿cuánto espero ganar si estoy en <var>s</var> y hago <var>a</var>?».</p>
+    <p>¿Cómo sabe el agente qué tan buena es una casilla? Con la <b>función de valor</b> (<i>value function</i>): V(<var>s</var>) es el retorno que se espera conseguir si se empieza en <var>s</var> y se juega bien desde ahí. Su prima, Q(<var>s</var>, <var>a</var>), es lo mismo pero fijando la primera acción: «¿cuánto espero ganar si estoy en <var>s</var> y hago <var>a</var>?».</p>
     <p>Richard Bellman notó algo que lo simplifica todo: <span class="hl">el valor de donde estoy es lo que gano ahora más el valor, descontado, de donde llegaré</span>.</p>
   </div>
   <div class="eq">V(s) = max<sub>a</sub> [ R(s, a) + γ · Σ<sub>s′</sub> P(s′ | s, a) · V(s′) ]</div>
   <div class="prose">
     <p>En palabras: prueba cada acción; para cada una suma el premio inmediato y el promedio de los valores de las casillas a las que puedes llegar, multiplicado por γ; quédate con la mejor. Lo que está dentro del corchete es justamente Q(<var>s</var>, <var>a</var>), y la política óptima es elegir la acción con mayor Q.</p>
-    <p>La ecuación usa V en los dos lados, pero eso no es problema. Se arranca con V = 0 en todas partes y se aplica la fórmula una y otra vez: cada vuelta corrige los valores un poco. A eso se le llama <b>iteración de valores</b>, y los valores <a href="06-limites.html">convergen</a> a los verdaderos.</p>
+    <p>La ecuación usa V en los dos lados, pero eso no es problema. Se arranca con V = 0 en todas partes y se aplica la fórmula una y otra vez: cada vuelta corrige los valores un poco. A eso se le llama <b>iteración de valores</b> (<i>value iteration</i>), y los valores <a href="06-limites.html">convergen</a> a los verdaderos.</p>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Mundo de cuadrícula: iteración de valores</h3></div>
@@ -158,7 +178,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="btns"><button class="primary" id="bd-play">Jugar 100 veces</button><button id="bd-cmp">Comparar ε = 0, 0.1 y 0.3</button><button id="bd-reset">Reiniciar</button></div>
     <div class="readout" id="bd-out"></div>
-    <p class="hint">Cada máquina paga en promedio una cantidad distinta, con ruido. El agente no lo sabe. Con ε = 0 suele quedarse pegado a la primera máquina que le pareció buena; con ε grande explora tanto que desperdicia jugadas.</p>
+    <p class="hint">Este juego es el problema del <b>bandido multibrazo</b> (<i>multi-armed bandit</i>), por las tragamonedas, a las que en inglés llaman «bandidos de un brazo». Cada máquina paga en promedio una cantidad distinta, con ruido. El agente no lo sabe. Con ε = 0 suele quedarse pegado a la primera máquina que le pareció buena; con ε grande explora tanto que desperdicia jugadas.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Cuatro tragamonedas en la terminal</h3></div>
@@ -188,14 +208,14 @@ print("premio promedio:", round(total / 1000, 2))</code></pre><button type="butt
       <li>En la terminal, dentro de la carpeta del archivo, ejecútalo con el comando de tu sistema:<div class="cmds"><div class="cmd-tabs" role="tablist" aria-label="Sistema operativo"><button type="button" role="tab" data-so="win">Windows</button><button type="button" role="tab" data-so="mac linux">macOS y Linux</button></div><div class="cmd-panel" role="tabpanel" data-so="win"><div class="cmd-l"><code>py bandido.py</code><button type="button" class="copiar">Copiar</button></div></div><div class="cmd-panel" role="tabpanel" data-so="mac linux"><div class="cmd-l"><code>python3 bandido.py</code><button type="button" class="copiar">Copiar</button></div></div></div></li>
       <li>Cambia <code>epsilon</code> a 0 y a 0.5, y ejecuta cada versión varias veces.</li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> con ε = 0 el agente se queda pegado a una de las primeras máquinas que prueba y gana entre 1 y 1.5 por jugada. Con ε = 0.1 descubre la máquina 3 y gana cerca de 2.8. Con ε = 0.5 la encuentra, pero desperdicia tantas jugadas explorando que gana menos, unos 2.4.</p>
+    <p class="obs"><b>Qué observar:</b> con ε = 0 el agente se queda pegado a una de las primeras máquinas que prueba y gana entre 1 y 1.5 por jugada. Con ε = 0.1 descubre la tercera máquina, la que paga 3, y gana cerca de 2.8. Con ε = 0.5 la encuentra, pero desperdicia tantas jugadas explorando que gana menos, unos 2.4.</p>
   </div>
 </section>
 
 <section>
   <h2>Un agente con LLM es el mismo esquema</h2>
   <div class="prose">
-    <p>Los asistentes que usan herramientas (buscan en la web, ejecutan código, leen archivos) son agentes en el sentido exacto de este módulo. Solo cambian las piezas:</p>
+    <p>Los asistentes basados en un LLM (modelo de lenguaje grande) que usan herramientas (buscan en la web, ejecutan código, leen archivos) son agentes en el sentido exacto de este módulo. Solo cambian las piezas:</p>
   </div>
   <div class="tbl"><table>
     <thead><tr><th>Pieza</th><th>Aprendizaje por refuerzo clásico</th><th>Agente con LLM</th></tr></thead>
@@ -225,7 +245,7 @@ print("premio promedio:", round(total / 1000, 2))</code></pre><button type="butt
       <div class="readout" id="lp-out"></div>
     </div>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>El aprendizaje por refuerzo entrenó a AlphaGo, a robots que caminan y a sistemas que ajustan la temperatura de centros de datos. En los LLM aparece dos veces: en el <b>RLHF</b> (aprendizaje por refuerzo con retroalimentación humana), donde la recompensa es la preferencia de una persona entre dos respuestas, y en los <b>agentes</b>, donde el modelo actúa en bucle con herramientas. La exploración, el descuento y el valor de los estados siguen siendo las mismas ideas de este módulo.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>El aprendizaje por refuerzo entrenó a AlphaGo, a robots que caminan y a sistemas que ajustan la temperatura de centros de datos. En los LLM aparece dos veces: en el <b>RLHF</b> (<i>reinforcement learning from human feedback</i>, aprendizaje por refuerzo con retroalimentación humana), donde la recompensa es la preferencia de una persona entre dos respuestas, y en los <b>agentes</b>, donde el modelo actúa en bucle con herramientas. La exploración, el descuento y el valor de los estados siguen siendo las mismas ideas de este módulo.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Con γ = 0.9, un agente recibe las recompensas 1, 1, 10. ¿Cuál es su retorno?</summary><p>G = 1 + 0.9·1 + 0.9²·10 = 1 + 0.9 + 8.1 = 10</p></details>
     <details><summary>¿Qué pasa si γ = 0?</summary><p>G = r₀: el agente es «miope» y solo le importa el premio inmediato. En la cuadrícula, solo las casillas vecinas a la meta saben a dónde ir.</p></details>
@@ -329,7 +349,7 @@ print("premio promedio:", round(total / 1000, 2))</code></pre><button type="butt
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>
@@ -437,7 +457,7 @@ const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hex
     const x1=Math.max(100,hist.length,cmp?cmp.T:0);
     const F=frame(ctx,w,h,{x0:0,x1,y0:0,y1:3.5,sy:.5});
     ctx.strokeStyle=tok('--muted');ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(F.X(0),F.Y(MU[BEST]));ctx.lineTo(F.X(x1),F.Y(MU[BEST]));ctx.stroke();ctx.setLineDash([]);
-    label(ctx,'la mejor máquina: 3',F.X(x1)-6,F.Y(MU[BEST])-10,tok('--muted'),'right');
+    label(ctx,'la mejor (C): 3',F.X(x1)-6,F.Y(MU[BEST])-10,tok('--muted'),'right');
     const line=(arr,col,lw)=>{ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.beginPath();arr.forEach((v,i)=>{const X=F.X(i+1),Y=F.Y(Math.max(0,Math.min(3.5,v)));i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});ctx.stroke();};
     if(cmp){const cols=[tok('--warm'),tok('--good'),tok('--accent')];
       cmp.curves.forEach((c,i)=>{line(c,cols[i],2);label(ctx,'ε = '+cmp.eps[i],F.X(x1)-6,F.Y(.3+i*.35),cols[i],'right');});}

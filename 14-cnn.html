@@ -46,9 +46,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Podríamos «aplanar» esa tabla en un vector largo y dárselo a la red del <a href="13-neurona.html">módulo 13</a>. Funciona para imágenes diminutas, pero tiene dos problemas: <span class="hl">al aplanar se pierde quién es vecino de quién, y el número de pesos se dispara</span>.</p>
   </div>
   <div class="cards">
-    <div class="fact"><h3>Dígito escrito a mano</h3><span class="ex">28 × 28 = 784 números</span><p>El clásico conjunto MNIST. Ya son 784 entradas para cada neurona de la primera capa.</p></div>
-    <div class="fact"><h3>Foto a color pequeña</h3><span class="ex">224 × 224 × 3 = 150 528</span><p>Una capa densa de solo 1000 neuronas necesitaría ¡más de 150 millones de pesos!</p></div>
-    <div class="fact"><h3>La idea de la CNN</h3><span class="ex">mirar por una ventanita</span><p>En vez de conectar todo con todo, revisar la imagen por trozos pequeños con el mismo «detector».</p></div>
+    <div class="fact"><h3>Dígito escrito a mano</h3><span class="ex">28 × 28 = 784 números</span><p>El clásico conjunto MNIST (<i>Modified National Institute of Standards and Technology</i>): 70 000 dígitos del 0 al 9 escritos a mano, en gris. Ya son 784 entradas para cada neurona de la primera capa.</p></div>
+    <div class="fact"><h3>Foto a color pequeña</h3><span class="ex">224 × 224 × 3 = 150 528</span><p>Una capa densa (<i>dense layer</i>, donde cada neurona se conecta con todas las entradas) de solo 1000 neuronas necesitaría ¡más de 150 millones de pesos!</p></div>
+    <div class="fact"><h3>La idea de la CNN</h3><span class="ex">mirar por una ventanita</span><p>Una CNN (<i>Convolutional Neural Network</i>, red neuronal convolucional), en vez de conectar todo con todo, revisa la imagen por trozos pequeños con el mismo «detector».</p></div>
   </div>
 </section>
 
@@ -62,7 +62,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><span><b>Colocar</b> el filtro sobre una ventana de 3 × 3 de la imagen.</span></li>
     <li><span><b>Multiplicar</b> cada píxel por el peso del filtro que tiene encima.</span></li>
     <li><span><b>Sumar</b> los 9 productos. Ese número es una casilla del resultado.</span></li>
-    <li><span><b>Deslizar</b> el filtro una casilla y repetir hasta recorrer toda la imagen. La tabla de resultados se llama <b>mapa de activación</b>.</span></li>
+    <li><span><b>Deslizar</b> el filtro una casilla y repetir hasta recorrer toda la imagen. La tabla de resultados se llama <b>mapa de activación</b> (<i>activation map</i> o <i>feature map</i>).</span></li>
   </ol>
   <div class="lab">
     <div class="lab-title"><span class="tag">Paso a paso</span><h3>Convolución sobre una imagen de 12 × 12</h3></div>
@@ -87,7 +87,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>Nitidez</h3><span class="ex">5 al centro, −1 en la cruz</span><p>Refuerza el píxel central frente a sus vecinos: resalta los contornos.</p></div>
   </div>
   <div class="prose">
-    <p>Aquí está el truco que convierte esto en aprendizaje automático: <span class="hl">en una red convolucional nadie escribe los números del filtro; la red los aprende</span> con el <a href="10-gradiente.html">descenso del gradiente</a>, igual que los pesos de cualquier neurona. Empiezan al azar y terminan siendo detectores de bordes, de texturas o de ojos, según lo que ayude a reducir el error.</p>
+    <p>Aquí está el truco que convierte esto en aprendizaje automático (<i>machine learning</i>): <span class="hl">en una red convolucional nadie escribe los números del filtro; la red los aprende</span> con el <a href="10-gradiente.html">descenso del gradiente</a>, igual que los pesos de cualquier neurona. Empiezan al azar y terminan siendo detectores de bordes, de texturas o de ojos, según lo que ayude a reducir el error.</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag web">En el navegador</span><h3>Filtros sobre una foto real</h3></div>
@@ -98,7 +98,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>Elige en el menú otros filtros, como «blur», «sharpen» u «outline».</li>
       <li>Más abajo, edita los números del filtro y mira el resultado en vivo.</li>
     </ol>
-    <p class="obs"><b>Qué observar:</b> cada píxel nuevo es un producto punto entre el filtro y una ventana de la imagen. «blur» es el desenfoque de todos 1/9 y «sharpen» es la nitidez con 5 al centro. Si todos los números suman 0, como en «outline», las zonas planas quedan negras y solo sobreviven los bordes.</p>
+    <p class="obs"><b>Qué observar:</b> cada píxel nuevo es un producto punto entre el filtro y una ventana de la imagen. «blur» es un desenfoque parecido al del módulo, pero pesa más el centro que las esquinas, y «sharpen» es la nitidez con 5 al centro. Si todos los números suman 0, como en «outline», las zonas planas quedan negras y solo sobreviven los bordes.</p>
   </div>
 </section>
 
@@ -141,8 +141,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section>
   <h2>ReLU y pooling: quedarse con lo importante</h2>
   <div class="prose">
-    <p>Después de cada convolución se aplica <b>ReLU</b> casilla por casilla: los negativos pasan a 0 y quedan solo las coincidencias positivas (prueba el botón «Aplicar ReLU» de arriba). Luego viene el <b>pooling</b>: se parte el mapa en bloques de 2 × 2 y de cada bloque se guarda solo el máximo.</p>
-    <p>El <i>max pooling</i> reduce el mapa a la cuarta parte y dice, en resumen, «por esta zona sí había un borde», sin importar en qué píxel exacto. Eso hace a la red más tolerante a que el objeto se mueva un poco.</p>
+    <p>Después de cada convolución se aplica <b>ReLU</b> (<i>Rectified Linear Unit</i>, unidad lineal rectificada, del <a href="13-neurona.html">módulo 13</a>) casilla por casilla: los negativos pasan a 0 y quedan solo las coincidencias positivas (prueba el botón «Aplicar ReLU» de arriba). Luego viene el <b>pooling</b> (agrupamiento o submuestreo): se parte el mapa en bloques de 2 × 2 y de cada bloque se guarda solo el máximo.</p>
+    <p>El <i>max pooling</i> (agrupamiento por máximo) reduce el mapa a la cuarta parte y dice, en resumen, «por esta zona sí había un borde», sin importar en qué píxel exacto. Eso hace a la red más tolerante a que el objeto se mueva un poco.</p>
   </div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Max pooling 2 × 2 sobre el mapa de activación</h3></div>
@@ -189,7 +189,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </ol>
     <p class="obs"><b>Qué observar:</b> la red sigue la receta del módulo: convolución, ReLU y pooling repetidos, y al final un softmax con las probabilidades de cada clase. Los mapas se encogen capa tras capa mientras se vuelven más abstractos.</p>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Reconocimiento de imágenes y rostros, lectura de radiografías, autos que ven la carretera, lectura de cheques y matrículas. La misma idea de «ventana que se desliza» funciona en una dimensión, para audio y series de tiempo, y en tres, para video. Los modelos de visión modernos (los <i>Vision Transformers</i>) cambian la convolución por atención, pero siguen partiendo la imagen en trozos.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Reconocimiento de imágenes y rostros, lectura de radiografías, autos que ven la carretera, lectura de cheques y matrículas. La misma idea de «ventana que se desliza» funciona en una dimensión, para audio y series de tiempo, y en tres, para video. Los modelos de visión modernos (los transformadores de visión, <i>Vision Transformers</i> o ViT) cambian la convolución por la atención del <a href="15-llm.html">módulo 15</a>, que deja que cada trozo de la imagen se compare con todos los demás, pero siguen partiendo la imagen en trozos.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Imagen de 32 × 32, filtro 5 × 5, sin padding y stride 1. ¿Tamaño de salida?</summary><p>(32 + 0 − 5) / 1 + 1 = 28, o sea 28 × 28.</p></details>
     <details><summary>¿Y con padding 1 y filtro 3 × 3 sobre la misma imagen?</summary><p>(32 + 2 − 3) / 1 + 1 = 32: el padding conserva el tamaño.</p></details>
@@ -295,7 +295,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>
@@ -314,8 +314,8 @@ const {$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hex
   };
   const KS={
     'Identidad':{k:[0,0,0,0,1,0,0,0,0],d:'Solo copia el píxel central: el mapa repite la imagen, un poco recortada.'},
-    'Borde vertical':{k:[-1,0,1,-2,0,2,-1,0,1],d:'Resta la columna izquierda de la derecha. Positivo (azul) donde el trazo empieza al ir hacia la derecha; negativo donde termina. En las zonas parejas da 0.'},
-    'Borde horizontal':{k:[-1,-2,-1,0,0,0,1,2,1],d:'Lo mismo pero de arriba hacia abajo: se encienden los bordes superior e inferior de la figura.'},
+    'Borde vertical':{k:[-1,0,1,-1,0,1,-1,0,1],d:'Resta la columna izquierda de la derecha. Positivo (azul) donde el trazo empieza al ir hacia la derecha; negativo donde termina. En las zonas parejas da 0.'},
+    'Borde horizontal':{k:[-1,-1,-1,0,0,0,1,1,1],d:'Lo mismo pero de arriba hacia abajo: se encienden los bordes superior e inferior de la figura.'},
     'Desenfoque':{k:Array(9).fill(+(1/9).toFixed(3)),d:'Promedia la ventana: los bordes quedan difusos y los valores bajan de 1 a fracciones.'},
     'Nitidez':{k:[0,-1,0,-1,5,-1,0,-1,0],d:'Refuerza el centro frente a sus cuatro vecinos: los contornos quedan más marcados que el interior.'}
   };

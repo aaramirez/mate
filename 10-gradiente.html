@@ -30,12 +30,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main>
 <header class="page-head"><span class="num">MÓDULO 10 DE 17</span><h1>Descenso del gradiente: bajar la montaña a ciegas</h1></header>
 <section>
-  
+  <h2>Bajar por la pendiente de la pérdida</h2>
   <div class="prose">
     <p>Imagina que estás en una montaña con niebla y quieres llegar al valle. No ves nada, pero sientes la inclinación bajo tus pies. Das un paso cuesta abajo, vuelves a sentir y repites. Eso es entrenar un modelo.</p>
-    <p>La montaña es la <b>función de pérdida</b> <var>L</var>: mide qué tan mal predice el modelo. La inclinación es la derivada. El <b>gradiente</b> ∇<var>L</var> junta todas las derivadas parciales y apunta cuesta arriba, así que caminamos en sentido contrario:</p>
+    <p>La montaña es la <b>función de pérdida</b> (<i>loss function</i>) <var>L</var>: mide qué tan mal predice el modelo. La inclinación es la derivada. El <b>gradiente</b> (<i>gradient</i>) ∇<var>L</var> (el símbolo ∇ se lee «nabla») junta todas las derivadas parciales y apunta cuesta arriba, así que caminamos en sentido contrario. Repetir ese paso es el <b>descenso del gradiente</b> (<i>gradient descent</i>):</p>
   </div>
-  <div class="eq"><var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var><small>η = tasa de aprendizaje (tamaño del paso)</small></div>
+  <div class="eq"><var>w</var> ← <var>w</var> − η · ∂<var>L</var>/∂<var>w</var><small>η (eta) = tasa de aprendizaje (<i>learning rate</i>), el tamaño del paso; la flecha ← significa «reemplaza w por»</small></div>
   <div class="lab">
     <div class="lab-title"><span class="tag">Prueba</span><h3>Entrena un peso</h3></div>
     <div class="btns" role="group" aria-label="Elegir función de pérdida"><button id="gd-l1" aria-pressed="true">Cuenco simple</button><button id="gd-l2" aria-pressed="false">Con dos valles</button></div>
@@ -46,7 +46,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="btns"><button class="primary" id="gd-step">Dar un paso</button><button id="gd-run">Entrenar 30 pasos</button><button id="gd-reset">Reiniciar</button></div>
     <div class="readout" id="gd-out"></div>
-    <p class="hint">Experimenta: en el cuenco, η = 0.1 llega lento, η = 1.0 llega en un solo paso, η = 1.9 rebota y η = 2.1 se escapa. En los dos valles, empieza en <var>w</var>₀ = 3 y quedarás atrapado en el valle menos profundo (un mínimo local).</p>
+    <p class="hint">Experimenta: en el cuenco, η = 0.1 llega lento, η = 1.0 llega en un solo paso, η = 1.9 rebota y η = 2.1 se escapa. En los dos valles, empieza en <var>w</var>₀ = 3 y quedarás atrapado en el valle menos profundo (un <b>mínimo local</b>, <i>local minimum</i>: más bajo que sus vecinos, pero no el más bajo de todos).</p>
   </div>
   <div class="practica">
     <div class="practica-title"><span class="tag">En la terminal</span><h3>Entrena un peso en la terminal</h3></div>
@@ -66,8 +66,8 @@ for paso in range(1, 11):
     <p class="obs"><b>Qué observar:</b> con η = 0.3, <var>w</var> se acerca a 2 y la pérdida a 0.5. Con η = 1.0 llega en un paso. Con η = 1.9, <var>w</var> salta de un lado al otro del mínimo (5.6, −1.24…) y con η = 2.1 la pérdida crece sin parar hasta 54: divergió, como en el ejercicio 3.</p>
   </div>
   <div class="practica">
-    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Por qué el momentum funciona</h3></div>
-    <p class="para">Juega con la tasa de aprendizaje y el momentum en un artículo interactivo.</p>
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Por qué funciona el momentum (impulso)</h3></div>
+    <p class="para">Juega con la tasa de aprendizaje y el <i>momentum</i> (impulso: cada paso arrastra parte del anterior) en un artículo interactivo.</p>
     <ol>
       <li>Abre <a href="https://distill.pub/2017/momentum/" target="_blank" rel="noopener">Why Momentum Really Works</a>, de la revista Distill (en inglés).</li>
       <li>En la primera figura, pon el momentum β en 0 y mueve el tamaño del paso α.</li>
@@ -75,7 +75,7 @@ for paso in range(1, 11):
     </ol>
     <p class="obs"><b>Qué observar:</b> con β = 0 es el descenso del gradiente de este módulo: si α es chico avanza lento, y si es grande zigzaguea o se escapa. El momentum suma una parte del paso anterior, como una pelota con inercia: llega más rápido por el valle largo. Es una de las «formas más inteligentes de elegir el paso» que nombra el recuadro.</p>
   </div>
-  <div class="ml"><b>Dónde aparece en ML</b><p>Todo modelo entrenable (regresión lineal, logística, redes neuronales, transformers) aprende así. Una red grande tiene millones de pesos <var>w</var>, pero la regla es la misma para cada uno. Variantes como SGD, Momentum y Adam son formas más inteligentes de elegir el paso.</p></div>
+  <div class="ml"><b>Dónde aparece en ML</b><p>Todo modelo entrenable (regresión lineal, logística, redes neuronales, <i>transformers</i>, la arquitectura de los modelos de lenguaje del <a href="15-llm.html">módulo 15</a>) aprende así. Una red grande tiene millones de pesos <var>w</var>, pero la regla es la misma para cada uno. Variantes como SGD (<i>stochastic gradient descent</i>, descenso del gradiente estocástico), el momentum y Adam (<i>adaptive moment estimation</i>, el optimizador más usado hoy) son formas más inteligentes de elegir el paso.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Si w = 4, la derivada de la pérdida es 2 y η = 0.1, ¿cuál es el nuevo w?</summary><p>4 − 0.1 · 2 = 3.8</p></details>
     <details><summary>¿Qué pasa si la tasa de aprendizaje es demasiado grande?</summary><p>Los pasos se pasan del mínimo, rebotan de un lado al otro y la pérdida puede crecer sin control (divergencia).</p></details>
@@ -86,7 +86,7 @@ for paso in range(1, 11):
     <ol>
       <li>¿Quién propuso el descenso del gradiente y en qué año?<span class="pista">Pista: busca «Cauchy 1847 método del gradiente».</span></li>
       <li>El recuadro nombra Adam. ¿Qué hace distinto del descenso simple y qué controlan sus parámetros β₁ y β₂?<span class="pista">Pista: busca «optimizador Adam Kingma Ba 2014».</span></li>
-      <li>¿Qué es el descenso estocástico (SGD) y qué es un mini-lote? ¿Por qué su ruido puede ayudar a salir de un mínimo local?<span class="pista">Pista: busca «descenso del gradiente estocástico mini-batch».</span></li>
+      <li>¿Qué tiene de «estocástico» (aleatorio) el SGD y qué es un mini-lote (<i>mini-batch</i>)? ¿Por qué su ruido puede ayudar a salir de un mínimo local?<span class="pista">Pista: busca «descenso del gradiente estocástico mini-batch».</span></li>
       <li>En redes con millones de pesos, ¿el gran obstáculo son los mínimos locales o los puntos de silla?<span class="pista">Pista: busca «puntos de silla redes profundas Dauphin 2014».</span></li>
       <li>¿Qué es un calendario de tasa de aprendizaje (learning rate schedule) y por qué muchos entrenamientos empiezan con un «calentamiento»?<span class="pista">Pista: busca «learning rate warmup cosine schedule».</span></li>
     </ol>
@@ -136,7 +136,7 @@ for paso in range(1, 11):
         <li>Con la fórmula del ejercicio 2, el factor es 1 − η = −1.5: la distancia cambia de signo (rebota) y crece 1.5 veces en cada paso.</li>
       </ol>
       <p class="ej-res">Resultado: w = 0.5 y luego 4.25; la pérdida sube 1 → 1.625 → 3.03. Diverge.</p>
-      <p class="ej-ml">En ML: si la pérdida de entrenamiento crece o salta a «NaN», lo primero que se revisa es la tasa de aprendizaje.</p>
+      <p class="ej-ml">En ML: si la pérdida de entrenamiento crece o salta a «NaN» (<i>Not a Number</i>, «no es un número»: el valor que queda cuando las cuentas se desbordan), lo primero que se revisa es la tasa de aprendizaje.</p>
     </details>
   </div>
   <div class="ej-item">
@@ -171,7 +171,7 @@ for paso in range(1, 11):
 <nav class="pager" id="pager" aria-label="Módulo anterior y siguiente"></nav>
 </main>
 </div>
-<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Código fuente: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
+<footer><span>Material de repaso para el equipo del curso de Machine Learning.</span><span>Sitio publicado: <a href="https://github.com/aaramirez/mate" target="_blank" rel="noopener">github.com/aaramirez/mate</a></span></footer>
 </div>
 <script src="assets/lab.js"></script>
 <script>
