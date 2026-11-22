@@ -418,6 +418,35 @@ section{grid-template-columns:minmax(0,1fr)}
 .code-copia pre{max-width:100%;overflow-x:auto;padding-right:84px}
 .code-copia .copiar-todo{position:absolute;top:8px;right:8px}
 
+/* ---- Libros de matemática: fórmulas, enunciados, demostraciones, ejercicios y prompts ---- */
+.math-display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:6px 2px;margin:4px 0;text-align:center}
+.math-display .katex-display{margin:0}
+.math-display:not([data-tex]),.math:not([data-tex]){font-family:var(--f-mono);font-size:.92em}
+.enunciado{border-left:4px solid var(--accent);background:var(--card);padding:12px 16px;border-radius:0 8px 8px 0;display:grid;gap:6px;min-width:0;scroll-margin-top:24px}
+.enunciado-definicion{border-left-color:var(--good)}
+.enunciado-ejemplo{border-left-color:var(--warm)}
+.enunciado-observacion{border-left-color:var(--line)}
+.enunciado-teorema,.enunciado-proposicion,.enunciado-corolario,.enunciado-lema{background:var(--accent-soft)}
+.enunciado p,.ejercicio p{margin:0}
+.enunciado-t{font-family:var(--f-display)}
+.enunciado-t b{font-weight:700}
+.enunciado-t .nombre,.enunciado-t .nivel{color:var(--muted);font-weight:500}
+.enunciado-t .nivel{letter-spacing:.1em}
+.ejercicio{border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:var(--card);display:grid;gap:6px;min-width:0;scroll-margin-top:24px}
+details.demostracion,details.pista,details.solucion{background:var(--card);border-style:solid}
+details.demostracion summary,details.pista summary,details.solucion summary{cursor:pointer;font:600 .95rem var(--f-display)}
+details.demostracion p,details.pista p,details.solucion p{color:var(--ink);font-family:var(--f-body);font-size:1rem;margin-top:8px}
+details.demostracion .qed{text-align:right;color:var(--muted)}
+details.pista,details.solucion{margin-top:-8px}
+.ref{white-space:nowrap}
+.ref.falta{color:var(--warm);font-family:var(--f-mono);font-size:.9em}
+.prompt{border:1.5px dashed var(--accent);border-radius:12px;padding:16px;display:grid;gap:10px;min-width:0;background:var(--card)}
+.prompt-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.prompt-title .tag{font:700 .7rem var(--f-display);letter-spacing:.12em;text-transform:uppercase;background:var(--accent);color:var(--card);padding:3px 8px;border-radius:4px}
+.prompt pre{white-space:pre-wrap}
+.indice-enunciados{list-style:none;padding:0;display:grid;gap:4px}
+.indice-enunciados a{text-decoration:none}
+
 /* ---- Propio de este curso ---- */
 /* Estilos propios de mate: se agregan al final del style.css del motor de cursos */
 .ml b{font-family:var(--f-display);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--good)}

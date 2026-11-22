@@ -137,5 +137,18 @@ function sync(){
   sync();
 })();
 
-window.Lab={$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide};
+/* Fórmulas: KaTeX dibuja cada .math (en línea) y .math-display (en bloque). Sin KaTeX queda el TeX legible.
+   Un laboratorio que escribe fórmulas nuevas llama a Lab.renderMath(su_contenedor). */
+function renderMath(raiz){
+  if(!window.katex)return;
+  (raiz||document).querySelectorAll('.math,.math-display').forEach(el=>{
+    if(el.dataset.tex!==undefined)return;
+    const tex=el.textContent;el.dataset.tex=tex;
+    try{katex.render(tex,el,{displayMode:el.classList.contains('math-display'),throwOnError:false,output:'htmlAndMathml'});}
+    catch(err){el.textContent=tex;}
+  });
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>renderMath());else renderMath();
+
+window.Lab={$,tok,fmt,short,num,canvasWidget,frame,curve,seg,ring,dot,arrow,label,hexRgb,lerp,bindOut,wide,renderMath};
 })();
