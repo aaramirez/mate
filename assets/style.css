@@ -260,3 +260,26 @@ figure{margin:0}
 .ej-steps .eq{font-size:1.05rem;margin-top:6px;white-space:normal}
 .ej-sol p.ej-res{font-family:var(--f-mono);color:var(--good);font-weight:600;font-size:.95rem}
 .ej-sol p.ej-ml{border-left:3px solid var(--warm);padding-left:10px;color:var(--muted)}
+
+/* ---- Prácticas fuera de la página y preguntas para investigar ---- */
+.practica{border:1.5px dashed var(--good);border-radius:12px;padding:16px;display:grid;gap:10px;min-width:0}
+.practica-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.practica-title .tag{font:700 .7rem var(--f-display);letter-spacing:.12em;text-transform:uppercase;background:var(--ink);color:var(--card);padding:3px 8px;border-radius:4px}
+.practica-title .tag.web{background:var(--good)}
+.practica-title h3{font-size:1.05rem}
+.practica .para{color:var(--muted);max-width:68ch}
+.practica ol{display:block;margin:0;padding-left:1.5em;max-width:76ch;min-width:0}
+.practica li{min-width:0}
+.practica li+li{margin-top:8px}
+.practica li::marker{font:700 .88rem var(--f-mono);color:var(--good)}
+.practica pre{margin:8px 0 2px;padding:10px 12px;background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow-x:auto;max-width:100%}
+.practica pre code{font:400 .8rem/1.55 var(--f-mono);white-space:pre;color:var(--ink)}
+.practica .obs{border-left:3px solid var(--good);background:var(--good-soft);padding:10px 14px;border-radius:0 8px 8px 0}
+.practica .obs b{font-family:var(--f-display);color:var(--good)}
+.investiga{border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:16px 18px;display:grid;gap:10px;min-width:0}
+.investiga h3{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.investiga>p{font-size:.94rem;color:var(--muted)}
+.investiga ol{display:block;margin:0;padding-left:1.5em;min-width:0}
+.investiga li+li{margin-top:10px}
+.investiga li::marker{font:600 .85rem var(--f-mono);color:var(--accent)}
+.investiga .pista{display:block;margin-top:2px;font:500 .8rem/1.45 var(--f-display);color:var(--muted)}

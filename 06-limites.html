@@ -45,6 +45,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="lim-out"></div>
     <p class="hint">Desliza el control hacia la derecha para acercarte: δ va de 1 a 0.001. Los puntos naranjas son <var>f</var>(<var>a</var> − δ) y <var>f</var>(<var>a</var> + δ). Un círculo vacío marca un valor que la función no toma.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Acércate al punto en Python</h3></div>
+    <p class="para">Calcula la función del módulo cada vez más cerca de 1, desde los dos lados.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>f = lambda x: (x**2 - 1) / (x - 1)
+f(1)                        # ZeroDivisionError: 0 / 0
+f(0.9), f(1.1)              # (1.9, 2.1)
+f(0.999), f(1.001)          # (1.998..., 2.000...)
+f(0.999999), f(1.000001)    # (1.999999..., 2.000001...)</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> en 1 la función no existe, pero los dos lados se acercan a 2: eso es el límite. Los dígitos raros del final, como 1.9989999999999712, son redondeo de la computadora, no matemática.</p>
+  </div>
 </section>
 
 <section>
@@ -71,6 +84,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>Razón de funciones</h3><span class="ex">lím (x→∞) (2x+1)/(x+1) = 2</span><p>El comportamiento que viste en el <a href="01-aritmetica.html">módulo 01</a>, escrito como límite.</p></div>
     <div class="fact"><h3>Una sucesión</h3><span class="ex">1, 1/2, 1/3, 1/4, … → 0</span><p>Una lista infinita de números puede acercarse a un valor. Las sumas de Riemann S₁, S₂, S₃… hacen lo mismo con el área.</p></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Límites con WolframAlpha</h3></div>
+    <p class="para">Pide límites en palabras y compara con los resultados del módulo.</p>
+    <ol>
+      <li>Abre <a href="https://www.wolframalpha.com/" target="_blank" rel="noopener">WolframAlpha</a>.</li>
+      <li>Escribe <code>limit (x^2-1)/(x-1) as x->1</code>.</li>
+      <li>Escribe <code>limit (3x^2+5)/(x^2+1) as x->infinity</code>.</li>
+      <li>Escribe <code>limit 1/x as x->0</code>.</li>
+      <li>Escribe <code>limit (1+1/n)^n as n->infinity</code>.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> los dos primeros dan 2 y 3, como el primer laboratorio y el ejercicio 4. Con 1/<var>x</var> en 0 te dirá que el límite no existe y mostrará los dos límites laterales: −∞ por la izquierda y +∞ por la derecha. El último es una sucesión que converge a un número famoso: <var>e</var>.</p>
+  </div>
 </section>
 
 <section>
@@ -89,6 +114,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>Infinita</h3><span class="ex">una asíntota vertical</span><p>La función crece sin límite al acercarse al punto. Ejemplo: 1/<var>x</var> en 0.</p></div>
   </div>
   <div class="prose"><p>Vuelve al primer laboratorio: los casos «Continua» y «ReLU» cumplen las tres condiciones; los demás fallan al menos una. La lectura de abajo te dice cuál.</p></div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Cierra el salto en Desmos</h3></div>
+    <p class="para">Arma la función por tramos del ejercicio 2 y busca el valor de <var>k</var> que la vuelve continua.</p>
+    <ol>
+      <li>Abre <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">Desmos</a>.</li>
+      <li>Escribe <code>f(x)={x&lt;2: x^2, kx}</code> y acepta el deslizador para <var>k</var>.</li>
+      <li>Mueve <var>k</var> hasta que los dos tramos se unan en <var>x</var> = 2.</li>
+      <li>En otra fila escribe <code>y=1/x</code>.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> solo con <var>k</var> = 2 los tramos se juntan en el punto (2, 4); con cualquier otro valor hay un salto. 1/<var>x</var> muestra el tercer tipo: una discontinuidad infinita, con su asíntota vertical en 0.</p>
+  </div>
 </section>
 
 <section>
@@ -98,6 +134,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>¿Cuánto vale lím (x→3) (x² − 9) / (x − 3)?</summary><p>(x − 3)(x + 3) / (x − 3) = x + 3 → 6</p></details>
     <details><summary>¿Es continua f(x) = |x| en x = 0?</summary><p>Sí: los dos límites laterales valen 0 y f(0) = 0. Tiene una esquina, pero no un salto.</p></details>
     <details><summary>¿Cuánto vale lím (x→∞) (3x + 2) / (x − 1)?</summary><p>3 (el cociente de las pendientes)</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>Newton y Leibniz usaron derivadas sin una definición precisa de límite. ¿Quiénes escribieron la definición ε-δ, casi dos siglos después?<span class="pista">Pista: busca «Cauchy Weierstrass definición épsilon delta».</span></li>
+      <li>El video de 3Blue1Brown nombra la regla de L'Hôpital. ¿Qué dice y cuándo se puede usar para resolver un 0/0?<span class="pista">Pista: busca «regla de L'Hôpital condiciones».</span></li>
+      <li>¿Existe una función continua en todas partes que no tenga pendiente en ningún punto?<span class="pista">Pista: busca «función de Weierstrass».</span></li>
+      <li>0/0 es una «forma indeterminada». ¿Cuáles son las otras y por qué se llaman así?<span class="pista">Pista: busca «formas indeterminadas lista».</span></li>
+      <li>El módulo dice que el perceptrón original usaba una función escalón. ¿Quién lo inventó y cómo aprendía sin derivadas?<span class="pista">Pista: busca «perceptrón Rosenblatt 1958 regla de aprendizaje».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=kfF40MiS7zA" target="_blank" rel="noopener">Limits, L'Hôpital's rule, and epsilon delta definitions (cap. 7)</a><span>Límites, el juego ε-δ y cómo resolver un 0/0.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

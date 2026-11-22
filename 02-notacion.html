@@ -58,12 +58,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="eq">Σ<sub><var>i</var>=1</sub><sup>3</sup> <var>x</var><sub><var>i</var></sub> = <var>x</var>₁ + <var>x</var>₂ + <var>x</var>₃ = 2 + 5 + 1 = 8<small>total = sum(x)</small></div>
   <div class="prose"><p>Con ella se escribe el <b>error cuadrático medio</b> (MSE), la medida de error más común en regresión. Si los valores reales son <span class="mono">y = [3, 5]</span> y el modelo predijo <span class="mono">ŷ = [2.5, 6]</span>:</p></div>
   <div class="eq">MSE = <span style="font-size:.9em">1/<var>n</var></span> Σ (<var>y</var>ᵢ − ŷᵢ)² = ½ [(0.5)² + (−1)²] = ½ (0.25 + 1) = 0.625</div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>La Σ y la ∏ son ciclos</h3></div>
+    <p class="para">Escribe en Python las mismas sumas y productos de la tabla y confirma los resultados.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>x = [2, 5, 1]
+sum(x)                                    # 8 = x₁ + x₂ + x₃
+sum(i**2 for i in range(1, 5))            # 30: la pregunta de «Pruébate»
+y = [3, 5]
+y_gorro = [2.5, 6]
+sum((a - b)**2 for a, b in zip(y, y_gorro)) / len(y)   # 0.625: el MSE
+import math
+math.prod([0.5, 0.4, 0.5])                # 0.1 = ∏ pᵢ
+sum(math.log(p) for p in [0.5, 0.4, 0.5]) # -2.302... = Σ ln pᵢ
+math.log(0.1)                             # el mismo número</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> <code>range(1, 5)</code> recorre 1, 2, 3 y 4: el límite de arriba de Σ se incluye y el de <code>range</code> no. Y el logaritmo del producto coincide con la suma de los logaritmos, como en el ejercicio 4.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Pídele la notación a WolframAlpha</h3></div>
+    <p class="para">Escribe las fórmulas en palabras y mira cómo las devuelve en notación matemática.</p>
+    <ol>
+      <li>Abre <a href="https://www.wolframalpha.com/" target="_blank" rel="noopener">WolframAlpha</a>. Funciona sin cuenta.</li>
+      <li>Escribe <code>sum i^2, i=1 to 4</code> y pulsa Enter.</li>
+      <li>Escribe <code>sum (2i-1), i=1 to n</code>.</li>
+      <li>Escribe <code>minimize (x-3)^2</code>.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> la primera respuesta aparece con la Σ dibujada: es la traducción de tu frase a notación. La segunda da <var>n</var>²: la suma de los primeros <var>n</var> impares es un cuadrado (en el ejercicio 1 salió 16 = 4²). La tercera separa los dos números del ejercicio 5: el valor mínimo, 0 (min), y el punto donde ocurre, <var>x</var> = 3 (arg min).</p>
+  </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>En cada paper, cada documentación de PyTorch o scikit-learn y cada diapositiva del curso. Si un símbolo te frena, vuelve a esta tabla.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>¿Cuánto vale Σ<sub>i=1</sub><sup>4</sup> i² ?</summary><p>1 + 4 + 9 + 16 = 30</p></details>
     <details><summary>Si y = [1, 4] y ŷ = [2, 2], ¿cuál es el MSE?</summary><p>½ [(−1)² + 2²] = ½ (1 + 4) = 2.5</p></details>
   </div>
   
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Por qué la sumatoria se escribe con la sigma griega (Σ) y la productoria con la pi mayúscula (∏)? ¿Quién popularizó la Σ?<span class="pista">Pista: busca «Euler notación sigma 1755».</span></li>
+      <li>La derivada parcial usa ∂ y no la <var>d</var> de siempre. ¿De dónde salió ese símbolo y quién lo impuso?<span class="pista">Pista: busca «historia del símbolo ∂ Legendre Jacobi».</span></li>
+      <li>¿Por qué el símbolo ∇ se llama «nabla»?<span class="pista">Pista: busca «nabla arpa Hamilton Tait».</span></li>
+      <li>¿Por qué los números reales se escriben ℝ, con una letra de doble trazo? ¿Qué son ℕ, ℤ y ℚ?<span class="pista">Pista: busca «negrita de pizarra» y «conjuntos numéricos».</span></li>
+      <li>Si dos entradas distintas dan el mismo valor mínimo, ¿qué devuelve arg min: un número o un conjunto?<span class="pista">Pista: busca «argmin conjunto de minimizadores» y piensa en <var>L</var>(θ) = (θ² − 1)².</span></li>
+    </ol>
+  </div>
   <div class="vids"><span>Más videos</span>
     <a class="vid" href="https://www.youtube.com/results?search_query=notaci%C3%B3n+sumatoria+sigma+explicaci%C3%B3n" target="_blank" rel="noopener">Notación sigma · búsqueda</a>
     <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=sumatoria" target="_blank" rel="noopener">julioprofe · sumatorias</a>

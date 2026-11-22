@@ -48,10 +48,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="gd-out"></div>
     <p class="hint">Experimenta: en el cuenco, η = 0.1 llega lento, η = 1.0 llega en un solo paso, η = 1.9 rebota y η = 2.1 se escapa. En los dos valles, empieza en <var>w</var>₀ = 3 y quedarás atrapado en el valle menos profundo (un mínimo local).</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Entrena un peso en la terminal</h3></div>
+    <p class="para">Escribe el bucle del descenso del gradiente y prueba las tasas de aprendizaje del laboratorio.</p>
+    <ol>
+      <li>Guarda este código en un archivo llamado <code>gradiente.py</code>:<pre><code>eta = 0.3     # tasa de aprendizaje: prueba 0.1, 1.0, 1.9 y 2.1
+w = -2.0      # peso inicial
+
+for paso in range(1, 11):
+    pendiente = w - 2                  # derivada de L(w) = 0.5·(w − 2)² + 0.5
+    w = w - eta * pendiente
+    L = 0.5 * (w - 2) ** 2 + 0.5
+    print(f"paso {paso:2}  w = {w:9.4f}  L = {L:9.4f}")</code></pre></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo: <code>py gradiente.py</code> en Windows o <code>python3 gradiente.py</code> en macOS y Linux. Si no tienes Python, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Cambia el valor de <code>eta</code>, guarda y vuelve a ejecutar.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con η = 0.3, <var>w</var> se acerca a 2 y la pérdida a 0.5. Con η = 1.0 llega en un paso. Con η = 1.9, <var>w</var> salta de un lado al otro del mínimo (5.6, −1.24…) y con η = 2.1 la pérdida crece sin parar hasta 54: divergió, como en el ejercicio 3.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Por qué el momentum funciona</h3></div>
+    <p class="para">Juega con la tasa de aprendizaje y el momentum en un artículo interactivo.</p>
+    <ol>
+      <li>Abre <a href="https://distill.pub/2017/momentum/" target="_blank" rel="noopener">Why Momentum Really Works</a>, de la revista Distill (en inglés).</li>
+      <li>En la primera figura, pon el momentum β en 0 y mueve el tamaño del paso α.</li>
+      <li>Ahora sube β poco a poco, hasta cerca de 0.99.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con β = 0 es el descenso del gradiente de este módulo: si α es chico avanza lento, y si es grande zigzaguea o se escapa. El momentum suma una parte del paso anterior, como una pelota con inercia: llega más rápido por el valle largo. Es una de las «formas más inteligentes de elegir el paso» que nombra el recuadro.</p>
+  </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Todo modelo entrenable (regresión lineal, logística, redes neuronales, transformers) aprende así. Una red grande tiene millones de pesos <var>w</var>, pero la regla es la misma para cada uno. Variantes como SGD, Momentum y Adam son formas más inteligentes de elegir el paso.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Si w = 4, la derivada de la pérdida es 2 y η = 0.1, ¿cuál es el nuevo w?</summary><p>4 − 0.1 · 2 = 3.8</p></details>
     <details><summary>¿Qué pasa si la tasa de aprendizaje es demasiado grande?</summary><p>Los pasos se pasan del mínimo, rebotan de un lado al otro y la pérdida puede crecer sin control (divergencia).</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Quién propuso el descenso del gradiente y en qué año?<span class="pista">Pista: busca «Cauchy 1847 método del gradiente».</span></li>
+      <li>El recuadro nombra Adam. ¿Qué hace distinto del descenso simple y qué controlan sus parámetros β₁ y β₂?<span class="pista">Pista: busca «optimizador Adam Kingma Ba 2014».</span></li>
+      <li>¿Qué es el descenso estocástico (SGD) y qué es un mini-lote? ¿Por qué su ruido puede ayudar a salir de un mínimo local?<span class="pista">Pista: busca «descenso del gradiente estocástico mini-batch».</span></li>
+      <li>En redes con millones de pesos, ¿el gran obstáculo son los mínimos locales o los puntos de silla?<span class="pista">Pista: busca «puntos de silla redes profundas Dauphin 2014».</span></li>
+      <li>¿Qué es un calendario de tasa de aprendizaje (learning rate schedule) y por qué muchos entrenamientos empiezan con un «calentamiento»?<span class="pista">Pista: busca «learning rate warmup cosine schedule».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=IHZwWFHWa-w" target="_blank" rel="noopener">Gradient descent, how neural networks learn (Deep learning, cap. 2)</a><span>El descenso del gradiente en una red real de reconocimiento de dígitos.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

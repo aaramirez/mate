@@ -72,10 +72,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h3>Derivadas parciales</h3>
     <p>Si la función tiene varias perillas, la derivada parcial mueve una sola y deja las demás quietas. Para <var>f</var>(<var>w</var>, <var>b</var>) = <var>w</var>² + 3<var>b</var>: ∂<var>f</var>/∂<var>w</var> = 2<var>w</var> y ∂<var>f</var>/∂<var>b</var> = 3.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>La secante se vuelve tangente</h3></div>
+    <p class="para">Achica <var>h</var> en Python y mira cómo la pendiente de la secante se acerca a la derivada.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo. Después de la línea del <code>for</code>, pulsa Enter dos veces.<pre><code>f = lambda x: x**2
+for h in [1, 0.1, 0.01, 0.001, 1e-6, 1e-12]: print(h, (f(3 + h) - f(3)) / h)</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> la pendiente baja de 7 a 6.1, 6.01, 6.001…: es el 6 + <var>h</var> del ejercicio 1. Pero con <var>h</var> = 1e-12 el resultado empeora (6.0005): al restar dos números casi iguales la computadora pierde dígitos. Por eso las librerías no derivan así, sino con la regla de la cadena.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Comprueba la cadena y la sigmoide</h3></div>
+    <p class="para">Usa una diferencia centrada para confirmar dos resultados del módulo.</p>
+    <ol>
+      <li>Entra a Python: <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import math
+y = lambda x: (3*x + 1)**2
+h = 1e-6
+(y(1 + h) - y(1 - h)) / (2*h)            # ≈ 24
+sig = lambda z: 1 / (1 + math.exp(-z))
+(sig(h) - sig(-h)) / (2*h)               # ≈ 0.25
+sig(2.2)                                 # ≈ 0.9
+(sig(2.2 + h) - sig(2.2 - h)) / (2*h)    # ≈ 0.09</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> el 24 es el 8 · 3 de la regla de la cadena del módulo. La pendiente de la sigmoide vale 0.25 en 0 y cae a 0.09 donde σ ≈ 0.9: es σ(1 − σ) = 0.9 · 0.1, la sigmoide «cansada» del ejercicio 4.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Una tangente que se mueve, en Desmos</h3></div>
+    <p class="para">Dibuja la recta tangente en cualquier punto y busca dónde queda horizontal.</p>
+    <ol>
+      <li>Abre <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">Desmos</a>.</li>
+      <li>Escribe <code>f(x)=x^3-3x</code>.</li>
+      <li>Escribe <code>a=0.5</code> para crear un deslizador.</li>
+      <li>Escribe <code>y=f'(a)(x-a)+f(a)</code>. Desmos entiende la comilla como derivada.</li>
+      <li>Mueve <var>a</var> de −2 a 2.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> en <var>a</var> = −1 y <var>a</var> = 1 la tangente queda horizontal: la derivada 3<var>x</var>² − 3 vale 0. En esos puntos el descenso del gradiente se detiene; en <var>a</var> = 1 hay un mínimo local.</p>
+  </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Una red es una cadena de funciones: capa tras capa. <b>Backpropagation</b> es la regla de la cadena aplicada desde el error hacia atrás, para saber cuánto culpa tiene cada peso. PyTorch y TensorFlow lo hacen automáticamente (<code>loss.backward()</code>), pero entender la idea te permite depurar.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>¿Cuál es la derivada de 3x² en x = 2?</summary><p>f′(x) = 6x → f′(2) = 12</p></details>
     <details><summary>Si y = (2x)³, ¿cuánto vale dy/dx en x = 1? (usa la cadena)</summary><p>u = 2x = 2; dy/du = 3u² = 12; du/dx = 2 → 12 · 2 = 24</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>Leibniz escribía <var>dy</var>/<var>dx</var> y Newton ponía un punto encima de la letra. ¿Por qué ganó la notación de Leibniz? ¿Quién introdujo <var>f</var>′(<var>x</var>)?<span class="pista">Pista: busca «notación de Leibniz Newton Lagrange derivada».</span></li>
+      <li>El módulo dice que PyTorch deriva solo con <code>loss.backward()</code>. ¿Qué es la diferenciación automática y en qué se diferencia de derivar con un <var>h</var> pequeño?<span class="pista">Pista: busca «diferenciación automática modo inverso».</span></li>
+      <li>La tabla dice que e<sup><var>x</var></sup> es la única función que es su propia derivada. ¿Qué pasa con 5e<sup><var>x</var></sup>? ¿Es cierta la frase tal como está?<span class="pista">Pista: busca «ecuación diferencial y′ = y soluciones».</span></li>
+      <li>El video del cap. 4 menciona la regla del producto. ¿Qué dice, y cuál es la regla del cociente?<span class="pista">Pista: busca «regla del producto y del cociente derivadas».</span></li>
+      <li>ReLU no tiene derivada en 0. ¿Qué valor usan PyTorch y TensorFlow en ese punto?<span class="pista">Pista: busca «subgradiente ReLU en cero».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=WUvTyaaNkzM" target="_blank" rel="noopener">The essence of calculus (cap. 1)</a><span>El panorama completo: derivadas e integrales como dos caras de la misma idea.</span></li><li><a href="https://www.youtube.com/watch?v=9vKqVkMQHKk" target="_blank" rel="noopener">The paradox of the derivative (cap. 2)</a><span>Qué significa una «tasa de cambio instantánea».</span></li><li><a href="https://www.youtube.com/watch?v=S0_qX4VJhMQ" target="_blank" rel="noopener">Derivative formulas through geometry (cap. 3)</a><span>De dónde salen las reglas como xⁿ → n·xⁿ⁻¹.</span></li><li><a href="https://www.youtube.com/watch?v=YG15m2VwSjA" target="_blank" rel="noopener">Visualizing the chain rule and product rule (cap. 4)</a><span>La regla de la cadena que usa backpropagation.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

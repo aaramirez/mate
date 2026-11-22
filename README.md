@@ -30,6 +30,8 @@ El orden sigue las dependencias: bases y álgebra lineal (01–05), cálculo y p
 
 Cada módulo tiene laboratorios interactivos, un recuadro de «Dónde aparece en ML», preguntas de autoevaluación y videos de apoyo. Entre ellos hay capítulos concretos de [3Blue1Brown](https://www.youtube.com/@3blue1brown). La página `recursos.html` reúne los canales recomendados y un plan de 6 semanas.
 
+Cada módulo trae además **prácticas** (de 1 a 3) para hacer fuera de la página, en la terminal con Python o en el navegador con herramientas gratuitas y sin registro, y una lista de **preguntas para investigar** sobre lo que el módulo nombra pero no explica, sin respuestas publicadas. Para agregarlas a un módulo nuevo: cada práctica es un `<div class="practica">` dentro de la sección que ejercita, con `<div class="practica-title"><span class="tag">En la terminal</span><h3>…</h3></div>` (o `<span class="tag web">En el navegador</span>`), un `<p class="para">` con para qué sirve, un `<ol>` de pasos (el código va en `<pre><code>`) y un `<p class="obs"><b>Qué observar:</b> …</p>`. Las preguntas van en un `<div class="investiga">` con `<h3>Para investigar</h3>` y un `<ol>`; cada `<li>` lleva su pista en `<span class="pista">`. Ese bloque se ubica después de «Pruébate» y antes de los videos. Prueba los comandos y las URL antes de publicarlos.
+
 ## Usarlo localmente
 
 No necesita instalación ni servidor: abre `index.html` en el navegador. El avance («Lo tengo claro») se guarda en el `localStorage` de cada navegador.

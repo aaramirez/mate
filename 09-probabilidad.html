@@ -57,6 +57,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="pm-out"></div>
     <p class="hint">Con un dado todas las caras valen lo mismo. Al sumar más dados aparece una campana: es el teorema central del límite, y explica por qué la distribución normal está en todas partes.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Lanza 36 000 pares de dados</h3></div>
+    <p class="para">Simula dados en Python y mira aparecer la función de masa de la suma.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import random
+from collections import Counter
+sumas = Counter(random.randint(1, 6) + random.randint(1, 6) for _ in range(36000))
+sorted(sumas.items())     # (suma, veces): el 7 sale unas 6000 veces
+sumas[7] / 36000          # cerca de 6/36 ≈ 0.167</code></pre></li>
+      <li>Ahora suma cinco dados:<pre><code>sumas = Counter(sum(random.randint(1, 6) for _ in range(5)) for _ in range(36000))
+sorted(sumas.items())</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con dos dados el 7 sale unas 6 veces más que el 2 o el 12, como predice el conteo de casos. Con cinco dados los conteos suben y bajan en forma de campana alrededor de 17 y 18: es el teorema central del límite del laboratorio.</p>
+  </div>
 </section>
 
 <section>
@@ -126,6 +141,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="nd-out"></div>
     <p class="hint">El área se calcula de dos formas: con una suma de Riemann de 400 tiras y con <var>F</var>(<var>b</var>) − <var>F</var>(<var>a</var>). Con μ ± σ siempre da cerca de 68%, con μ ± 2σ cerca de 95% y con μ ± 3σ cerca de 99.7%. Normalizar con <b>z = (x − μ) / σ</b> lleva cualquier campana a μ = 0 y σ = 1.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>La normal en la biblioteca estándar</h3></div>
+    <p class="para">Calcula áreas bajo la campana con <code>statistics.NormalDist</code>, sin instalar nada.</p>
+    <ol>
+      <li>Entra a Python: <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>from statistics import NormalDist, mean, pstdev
+datos = [2, 4, 4, 4, 5, 5, 7, 9]
+mean(datos), pstdev(datos)      # (5, 2.0): la media y la σ del módulo
+N = NormalDist(mu=170, sigma=10)
+N.cdf(180) - N.cdf(160)         # 0.6827: el 68 %
+1 - N.cdf(190)                  # 0.0228
+N.zscore(185)                   # 1.5
+NormalDist(0, 0.1).pdf(0)       # 3.99: más que 1</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> las librerías calculan la probabilidad de un tramo como <var>F</var>(<var>b</var>) − <var>F</var>(<var>a</var>). Arriba de 190 cm queda el 2.28 %: la regla 68-95-99.7 dio 2.5 % porque redondea. Y una densidad angosta vale 3.99 en su centro: la altura no es una probabilidad.</p>
+  </div>
 </section>
 
 <section>
@@ -170,6 +200,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="readout" id="cv3-out"></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Pelotas que caen en dos estantes</h3></div>
+    <p class="para">Mira la probabilidad condicional como un cambio de punto de vista, con una animación.</p>
+    <ol>
+      <li>Abre <a href="https://setosa.io/ev/conditional-probability/" target="_blank" rel="noopener">Conditional probability, Explained Visually</a> (en inglés).</li>
+      <li>Las pelotas que tocan el estante rojo cumplen A y las que tocan el azul cumplen B. Arrastra y estira los estantes para cambiar cuánto se cruzan.</li>
+      <li>En «perspective» cambia entre «world», «P(B|A)» y «P(A|B)».</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con «P(A|B)» solo quedan las pelotas que tocaron el estante azul: B pasa a ser el universo completo, igual que la pista de los dados. Si separas los estantes hasta que no se crucen, P(A|B) cae a 0.</p>
+  </div>
 </section>
 
 <section>
@@ -192,6 +232,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>¿Puede una función de densidad valer 3 en algún punto?</summary><p>Sí. La uniforme en [0, 1/3] vale 3 en todo el tramo; su área es 3 × 1/3 = 1.</p></details>
     <details><summary>Si F(2) = 0.8 y F(1) = 0.5, ¿cuánto vale P(1 &lt; X ≤ 2)?</summary><p>F(2) − F(1) = 0.8 − 0.5 = 0.3</p></details>
     <details><summary>Con μ = 170 cm y σ = 10 cm, ¿cuál es el valor z de 185 cm?</summary><p>z = (185 − 170) / 10 = 1.5</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Qué condiciones necesita el teorema central del límite? ¿Existe alguna distribución para la que falle?<span class="pista">Pista: busca «distribución de Cauchy teorema central del límite».</span></li>
+      <li>¿Por qué aparece π en la fórmula de la densidad normal, si la campana no tiene nada de círculo?<span class="pista">Pista: busca «integral de Gauss» o mira el video de 3Blue1Brown de este módulo.</span></li>
+      <li>El módulo divide la varianza entre <var>n</var>. ¿Por qué muchas calculadoras dividen entre <var>n</var> − 1?<span class="pista">Pista: busca «corrección de Bessel» y compara <code>statistics.pvariance</code> con <code>statistics.variance</code>.</span></li>
+      <li>¿Quién fue Thomas Bayes? ¿Publicó él su teorema?<span class="pista">Pista: busca «Thomas Bayes Richard Price 1763 Laplace».</span></li>
+      <li>El recuadro de ML nombra la verosimilitud. ¿En qué se diferencia de la probabilidad?<span class="pista">Pista: busca «probabilidad vs verosimilitud».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=ZA4JkHKZM50" target="_blank" rel="noopener">Why "probability of 0" does not mean "impossible"</a><span>La función de densidad: por qué un valor exacto tiene probabilidad 0 y el área sí es probabilidad.</span></li><li><a href="https://www.youtube.com/watch?v=8idr1WZ1A7Q" target="_blank" rel="noopener">Binomial distributions | Probabilities of probabilities</a><span>Una distribución discreta en acción, paso a paso.</span></li><li><a href="https://www.youtube.com/watch?v=zeJD6dqJ5lo" target="_blank" rel="noopener">But what is the Central Limit Theorem?</a><span>Por qué al sumar dados aparece una campana.</span></li><li><a href="https://www.youtube.com/watch?v=cy8r7WSuT1I" target="_blank" rel="noopener">Why π is in the normal distribution</a><span>De dónde sale la fórmula de la densidad normal.</span></li><li><a href="https://www.youtube.com/watch?v=HZGCoVF3YvM" target="_blank" rel="noopener">Bayes theorem, the geometry of changing beliefs</a><span>Bayes con áreas, sin memorizar fórmulas.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

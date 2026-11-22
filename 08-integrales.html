@@ -60,6 +60,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>No acotada</h3><span class="ex">1/x en (0, 1]: no integrable</span><p>La suma superior es infinita para cualquier <var>n</var>. Hace falta otra herramienta, la integral impropia.</p></div>
     <div class="fact"><h3>Salta en todas partes</h3><span class="ex">Dirichlet: no integrable</span><p>Vale 1 en los números racionales y 0 en los irracionales. Toda tira contiene de ambos, así que la suma superior siempre da 1 y la inferior 0.</p></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Suma inferior y superior en GeoGebra</h3></div>
+    <p class="para">Dibuja las dos sumas del laboratorio y mira cómo se cierra la brecha.</p>
+    <ol>
+      <li>Abre la <a href="https://www.geogebra.org/calculator" target="_blank" rel="noopener">calculadora de GeoGebra</a>. No necesitas cuenta.</li>
+      <li>Escribe <code>f(x)=x^2</code>.</li>
+      <li>Escribe <code>n=Slider(1,100,1)</code> para crear un deslizador.</li>
+      <li>Escribe <code>LowerSum(f,0,2,n)</code> y <code>UpperSum(f,0,2,n)</code>.</li>
+      <li>Escribe <code>Integral(f,0,2)</code> y mueve <var>n</var>.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> la suma inferior queda por debajo de 2.667 y la superior por encima. Para esta curva, que solo sube, la brecha mide exactamente (<var>f</var>(2) − <var>f</var>(0)) · Δ<var>x</var> = 8/<var>n</var>: con <var>n</var> = 4 es 2 (3.75 − 1.75, el ejercicio 1) y con <var>n</var> = 100, solo 0.08.</p>
+  </div>
 </section>
 
 <section>
@@ -104,6 +116,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <tr><td>Resultado</td><td><var>f</var>′(<var>x</var>)</td><td>∫ <var>f</var>(<var>x</var>) <var>dx</var></td></tr>
     </tbody>
   </table></div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Sumas de Riemann en una línea</h3></div>
+    <p class="para">Calcula la sucesión <var>S</var>₄, <var>S</var>₁₆, <var>S</var>₆₄… con tres formas de elegir la altura.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo. Después de la línea del <code>for</code>, pulsa Enter dos veces.<pre><code>f = lambda x: x**2
+riemann = lambda n, d: sum(f((i + d) * 2 / n) for i in range(n)) * 2 / n
+8 / 3                      # 2.6666...: el valor exacto
+for n in [4, 16, 64, 256]: print(n, riemann(n, 0), riemann(n, 1), riemann(n, 0.5))</code></pre></li>
+      <li>La <code>d</code> elige el punto dentro de cada tira: 0 es el borde izquierdo, 1 el derecho y 0.5 el centro.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con <var>n</var> = 4 salen 1.75 y 3.75, los del ejercicio 1. Cada vez que <var>n</var> se multiplica por 4, el error del punto medio se divide entre 16 (0.042, 0.0026, 0.00016), como dice el laboratorio. Ningún <var>S</var><sub><var>n</var></sub> da 8/3 exacto: hace falta el límite.</p>
+  </div>
 </section>
 
 <section>
@@ -126,6 +151,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>Suma de Riemann por la izquierda de f(x) = x en [0, 2] con n = 2. ¿Cuánto da y cuál es el área real?</summary><p>Δx = 1; f(0)·1 + f(1)·1 = 0 + 1 = 1. El área real es 2 (un triángulo de base 2 y alto 2).</p></details>
     <details><summary>¿Es integrable la función escalón en [−1, 1]? ¿Cuánto vale?</summary><p>Sí: tiene un solo salto y está acotada. Vale 1 (un rectángulo de 1 × 1).</p></details>
     <details><summary>¿Cuánto vale ∫₀³ 2x dx?</summary><p>[x²]₀³ = 9 − 0 = 9</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Quién inventó el símbolo ∫ y en qué año? ¿Y quién empezó a escribir los extremos <var>a</var> y <var>b</var> abajo y arriba?<span class="pista">Pista: busca «Leibniz símbolo integral 1675» y «Fourier límites de integración».</span></li>
+      <li>¿Qué es la integral de Lebesgue y por qué sí puede integrar la función de Dirichlet?<span class="pista">Pista: busca «integral de Lebesgue función de Dirichlet».</span></li>
+      <li>El módulo nombra la integral impropia. ¿Qué es? ¿Cuánto vale el área bajo 1/<var>x</var>² desde 1 hasta infinito?<span class="pista">Pista: busca «integral impropia» y compara 1/<var>x</var> con 1/<var>x</var>².</span></li>
+      <li>¿Qué es la integración de Monte Carlo y por qué se usa cuando hay muchas dimensiones?<span class="pista">Pista: busca «integración Monte Carlo dimensiones».</span></li>
+      <li>El recuadro de ML nombra la métrica AUC-ROC. ¿Qué curva es la ROC y qué significa que su área valga 0.5?<span class="pista">Pista: busca «curva ROC AUC interpretación».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=rfG8ce4nNh0" target="_blank" rel="noopener">Integration and the fundamental theorem of calculus (cap. 8)</a><span>El área como suma de rectángulos cada vez más finos, y el límite que la convierte en integral.</span></li><li><a href="https://www.youtube.com/watch?v=FnJqaIESC2s" target="_blank" rel="noopener">What does area have to do with slope? (cap. 9)</a><span>Por qué integrar y derivar son operaciones inversas.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

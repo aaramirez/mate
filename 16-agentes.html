@@ -90,6 +90,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="eq">π* = argmax<sub>π</sub> 𝔼<sub>π</sub>[G]</div>
   <div class="prose"><p>Se lee: «π* es la política que hace más grande el valor esperado (𝔼, el promedio) del retorno». Hay que hablar de promedio porque tanto el mundo como la política pueden tener azar.</p></div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>El retorno y la serie geométrica</h3></div>
+    <p class="para">Calcula retornos con descuento y comprueba que la suma infinita se queda en 1 / (1 − γ).</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>r = [-1, -1, -1, 10]
+sum(0.9**t * rt for t, rt in enumerate(r))    # 4.58: el ejercicio 1
+sum(0.5**t * rt for t, rt in enumerate(r))    # -0.5: agente miope
+sum(0.9**t for t in range(1000))              # 10.000000000000002
+1 / (1 - 0.9)                                 # el mismo 10
+sum(0.99**t for t in range(10000))            # casi 100</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con mil términos la suma ya no se mueve de 10: la serie geométrica tiene un límite finito. Con γ = 0.99 el límite sube a 100: cuanto más cerca de 1 está γ, más lejos mira el agente.</p>
+  </div>
 </section>
 
 <section>
@@ -117,6 +131,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="gw-out"></div>
     <p class="hint">Cada paso cuesta −1, llegar a la meta da +10 y caer en la trampa, −10. Toca una casilla para ver la ecuación de Bellman con sus números. Con resbalones, la acción elegida solo se cumple a veces y el agente prefiere alejarse de la trampa.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Iteración de valores en GridWorld</h3></div>
+    <p class="para">Resuelve la ecuación de Bellman en una cuadrícula más grande que la del laboratorio.</p>
+    <ol>
+      <li>Abre <a href="https://cs.stanford.edu/people/karpathy/reinforcejs/gridworld_dp.html" target="_blank" rel="noopener">GridWorld: Dynamic Programming Demo</a>, de REINFORCEjs (en inglés).</li>
+      <li>Pulsa varias veces «Policy Evaluation (one sweep)» y luego «Policy Update».</li>
+      <li>Pulsa «Reset» y después «Toggle Value Iteration».</li>
+      <li>Haz clic en una casilla y cambia su recompensa con el deslizador de abajo.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> cada barrido aplica la ecuación de Bellman a todas las casillas y el valor de la meta se propaga hacia atrás, una casilla por vez. Las flechas son la política: apuntan a la vecina con mayor valor. Si pones un premio nuevo, las flechas se reorganizan solas.</p>
+  </div>
 </section>
 
 <section>
@@ -139,6 +164,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="btns"><button class="primary" id="bd-play">Jugar 100 veces</button><button id="bd-cmp">Comparar ε = 0, 0.1 y 0.3</button><button id="bd-reset">Reiniciar</button></div>
     <div class="readout" id="bd-out"></div>
     <p class="hint">Cada máquina paga en promedio una cantidad distinta, con ruido. El agente no lo sabe. Con ε = 0 suele quedarse pegado a la primera máquina que le pareció buena; con ε grande explora tanto que desperdicia jugadas.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Cuatro tragamonedas en la terminal</h3></div>
+    <p class="para">Programa el agente ε-greedy del laboratorio y compara cuánto gana según ε.</p>
+    <ol>
+      <li>Guarda este código en un archivo llamado <code>bandido.py</code>:<pre><code>import random
+
+verdad = [1.0, 1.5, 3.0, 2.0]    # lo que paga cada máquina en promedio (el agente no lo sabe)
+epsilon = 0.1                    # prueba 0, 0.1 y 0.5
+
+Q = [0.0] * 4                    # lo que el agente cree
+n = [0] * 4                      # cuántas veces jugó cada máquina
+total = 0
+for jugada in range(1000):
+    if random.random() &lt; epsilon:
+        a = random.randrange(4)                  # explorar
+    else:
+        a = Q.index(max(Q))                      # explotar
+    r = random.gauss(verdad[a], 1)               # premio con ruido
+    n[a] += 1
+    Q[a] += (r - Q[a]) / n[a]                    # Q ← Q + (1/n)·(r − Q)
+    total += r
+
+print("Q aprendido:", [round(q, 2) for q in Q])
+print("veces jugada:", n)
+print("premio promedio:", round(total / 1000, 2))</code></pre></li>
+      <li>En la terminal, dentro de la carpeta del archivo, ejecútalo: <code>py bandido.py</code> en Windows o <code>python3 bandido.py</code> en macOS y Linux.</li>
+      <li>Cambia <code>epsilon</code> a 0 y a 0.5, y ejecuta cada versión varias veces.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con ε = 0 el agente se queda pegado a una de las primeras máquinas que prueba y gana entre 1 y 1.5 por jugada. Con ε = 0.1 descubre la máquina 3 y gana cerca de 2.8. Con ε = 0.5 la encuentra, pero desperdicia tantas jugadas explorando que gana menos, unos 2.4.</p>
   </div>
 </section>
 
@@ -181,6 +236,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>¿Qué pasa si γ = 0?</summary><p>G = r₀: el agente es «miope» y solo le importa el premio inmediato. En la cuadrícula, solo las casillas vecinas a la meta saben a dónde ir.</p></details>
     <details><summary>Si todas las recompensas valen 1 y γ = 0.99, ¿a cuánto tiende el retorno?</summary><p>1 / (1 − 0.99) = 100: una serie geométrica con límite finito.</p></details>
     <details><summary>En un agente con LLM, ¿qué es el estado?</summary><p>El contexto completo: instrucciones, mensajes del usuario, las acciones que ya tomó el modelo y los resultados de las herramientas.</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Quién fue Andréi Márkov y qué estudió contando letras en un poema de Pushkin?<span class="pista">Pista: busca «Márkov Eugenio Oneguin cadenas».</span></li>
+      <li>¿Por qué Richard Bellman llamó a su método «programación dinámica», si no tiene que ver con programar?<span class="pista">Pista: busca «Bellman origen del nombre programación dinámica».</span></li>
+      <li>El módulo dice que la iteración de valores converge. ¿Por qué? ¿Qué papel juega que γ sea menor que 1?<span class="pista">Pista: busca «operador de Bellman contracción punto fijo de Banach».</span></li>
+      <li>¿Qué es UCB (cota superior de confianza) y por qué suele explorar mejor que ε-greedy?<span class="pista">Pista: busca «Upper Confidence Bound bandido multibrazo».</span></li>
+      <li>¿Qué es un POMDP, la versión del MDP en la que el agente no ve el estado completo?<span class="pista">Pista: busca «proceso de decisión de Markov parcialmente observable».</span></li>
+      <li>¿Qué es el patrón ReAct y cómo describe el bucle de un agente con LLM?<span class="pista">Pista: busca «ReAct reasoning acting Yao 2022».</span></li>
+    </ol>
   </div>
   <div class="vids"><span>Más videos</span>
     <a class="vid" href="https://www.youtube.com/@DotCSV/search?query=aprendizaje%20por%20refuerzo" target="_blank" rel="noopener">Dot CSV · aprendizaje por refuerzo</a>

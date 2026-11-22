@@ -84,6 +84,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>Entero → vector</h3><span class="ex">4721 → [0.21, −1.3, …, 0.08]</span><p>Es la fila 4721 de una matriz enorme de embeddings, de tamaño vocabulario × dimensión.</p></div>
     <div class="fact"><h3>Cercanía = parecido</h3><span class="ex">cos(gato, perro) ≈ 0.8</span><p>Los vectores de palabras relacionadas quedan cerca. cos(gato, impuesto) estaría cerca de 0.</p></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Un tokenizador de verdad</h3></div>
+    <p class="para">Mira cómo un tokenizador real parte tu texto y cuántos tokens cobra.</p>
+    <ol>
+      <li>Abre el <a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener">tokenizador de OpenAI</a>. Si te pide iniciar sesión, usa <a href="https://tiktokenizer.vercel.app/" target="_blank" rel="noopener">Tiktokenizer</a>, que muestra lo mismo.</li>
+      <li>Escribe una frase en español, por ejemplo «Los gatos persiguieron al ratón».</li>
+      <li>Escribe la misma frase en inglés y compara el número de tokens.</li>
+      <li>Prueba con un número largo, como 1234567, y con una palabra inventada.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> cada color es un token. Las palabras frecuentes son un solo token y las raras se parten en pedazos, como en el tokenizador de juguete. En español suelen salir más tokens que en inglés para la misma idea, y por eso cuesta más por API.</p>
+  </div>
 </section>
 
 <section>
@@ -106,6 +117,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="btns"><button class="primary" id="tp-gen">Elegir la siguiente palabra</button><button id="tp-many">Elegir 100 veces</button><button id="tp-reset">Reiniciar</button></div>
     <div class="readout" id="tp-out"></div>
     <p class="hint">Los logits son fijos e inventados. Con k = 1 y cualquier temperatura el modelo es <b>codicioso</b> (<i>greedy</i>): siempre toma la favorita. Top-k descarta todo menos los k mejores candidatos y reparte la probabilidad entre ellos.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Temperatura y muestreo en Python</h3></div>
+    <p class="para">Calcula softmax con temperatura y saca 1000 palabras al azar con esas probabilidades.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import math, random
+from collections import Counter
+softmax = lambda z, T=1: [math.exp(v / T) / sum(math.exp(u / T) for u in z) for v in z]
+softmax([2, 1, 0])               # ≈ [0.665, 0.245, 0.090]
+softmax([2, 1, 0], T=0.5)        # ≈ [0.867, 0.117, 0.016]
+softmax([2, 1, 0], T=2)          # ≈ [0.506, 0.307, 0.186]
+palabras = ['gato', 'cartero', 'mesa']
+Counter(random.choices(palabras, weights=softmax([2, 1, 0], T=2), k=1000))
+Counter(random.choices(palabras, weights=softmax([2, 1, 0], T=0.2), k=1000))</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> las probabilidades son las de los ejercicios 1 y 2. Con T = 2 «mesa» sale unas 190 veces de cada 1000; con T = 0.2 casi nunca, y el modelo se vuelve predecible. Cada vez que repites la línea los conteos cambian un poco: es muestreo al azar.</p>
   </div>
 </section>
 
@@ -158,6 +186,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="prose">
     <p>Un <b>transformer</b> es esto repetido: una capa de atención (en realidad varias en paralelo, las «cabezas») seguida de una capa densa como las del <a href="13-neurona.html">módulo 13</a>, y eso apilado decenas de veces. En cada piso las representaciones se vuelven más abstractas, y la última se usa para calcular los logits del siguiente token.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Un transformer abierto en el navegador</h3></div>
+    <p class="para">Mira la atención y las probabilidades del siguiente token en un modelo GPT-2 de verdad.</p>
+    <ol>
+      <li>Abre <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">Transformer Explainer</a> (en inglés). La primera vez descarga el modelo y puede tardar.</li>
+      <li>Escribe una frase en inglés en el cuadro de texto y pulsa «Generate».</li>
+      <li>Haz clic en el bloque de atención para ver los vectores Q, K y V y la matriz de pesos.</li>
+      <li>Mueve la temperatura y vuelve a generar.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> el recorrido es el del módulo: tokens, embeddings, atención con softmax(Q·Kᵀ / √d)·V, puntajes y softmax. Las filas de la matriz de atención suman 1, y con temperatura baja la palabra favorita se lleva casi toda la probabilidad.</p>
+  </div>
 </section>
 
 <section>
@@ -188,6 +227,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>Si los logits son [2, 1, 0], ¿qué palabra gana con T = 0.1? ¿Y qué pasa con T = 100?</summary><p>Con T = 0.1 los puntajes se vuelven [20, 10, 0] y la primera se lleva casi el 100 %. Con T = 100 quedan [0.02, 0.01, 0] y las tres tienen casi un tercio cada una.</p></details>
     <details><summary>¿Por qué los pesos de atención de una palabra suman 1?</summary><p>Porque salen de un softmax. La nueva representación es un promedio ponderado de los vectores V de las demás palabras.</p></details>
     <details><summary>El modelo le dio probabilidad 0.25 al token correcto. ¿Cuál es la pérdida? ¿Y la perplejidad si todos los tokens fueran así?</summary><p>−ln 0.25 ≈ 1.39. La perplejidad es e^1.39 = 4: es como dudar entre 4 opciones.</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>Los tokenizadores reales usan BPE. ¿Cómo funciona y de qué algoritmo de compresión de los años 90 salió?<span class="pista">Pista: busca «Byte Pair Encoding Gage 1994».</span></li>
+      <li>La atención divide entre √<var>d</var> «para que los números no crezcan demasiado». ¿Por qué exactamente √<var>d</var> y no <var>d</var>?<span class="pista">Pista: busca «scaled dot-product attention varianza √d».</span></li>
+      <li>El recuadro nombra top_p. ¿Qué es el muestreo de núcleo y en qué se diferencia de top-k?<span class="pista">Pista: busca «nucleus sampling top-p».</span></li>
+      <li>Si la atención solo hace promedios ponderados, ¿cómo sabe el modelo en qué orden van las palabras?<span class="pista">Pista: busca «codificación posicional transformer» y «RoPE».</span></li>
+      <li>¿De qué artículo de 2017 sale el transformer y qué quiere decir su título?<span class="pista">Pista: busca «Attention Is All You Need».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=LPZh9BOjkQs" target="_blank" rel="noopener">Large Language Models explained briefly</a><span>El panorama completo en pocos minutos: predecir la siguiente palabra, repetido.</span></li><li><a href="https://www.youtube.com/watch?v=wjZofJX0v4M" target="_blank" rel="noopener">Transformers, the tech behind LLMs (Deep learning, cap. 5)</a><span>Embeddings, softmax con temperatura y cómo se apilan las capas de un transformer.</span></li><li><a href="https://www.youtube.com/watch?v=eMlx5fFNoYc" target="_blank" rel="noopener">Attention in transformers, step-by-step (Deep learning, cap. 6)</a><span>Las matrices de consulta, clave y valor, con el mismo ejemplo de palabras que cambian de significado.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

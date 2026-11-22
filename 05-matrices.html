@@ -62,6 +62,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <p class="hint">Las columnas de la matriz dicen a dónde van las flechas base î = [1, 0] y ĵ = [0, 1]. El determinante mide cuánto crece o se encoge el área del cuadrado.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Multiplica matrices con NumPy</h3></div>
+    <p class="para">Usa la librería con la que trabajan PyTorch y scikit-learn para comprobar el ejercicio 1 y provocar un error de forma.</p>
+    <ol>
+      <li>Instala NumPy una sola vez, desde la terminal (no dentro de Python): <code>py -m pip install numpy</code> en Windows o <code>python3 -m pip install numpy</code> en macOS y Linux.</li>
+      <li>Entra a Python: <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import numpy as np
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[2, 0], [1, -1]])
+A @ B                    # [[ 4, -2], [10, -4]]
+B @ A                    # [[ 2,  4], [-2, -2]]
+np.linalg.det(np.array([[2, 1], [0, 3]]))           # 6.0
+np.ones((2, 3)) @ np.ones((2, 3))                   # ValueError
+(np.ones((32, 784)) @ np.ones((784, 128))).shape    # (32, 128)</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> <code>@</code> es la multiplicación de matrices. <code>A @ B</code> y <code>B @ A</code> dan resultados distintos: el orden importa. El <code>ValueError</code> dice que 3 ≠ 2, la misma regla de las dimensiones internas que provoca los errores de shape en PyTorch.</p>
+  </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Una capa de una red neuronal es <b>W</b><b>x</b> + <b>b</b>: una matriz de pesos transformando el vector de entrada. Las GPUs existen en ML porque multiplican matrices gigantes muy rápido. Cuando PyTorch se queja de un error de <i>shape</i>, casi siempre es la regla de las dimensiones de arriba.</p></div>
   </section>
 
@@ -109,6 +125,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="prose">
     <p>Por ejemplo, con A = [[2, 1], [1, 2]]: λ² − 4λ + 3 = 0, así que λ = 3 y λ = 1. Dos atajos útiles: <b>la suma de los autovalores es la traza</b> (a + d) y <b>su producto es el determinante</b> (ad − bc). Si la ecuación no tiene soluciones reales, como en una rotación, no hay ninguna dirección que se salve de girar.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Autovalores con una línea de NumPy</h3></div>
+    <p class="para">Pídele a NumPy los autovalores del ejercicio 4 y comprueba que <b>A</b><b>v</b> = λ<b>v</b>.</p>
+    <ol>
+      <li>Entra a Python: <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>import numpy as np
+A = np.array([[4, 1], [2, 3]])
+valores, vectores = np.linalg.eig(A)
+valores                       # 5 y 2
+vectores                      # cada columna es un autovector
+A @ vectores[:, 0]            # lo mismo que...
+valores[0] * vectores[:, 0]   # ...multiplicar por λ = 5
+np.linalg.eig(np.array([[0, -1], [1, 0]]))[0]   # rotación de 90°</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> NumPy entrega los autovectores con largo 1: [0.707, 0.707] es [1, 1] encogido, y [−0.447, 0.894] apunta en la misma recta que [1, −2]. Con la rotación aparecen números con <code>j</code> (imaginarios): ninguna dirección real se salva de girar. Según tu versión de NumPy, los valores reales pueden verse como <code>5.+0.j</code>; el <code>+0.j</code> solo dice que no tienen parte imaginaria.</p>
+  </div>
 </section>
 
 <section>
@@ -139,10 +170,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="pc-out"></div>
     <p class="hint">Cada punto cae sobre el eje con una línea fina: eso es proyectar. La curva de la derecha muestra la varianza de las proyecciones para cada ángulo. Su máximo es λ₁ y ocurre justo en el primer autovector; su mínimo es λ₂.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>PCA explicado visualmente</h3></div>
+    <p class="para">Arrastra puntos y mira cómo los ejes de PCA siguen la forma de la nube.</p>
+    <ol>
+      <li>Abre <a href="https://setosa.io/ev/principal-component-analysis/" target="_blank" rel="noopener">Principal Component Analysis, Explained Visually</a> (en inglés).</li>
+      <li>En el ejemplo 2D arrastra los puntos para formar una nube larga e inclinada. Mira cómo se mueven los ejes pc1 y pc2.</li>
+      <li>Baja al ejemplo 3D, gira la nube con el ratón y pulsa «show PCA».</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> pc1 siempre sigue la dirección larga de la nube: es el autovector de mayor autovalor de la covarianza. Si la nube es casi redonda, pc1 y pc2 saltan sin rumbo: los dos autovalores son casi iguales y ninguna dirección domina.</p>
+  </div>
   <div class="ml"><b>Dónde aparecen los autovalores en ML</b><p><b>PCA</b> comprime datos, quita ruido y permite dibujar en 2D datasets de cientos de variables. Los <b>embeddings</b> de palabras y de imágenes se suelen visualizar así. El algoritmo <b>PageRank</b> de Google es el autovector con λ = 1 de la matriz de enlaces. En una red recurrente, si los autovalores de la matriz de pesos son mayores que 1 los gradientes <b>explotan</b>, y si son menores que 1 se <b>desvanecen</b>. Los autovalores del hessiano (la matriz de segundas derivadas) dicen qué tan curva es la pérdida en cada dirección, y de eso depende la tasa de aprendizaje que se puede usar.</p></div>
 <div class="quiz"><h3>Pruébate</h3><details><summary>A = [[3, 0], [0, 1]]. ¿Cuáles son sus autovalores y autovectores?</summary><p>λ = 3 con el eje x, [1, 0], y λ = 1 con el eje y, [0, 1]. En una matriz diagonal se leen directamente.</p></details><details><summary>Los autovalores de una covarianza son 9 y 1. ¿Cuánta varianza conserva PCA con una sola componente?</summary><p>9 / (9 + 1) = 90 %.</p></details>
     <details><summary>¿Qué forma tiene el resultado de (32 × 784) · (784 × 128)?</summary><p>32 × 128 (las 784 del medio coinciden y desaparecen)</p></details>
     <details><summary>¿Se puede multiplicar (2 × 3) · (2 × 3)?</summary><p>No: 3 ≠ 2. Habría que transponer la segunda: (2 × 3) · (3 × 2) = 2 × 2</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>¿Por qué <b>AB</b> casi nunca es igual a <b>BA</b>? Piensa en matrices como transformaciones.<span class="pista">Pista: busca «multiplicación de matrices no conmutativa composición» y prueba rotar y luego cizallar.</span></li>
+      <li>¿Qué es la descomposición en valores singulares (SVD) y por qué las librerías la usan para calcular PCA?<span class="pista">Pista: busca «SVD y PCA relación».</span></li>
+      <li>El módulo dice que PageRank es un autovector. ¿Cómo se calcula ese autovector para una matriz con miles de millones de páginas?<span class="pista">Pista: busca «método de la potencia PageRank».</span></li>
+      <li>¿De dónde viene el prefijo alemán «eigen» y por qué en español se dice «autovalor» o «valor propio»?<span class="pista">Pista: busca «eigen Hilbert etimología».</span></li>
+      <li>El módulo dice que los autovalores del hessiano limitan la tasa de aprendizaje. ¿Por qué el paso máximo estable es 2 / λ<sub>máx</sub>?<span class="pista">Pista: busca «tasa de aprendizaje autovalor máximo hessiano».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=kYB8IZa5AuE" target="_blank" rel="noopener">Linear transformations and matrices (cap. 3)</a><span>Las columnas de la matriz son a dónde van î y ĵ, igual que en el laboratorio.</span></li><li><a href="https://www.youtube.com/watch?v=XkY2DOUCWMU" target="_blank" rel="noopener">Matrix multiplication as composition (cap. 4)</a><span>Multiplicar matrices es aplicar una transformación después de otra.</span></li><li><a href="https://www.youtube.com/watch?v=Ip3X9LOh2dk" target="_blank" rel="noopener">The determinant (cap. 6)</a><span>El determinante como factor de cambio de área.</span></li><li><a href="https://www.youtube.com/watch?v=PFDu9oVAE-g" target="_blank" rel="noopener">Eigenvectors and eigenvalues (cap. 14)</a><span>Las direcciones que una transformación solo estira, con las mismas animaciones del laboratorio.</span></li></ul></div>
   <div class="vids"><span>Más videos</span> <a class="vid" href="https://www.youtube.com/watch?v=FgakZw6K1QQ" target="_blank" rel="noopener">StatQuest · PCA paso a paso <small>EN</small></a>

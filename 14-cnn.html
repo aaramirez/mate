@@ -89,6 +89,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="prose">
     <p>Aquí está el truco que convierte esto en aprendizaje automático: <span class="hl">en una red convolucional nadie escribe los números del filtro; la red los aprende</span> con el <a href="10-gradiente.html">descenso del gradiente</a>, igual que los pesos de cualquier neurona. Empiezan al azar y terminan siendo detectores de bordes, de texturas o de ojos, según lo que ayude a reducir el error.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Filtros sobre una foto real</h3></div>
+    <p class="para">Aplica los filtros del módulo (desenfoque, nitidez, bordes) a una imagen de verdad y edita sus números.</p>
+    <ol>
+      <li>Abre <a href="https://setosa.io/ev/image-kernels/" target="_blank" rel="noopener">Image Kernels, Explained Visually</a> (en inglés).</li>
+      <li>Pasa el ratón sobre la imagen de la derecha: verás la ventana de 3 × 3, los 9 productos y su suma.</li>
+      <li>Elige en el menú otros filtros, como «blur», «sharpen» u «outline».</li>
+      <li>Más abajo, edita los números del filtro y mira el resultado en vivo.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> cada píxel nuevo es un producto punto entre el filtro y una ventana de la imagen. «blur» es el desenfoque de todos 1/9 y «sharpen» es la nitidez con 5 al centro. Si todos los números suman 0, como en «outline», las zonas planas quedan negras y solo sobreviven los bordes.</p>
+  </div>
 </section>
 
 <section>
@@ -115,6 +126,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="prose">
     <p>La gran diferencia está en la última línea. Un filtro <b>comparte sus pesos</b>: los mismos 9 números revisan cada rincón de la imagen. Un detector de bordes que funciona arriba a la izquierda también funciona abajo a la derecha. Por eso una CNN necesita miles de pesos donde una red densa necesitaría millones.</p>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Convolución y tamaños en Python</h3></div>
+    <p class="para">Comprueba el ejercicio 1 y la fórmula del tamaño de salida.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>img = [[0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 1, 1]]
+K = [[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]]
+[sum(img[i][j + n] * K[i][n] for i in range(3) for n in range(3)) for j in range(3)]   # [1, 3, 2]
+salida = lambda n, k, p, s: (n + 2*p - k) // s + 1
+salida(32, 5, 0, 1), salida(32, 5, 2, 1), salida(32, 3, 1, 2)   # (28, 32, 16)
+salida(28, 3, 0, 1) // 2        # 13: conv 3 × 3 y pooling, como en el ejercicio 5</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> el mapa [1, 3, 2] es el del ejercicio 1. La doble barra <code>//</code> divide y redondea hacia abajo, que es justo lo que pide la fórmula cuando la división no es exacta: el filtro nunca se sale de la imagen.</p>
   </div>
 </section>
 
@@ -158,12 +183,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <tr><td>Softmax</td><td>e<sup>zᵢ</sup> / Σ e<sup>zⱼ</sup></td><td>Convierte puntajes en probabilidades</td></tr>
     </tbody>
   </table></div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Por dentro de una CNN real</h3></div>
+    <p class="para">Recorre capa por capa una red convolucional pequeña que clasifica fotos.</p>
+    <ol>
+      <li>Abre <a href="https://poloclub.github.io/cnn-explainer/" target="_blank" rel="noopener">CNN Explainer</a> (en inglés).</li>
+      <li>Elige una de las fotos de arriba. Verás todos los mapas de activación de la red, de izquierda a derecha.</li>
+      <li>Haz clic en un mapa de la primera capa convolucional para ver el filtro deslizándose.</li>
+      <li>Haz clic en un mapa de una capa de max pooling y luego en la salida.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> la red sigue la receta del módulo: convolución, ReLU y pooling repetidos, y al final un softmax con las probabilidades de cada clase. Los mapas se encogen capa tras capa mientras se vuelven más abstractos.</p>
+  </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Reconocimiento de imágenes y rostros, lectura de radiografías, autos que ven la carretera, lectura de cheques y matrículas. La misma idea de «ventana que se desliza» funciona en una dimensión, para audio y series de tiempo, y en tres, para video. Los modelos de visión modernos (los <i>Vision Transformers</i>) cambian la convolución por atención, pero siguen partiendo la imagen en trozos.</p></div>
   <div class="quiz"><h3>Pruébate</h3>
     <details><summary>Imagen de 32 × 32, filtro 5 × 5, sin padding y stride 1. ¿Tamaño de salida?</summary><p>(32 + 0 − 5) / 1 + 1 = 28, o sea 28 × 28.</p></details>
     <details><summary>¿Y con padding 1 y filtro 3 × 3 sobre la misma imagen?</summary><p>(32 + 2 − 3) / 1 + 1 = 32: el padding conserva el tamaño.</p></details>
     <details><summary>¿Cuántos pesos tiene un filtro 3 × 3 sobre una imagen a color?</summary><p>3 · 3 · 3 = 27 pesos, más 1 sesgo = 28. Y sirven para toda la imagen, sea del tamaño que sea.</p></details>
     <details><summary>Max pooling 2 × 2 sobre un mapa de 28 × 28. ¿Qué queda?</summary><p>14 × 14: un cuarto de las casillas.</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>La fórmula del módulo no voltea el filtro, así que en rigor es una «correlación cruzada», no una convolución. ¿Cuál es la diferencia y por qué no importa en una red?<span class="pista">Pista: busca «convolución vs correlación cruzada CNN».</span></li>
+      <li>¿Qué fueron LeNet y AlexNet, y por qué AlexNet cambió la visión por computadora en 2012?<span class="pista">Pista: busca «LeNet LeCun» y «AlexNet ImageNet 2012».</span></li>
+      <li>¿Qué es el «campo receptivo» de una neurona y cómo crece con cada capa?<span class="pista">Pista: busca «campo receptivo CNN».</span></li>
+      <li>El recuadro dice que los Vision Transformers parten la imagen en trozos. ¿De qué tamaño son esos trozos y qué hacen con ellos?<span class="pista">Pista: busca «Vision Transformer patches 16x16».</span></li>
+      <li>¿Qué es el filtro de Sobel y en qué se diferencia del filtro de borde vertical del módulo?<span class="pista">Pista: busca «operador de Sobel».</span></li>
+    </ol>
   </div>
   <div class="ref3b"><div class="ref3b-h"><b>Míralo en 3Blue1Brown</b><span>En inglés · activa los subtítulos en español</span></div><ul><li><a href="https://www.youtube.com/watch?v=KuXjwB4LzSA" target="_blank" rel="noopener">But what is a convolution?</a><span>La convolución explicada con dados, imágenes y desenfoque: la misma operación que hace cada filtro de una CNN.</span></li></ul></div>
   <div class="vids"><span>Más videos</span>

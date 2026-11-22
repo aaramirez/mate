@@ -92,6 +92,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="legend"><span><i style="background:var(--accent)"></i>Clase A</span><span><i style="background:var(--warm)"></i>Clase B</span><span><i style="background:var(--ink)"></i>Punto nuevo</span></div>
     <p class="hint">Toca o arrastra sobre el gráfico para mover el punto nuevo. Pinta las regiones y compara <var>k</var> = 1, que dibuja islas alrededor de cada punto raro, con <var>k</var> = 21, que suaviza tanto que empieza a ignorar los detalles.</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>k vecinos en cinco líneas</h3></div>
+    <p class="para">Clasifica el punto del ejercicio 2 contando votos en Python.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>. Necesitas Python 3.8 o más reciente.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo. Después de la línea del <code>for</code>, pulsa Enter dos veces.<pre><code>import math
+from collections import Counter
+A = [(1, 1), (2, 4), (0, 3)]
+B = [(3, 2), (4, 4), (5, 2)]
+vecinos = sorted([(math.dist(p, (2, 2)), 'A') for p in A] + [(math.dist(p, (2, 2)), 'B') for p in B])
+vecinos                   # (distancia, clase), del más cercano al más lejano
+for k in [1, 3, 5]: print(k, Counter(c for d, c in vecinos[:k]).most_common(1))</code></pre></li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> sale B con <var>k</var> = 1 y A con <var>k</var> = 3 y 5, como en el ejercicio 2. Fíjate en que no hubo entrenamiento: el «modelo» es la lista de puntos y todo el trabajo ocurre al predecir.</p>
+  </div>
 </section>
 
 <section>
@@ -123,6 +138,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="dt-out"></div>
     <div class="legend"><span><i style="background:var(--accent)"></i>Clase A</span><span><i style="background:var(--warm)"></i>Clase B</span></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>Un árbol de decisión que crece mientras lees</h3></div>
+    <p class="para">Mira cómo un árbol elige preguntas para separar casas de Nueva York y de San Francisco.</p>
+    <ol>
+      <li>Abre <a href="https://r2d3.us/una-introduccion-visual-al-machine-learning-1/" target="_blank" rel="noopener">Una introducción visual al machine learning</a>, de R2D3 (en español).</li>
+      <li>Baja despacio con la rueda del ratón. Cada pantalla agrega una pregunta al árbol.</li>
+      <li>Al final, mira cómo cambia la precisión con los datos de entrenamiento y con los de prueba.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> cada corte es un umbral sobre una variable, como «elevación &gt; 73 m», elegido para que los grupos queden lo más puros posible. Un árbol que crece hasta acertar todo en entrenamiento falla más con datos nuevos: es el sobreajuste del módulo 11.</p>
+  </div>
 </section>
 
 <section>
@@ -152,6 +177,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="btns"><button class="primary" id="km-step">1. Asignar</button><button id="km-run">Hasta converger</button><button id="km-reset">Otros centros iniciales</button></div>
     </div>
     <div class="readout" id="km-out"></div>
+  </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>k-means paso a paso</h3></div>
+    <p class="para">Ejecuta tú mismo los dos pasos de k-means sobre distintos tipos de datos.</p>
+    <ol>
+      <li>Abre <a href="https://www.naftaliharris.com/blog/visualizing-k-means-clustering/" target="_blank" rel="noopener">Visualizing K-Means Clustering</a> (en inglés).</li>
+      <li>Elige cómo poner los centros iniciales (por ejemplo «Randomly») y un tipo de datos, como «Gaussian Mixture».</li>
+      <li>Agrega centros haciendo clic, pulsa «Go!» y alterna «Reassign Points» y «Update Centroids» hasta que nada cambie.</li>
+      <li>Repite con los datos «Smiley» o «Packed Circles».</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> «Reassign Points» es el paso asignar y «Update Centroids» es el paso mover. Con nubes redondas k-means acierta; con la cara sonriente corta los grupos de forma extraña, porque solo sabe medir distancias a un centro.</p>
   </div>
 </section>
 
@@ -221,6 +257,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>Con <var>p</var> = σ(<var>z</var>), ¿qué valor de <var>z</var> está justo sobre la frontera de decisión?</summary><p><var>z</var> = 0, porque σ(0) = 0.5.</p></details>
     <details><summary>¿Por qué k-means siempre termina?</summary><p>Porque asignar y mover nunca suben la inercia, y hay un número finito de formas de repartir los puntos entre los centros.</p></details>
     <details><summary>¿Qué modelo no hace nada al entrenar?</summary><p>k vecinos: solo guarda los datos y calcula distancias al predecir.</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>El módulo nombra el truco del kernel. ¿Qué es el kernel gaussiano (RBF) y en cuántas dimensiones «vive» de forma implícita?<span class="pista">Pista: busca «kernel RBF dimensión infinita».</span></li>
+      <li>¿Por qué Naive Bayes funciona bien aunque su suposición de independencia casi nunca se cumple?<span class="pista">Pista: busca «why naive Bayes works independence assumption».</span></li>
+      <li>k-means puede quedarse en una solución mediocre. ¿Qué es k-means++ y cómo elige los centros iniciales?<span class="pista">Pista: busca «k-means++ inicialización».</span></li>
+      <li>Si nadie te dice cuántos grupos hay, ¿cómo eliges <var>k</var> en k-means?<span class="pista">Pista: busca «método del codo» y «coeficiente de silueta».</span></li>
+      <li>El random forest entrena cada árbol con una muestra al azar. ¿Qué es el «bagging» y de dónde sale su nombre? ¿Quién propuso el random forest?<span class="pista">Pista: busca «bootstrap aggregating Breiman».</span></li>
+    </ol>
   </div>
   <div class="vids"><span>Más videos</span>
     <a class="vid" href="https://www.youtube.com/@statquest/search?query=logistic%20regression" target="_blank" rel="noopener">StatQuest · regresión logística <small>EN</small></a>

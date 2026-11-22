@@ -40,6 +40,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="fact"><h3>Notación científica</h3><span class="ex">0.001 = 1 × 10⁻³ = 1e-3</span><p>Así verás la tasa de aprendizaje en el código: <code>lr = 1e-3</code>.</p></div>
     <div class="fact"><h3>Signos</h3><span class="ex">(−3) × (−2) = 6 · (−3) × 2 = −6</span><p>Los pesos de una red pueden ser negativos: en vez de sumar influencia, la restan.</p></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Python como calculadora</h3></div>
+    <p class="para">Comprueba que la computadora sigue el mismo orden de operaciones que tú y mira qué pasa al dividir entre 0.</p>
+    <ol>
+      <li>Abre una terminal (PowerShell en Windows, Terminal en macOS o Linux) y entra a Python: escribe <code>py</code> en Windows o <code>python3</code> en macOS y Linux. Si no lo tienes, descárgalo de <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org</a>.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>2 + 3 * 4**2        # 50: primero la potencia, luego ×, al final +
+(2 + 3) * 4**2      # 80: el paréntesis cambia todo
+1e-3                # 0.001: así se escribe lr = 1e-3
+(-3) * (-2)         # 6
+5 / 0               # ZeroDivisionError: no se puede
+5 / (0 + 1e-8)      # 500000000.0</code></pre></li>
+      <li>Cambia el <code>1e-8</code> por <code>1e-3</code> y vuelve a dividir.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> en Python la potencia se escribe <code>**</code>. Dividir entre 0 es un error, y el truco <code>b + 1e-8</code> del recuadro «Cuidado con el denominador» lo evita a cambio de un número enorme: la razón se dispara cuando el denominador se acerca a 0.</p>
+  </div>
 </section>
 
 <section>
@@ -101,6 +116,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="ctls"><label class="ctl"><span id="rf-x-l">x</span><output id="rf-x-o"></output><input type="range" id="rf-x"></label></div>
     <div class="readout" id="rf-out"></div>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag web">En el navegador</span><h3>¿Quién crece más rápido? En Desmos</h3></div>
+    <p class="para">Dibuja dos funciones y su razón, y aléjate para ver hacia dónde va cuando x crece.</p>
+    <ol>
+      <li>Abre la calculadora gráfica de <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">Desmos</a>. No necesitas cuenta.</li>
+      <li>Escribe <code>f(x)=2x^2+3</code> en la primera fila y <code>g(x)=x^2+x</code> en la segunda.</li>
+      <li>En la tercera fila escribe <code>y=f(x)/g(x)</code> y en la cuarta <code>y=2</code>.</li>
+      <li>Aleja el zoom (rueda del ratón o el botón −) hasta ver x = 100.</li>
+      <li>Cambia <code>g(x)</code> por <code>x^3</code> y después por <code>x</code>.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> con g(x) = x² + x la razón se pega a la recta y = 2: las dos crecen al mismo ritmo, como en el ejercicio 3. Con x³ la razón se aplasta contra 0 (gana g) y con x se dispara (gana f). Cerca de x = 0 y x = −1 la curva explota: ahí g vale 0.</p>
+  </div>
   <div class="ml"><b>Dónde aparece en ML</b><p>Comparar quién crece más rápido es lo que hace la notación O(<var>n</var>) al medir algoritmos: O(<var>n</var>²) frente a O(<var>n</var>). Los momios <var>p</var> / (1 − <var>p</var>) y su logaritmo, el <i>logit</i>, son la base de la regresión logística. Y softmax compara exponenciales: <var>e</var><sup><var>a</var></sup> / <var>e</var><sup><var>b</var></sup> = <var>e</var><sup><var>a</var> − <var>b</var></sup>.</p></div>
 </section>
 
@@ -148,6 +175,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="readout" id="cm-note"></div>
     <p class="hint">Exactitud = aciertos / total. Precisión = VP / (VP + FP): de lo que marqué como spam, ¿cuánto lo era? Sensibilidad = VP / (VP + FN): del spam real, ¿cuánto atrapé?</p>
   </div>
+  <div class="practica">
+    <div class="practica-title"><span class="tag">En la terminal</span><h3>Las métricas en cuatro líneas</h3></div>
+    <p class="para">Calcula exactitud, precisión, sensibilidad y F1 con los números del laboratorio, y luego rompe el filtro a propósito.</p>
+    <ol>
+      <li>Entra a Python: <code>py</code> en Windows o <code>python3</code> en macOS y Linux.</li>
+      <li>Escribe cada línea y pulsa Enter. Lo que va después de <code>#</code> es un comentario con lo que deberías ver; no hace falta copiarlo.<pre><code>vp, fn, fp, vn = 40, 5, 10, 945
+exactitud = (vp + vn) / (vp + fn + fp + vn)
+precision = vp / (vp + fp)
+sensibilidad = vp / (vp + fn)
+f1 = 2 * precision * sensibilidad / (precision + sensibilidad)
+print(exactitud, precision, sensibilidad, f1)   # 0.985 0.8 0.888... 0.842...</code></pre></li>
+      <li>Ahora el filtro deja pasar casi todo el spam. Escribe <code>vp, fn = 5, 40</code>, repite las cuatro fórmulas (flecha ↑ para recuperarlas) y vuelve a imprimir.</li>
+    </ol>
+    <p class="obs"><b>Qué observar:</b> la exactitud apenas baja, de 0.985 a 0.95, pero la sensibilidad cae a 0.11: el filtro deja escapar 8 de cada 9 correos de spam. Cuando una clase es rara, la exactitud engaña; por eso se miran las otras razones.</p>
+  </div>
 </section>
 
 <section>
@@ -158,6 +200,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>Si A se triplica y B se duplica, ¿qué le pasa a la razón A / B?</summary><p>Se multiplica por 3 / 2 = 1.5</p></details>
     <details><summary>¿Hacia qué valor tiende (3x + 5) / (x + 2) cuando x crece mucho?</summary><p>Hacia 3: las dos crecen en línea recta y la razón queda en el cociente de sus pendientes, 3 / 1.</p></details>
     <details><summary>Normaliza el valor 140 si el mínimo es 100 y el máximo 200.</summary><p>(140 − 100) / (200 − 100) = 40 / 100 = 0.4</p></details>
+  </div>
+  <div class="investiga">
+    <h3>Para investigar</h3>
+    <p>El módulo nombra o usa estas ideas, pero no las explica. Búscalas por tu cuenta: aquí no está la respuesta.</p>
+    <ol>
+      <li>El módulo usa la notación O(<var>n</var>) para comparar algoritmos. ¿Cuál es su definición formal y quiénes la introdujeron?<span class="pista">Pista: busca «notación O grande» y los nombres Bachmann y Landau.</span></li>
+      <li>¿De dónde viene la palabra «logit» y quién la propuso?<span class="pista">Pista: busca «logit Berkson 1944».</span></li>
+      <li>F1 combina precisión y sensibilidad con una fórmula rara. ¿Por qué usa la media armónica y no el promedio de siempre?<span class="pista">Pista: busca «media armónica» y prueba qué pasa si una de las dos vale 0.</span></li>
+      <li>¿Por qué el truco del denominador usa 1e-8 y no 1e-30? ¿Qué es el «épsilon de máquina»?<span class="pista">Pista: busca «épsilon de máquina float32 float64».</span></li>
+      <li>Uno de los videos habla de sensibilidad y especificidad. ¿Qué mide la especificidad y con qué casilla de la matriz de confusión se calcula?<span class="pista">Pista: busca «especificidad tasa de verdaderos negativos».</span></li>
+    </ol>
   </div>
   <div class="vids"><span>Para verlo</span>
     <a class="vid" href="https://www.youtube.com/@julioprofe/search?query=fracciones" target="_blank" rel="noopener">julioprofe · fracciones</a>
