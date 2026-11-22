@@ -40,7 +40,7 @@ No necesita instalación ni servidor: abre `index.html` en el navegador. El avan
 
 ```
 index.html            Portada y mapa de la ruta
-01-…17-*.html         Un archivo por módulo (HTML + script del laboratorio)
+01-…17-*.html         Un archivo por módulo, generado desde fuente/modulos/
 recursos.html         Canales de YouTube, ruta de 3Blue1Brown y plan de estudio
 assets/style.css      Estilos compartidos (tema claro y oscuro)
 assets/lab.js         Utilidades de gráficas, navegación y avance
@@ -48,7 +48,7 @@ assets/lab.js         Utilidades de gráficas, navegación y avance
 
 Las gráficas se dibujan con Canvas y JavaScript sin librerías; solo se cargan fuentes de Google Fonts.
 
-Cada página carga Google Tag Manager (`GTM-KX76XF8R`): un bloque al inicio de `<head>` y un `<noscript>` al inicio de `<body>`. Toda página nueva debe llevar los dos; cópialos de `index.html`.
+Cada página carga Google Tag Manager (`GTM-KX76XF8R`): un bloque al inicio de `<head>` y un `<noscript>` al inicio de `<body>`. Los ponen las plantillas del motor de cursos (ver «Cómo se genera»).
 
 Los comandos van en bloques `.cmds`: pestañas por sistema operativo (`.cmd-tabs` con botones `role="tab"` y `data-so="win"`, `"mac linux"`…, y un `.cmd-panel role="tabpanel"` por pestaña) y una línea `.cmd-l` por comando, con su `<code>` y un botón `.copiar`. Los comentarios van en `.cmd-c`, sin botón. Un programa que se guarda en un archivo va en `.code-copia` con un solo botón `.copiar copiar-todo`. `assets/lab.js` elige la pestaña del sistema del lector, la recuerda (`mate-so`) y copia al portapapeles.
 
