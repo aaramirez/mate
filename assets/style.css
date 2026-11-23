@@ -207,6 +207,8 @@ footer{margin-top:40px;font-size:.88rem;color:var(--muted);display:grid;gap:4px}
 
 /* ---- Sitio de varias páginas ---- */
 .topbar{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 16px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.topbar .al-sitio{font:600 .8rem var(--f-display);color:var(--accent);text-decoration:none;white-space:nowrap}
+.topbar .al-sitio:hover{text-decoration:underline}
 .brand{font:800 1.3rem var(--f-display);color:var(--ink);text-decoration:none;letter-spacing:-.01em}
 .brand b{color:var(--accent)}
 .layout{margin-top:26px}
@@ -421,6 +423,9 @@ section{grid-template-columns:minmax(0,1fr)}
 /* ---- Libros de matemática: fórmulas, enunciados, demostraciones, ejercicios y prompts ---- */
 .math-display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:6px 2px;margin:4px 0;text-align:center}
 .math-display .katex-display{margin:0}
+.math-display.con-numero{display:flex;align-items:center;gap:10px;overflow:visible;padding:6px 0}
+.math-display.con-numero .formula{flex:1 1 0;width:0;min-width:0;overflow-x:auto;overflow-y:hidden}
+.math-display.con-numero .eq-num{flex:none;font:500 .92rem var(--f-mono);color:var(--muted)}
 .math-display:not([data-tex]),.math:not([data-tex]){font-family:var(--f-mono);font-size:.92em}
 .enunciado{border-left:4px solid var(--accent);background:var(--card);padding:12px 16px;border-radius:0 8px 8px 0;display:grid;gap:6px;min-width:0;scroll-margin-top:24px}
 .enunciado-definicion{border-left-color:var(--good)}

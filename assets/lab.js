@@ -144,8 +144,16 @@ function renderMath(raiz){
   (raiz||document).querySelectorAll('.math,.math-display').forEach(el=>{
     if(el.dataset.tex!==undefined)return;
     const tex=el.textContent;el.dataset.tex=tex;
-    try{katex.render(tex,el,{displayMode:el.classList.contains('math-display'),throwOnError:false,output:'htmlAndMathml'});}
-    catch(err){el.textContent=tex;}
+    const display=el.classList.contains('math-display');
+    // El número de una ecuación (	ag{3.1}) va en su propia columna: en el celular no tapa la fórmula
+    const m=display&&tex.match(/\\tag\{([^{}]*)\}\s*$/);
+    let destino=el;
+    if(m){el.textContent='';el.classList.add('con-numero');
+      destino=document.createElement('span');destino.className='formula';
+      const n=document.createElement('span');n.className='eq-num';n.textContent='('+m[1]+')';
+      el.append(destino,n);}
+    try{katex.render(m?tex.slice(0,m.index):tex,destino,{displayMode:display,throwOnError:false,output:'htmlAndMathml'});}
+    catch(err){destino.textContent=tex;}
   });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>renderMath());else renderMath();
