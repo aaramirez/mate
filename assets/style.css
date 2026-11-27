@@ -40,6 +40,8 @@ p{margin:0}
 var,.v{font-family:var(--f-body);font-style:italic}
 .bf{font-weight:700;font-style:normal}
 code,.mono{font-family:var(--f-mono);font-size:.86em}
+code,pre,.mono{font-variant-ligatures:none}
+blockquote{margin:0;padding:6px 0 6px 16px;border-left:3px solid var(--line);color:var(--muted);font-style:italic}
 .hl{background:linear-gradient(transparent 58%,var(--mark) 58%);padding:0 .1em}
 .eyebrow{font-family:var(--f-display);font-weight:600;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 
@@ -345,7 +347,7 @@ details.stage+details.stage{margin-top:-20px}
 .fig .t-m{fill:var(--muted)}
 .fig .t-s{font-size:11px}
 .fig .t-xs{font-size:10px;letter-spacing:.06em}
-.fig .t-mono{font-family:var(--f-mono)}
+.fig .t-mono{font-family:var(--f-mono);font-variant-ligatures:none}
 .fig .caja{fill:var(--card);stroke:var(--line);stroke-width:1.2}
 .fig .ln{stroke:var(--muted);stroke-width:1.4;fill:none}
 .fig .ln-d{stroke-dasharray:4 4}
@@ -384,7 +386,7 @@ section{grid-template-columns:minmax(0,1fr)}
 .lab{grid-template-columns:minmax(0,1fr)}
 .lab select{width:100%}
 .lab .opciones label{min-width:0}
-.prose code,.practica code,.investiga code,.pruebate code,.practica a,.investiga a,.pruebate a{overflow-wrap:anywhere}
+.prose code,.practica code,.investiga code,.pruebate code,.analogia code,.caso code,.ml code,.analogia a,.caso a,.ml a,.practica a,.investiga a,.pruebate a{overflow-wrap:anywhere}
 [hidden]{display:none!important}
 .lab>*{min-width:0}
 .fig .k-warm{fill:var(--warm)} .fig .s-warm{stroke:var(--warm)}
@@ -412,14 +414,24 @@ section{grid-template-columns:minmax(0,1fr)}
 .cmd-nota{font-size:.82rem;color:var(--muted);margin:0}
 .cmd-l{display:flex;align-items:center;gap:8px;min-width:0}
 .cmd-l code{flex:1;min-width:0;overflow-x:auto;white-space:pre;font-size:.85rem;padding:7px 9px;background:var(--card);border:1px solid var(--line);border-radius:6px}
-.cmd-c{font:.8rem var(--f-mono);color:var(--muted);padding:2px 2px 0;overflow-wrap:anywhere}
+.cmd-c{font:.8rem var(--f-mono);color:var(--muted);padding:2px 2px 0;overflow-wrap:anywhere;font-variant-ligatures:none}
 .copiar{flex:none;font:600 .74rem var(--f-display);padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);cursor:pointer}
 .copiar:hover,.copiar:focus-visible{border-color:var(--good)}
 .copiar.ok{background:var(--good);border-color:var(--good);color:var(--card)}
 .code-copia{position:relative;min-width:0}
-.code-copia pre{max-width:100%;overflow-x:auto;padding-right:84px}
-.code-copia .copiar-todo{position:absolute;top:8px;right:8px}
-@media (max-width:640px){.code-copia .copiar-todo{position:static;display:block;width:fit-content;margin:0 0 6px auto}.code-copia pre{padding-right:12px}}
+.code-copia pre{max-width:100%;overflow-x:auto}
+.code-copia .copiar-todo{position:static;display:block;width:fit-content;margin:0 0 6px auto}
+.code-lineas{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;margin:0 0 6px}
+.code-lineas pre{flex:1 0 100%;margin:0;font-size:.86em;line-height:1.5;max-height:calc(30em + 18px);overflow-x:auto;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--muted) transparent;padding:8px 12px 8px 4px;background:var(--card);border:1px solid var(--line);border-radius:6px}
+.code-lineas pre:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.code-lineas pre::-webkit-scrollbar{width:8px;height:8px}
+.code-lineas pre::-webkit-scrollbar-thumb{background:var(--muted);border-radius:4px}
+.code-lineas.abierto pre{max-height:none}
+.code-lineas code{font-size:1em;counter-reset:ln}
+.code-lineas .copiar-todo{margin:0}
+.code-lineas .ver-todo{font-size:.78rem}
+.code-lineas .ln{counter-increment:ln}
+.code-lineas .ln::before{content:counter(ln);display:inline-block;width:3ch;margin-right:1.5ch;text-align:right;color:var(--muted);opacity:.7;user-select:none;-webkit-user-select:none}
 
 /* ---- Libros de matemática: fórmulas, enunciados, demostraciones, ejercicios y prompts ---- */
 .math-display{display:block;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:6px 2px;margin:4px 0;text-align:center}
@@ -452,6 +464,9 @@ details.pista,details.solucion{margin-top:-8px}
 .prompt pre{white-space:pre-wrap}
 .indice-enunciados{list-style:none;padding:0;display:grid;gap:4px}
 .indice-enunciados a{text-decoration:none}
+
+/* ---- Aviso del curso (por ejemplo, material en proceso de curado) ---- */
+.aviso-curado{margin:0 0 16px;padding:10px 14px;border:1px solid var(--warm);border-left:4px solid var(--warm);border-radius:8px;background:var(--card);font:500 .92rem var(--f-display);color:var(--ink)}
 
 /* ---- Propio de este curso ---- */
 /* Estilos propios de mate: se agregan al final del style.css del motor de cursos */

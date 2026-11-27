@@ -129,6 +129,11 @@ function sync(){
     elegir(caja);});
   const aviso=document.createElement('span');aviso.setAttribute('aria-live','polite');aviso.style.cssText='position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';document.body.appendChild(aviso);
   document.querySelectorAll('.copiar').forEach(b=>{const c=b.parentElement.querySelector('code');if(c)b.setAttribute('aria-label','Copiar: '+c.textContent.slice(0,80));});
+  /* Scripts largos: se ven 20 líneas con scroll; «Ver las N líneas» abre el bloque completo y lo vuelve a cerrar */
+  document.addEventListener('click',ev=>{const b=ev.target.closest('.ver-todo');if(!b)return;const caja=b.closest('.code-lineas');
+    if(!b.dataset.rotulo)b.dataset.rotulo=b.textContent;const abierto=caja.classList.toggle('abierto');
+    b.setAttribute('aria-expanded',abierto?'true':'false');b.textContent=abierto?'Ver menos':b.dataset.rotulo;
+    if(!abierto)caja.scrollIntoView({block:'nearest'});});
   const copiaVieja=t=>new Promise((ok,mal)=>{const a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.cssText='position:fixed;top:0;opacity:0';document.body.appendChild(a);a.select();let r=false;try{r=document.execCommand('copy');}catch(e){}a.remove();r?ok():mal();});
   const copiarTexto=t=>(navigator.clipboard&&window.isSecureContext)?navigator.clipboard.writeText(t).catch(()=>copiaVieja(t)):copiaVieja(t);
   document.addEventListener('click',ev=>{const b=ev.target.closest('.copiar');if(!b)return;const c=b.parentElement.querySelector('code');if(!c)return;
